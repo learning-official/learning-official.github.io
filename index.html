@@ -1115,8 +1115,9 @@
         }
 
         try {
-          const res = await fetch(filename);
-          if (!res.ok) throw new Error(`無法載入此檔案：${filename}`);
+          const encodedFilename = encodeURIComponent(filename);
+          const res = await fetch(encodedFilename);
+          if (!res.ok) throw new Error(`HTTP ${res.status} - 無法載入此檔案：${filename}`);
           
           let text = await res.text();
           
@@ -1443,8 +1444,9 @@
       initCanvasAnimation();
       
       // Load both Markdown files in parallel on start
-      core.loadMarkdown('part1', 'Java學習歷程-1.md');
-      core.loadMarkdown('part2', 'Java學習歷程-2.md');
+      // NOTE: filenames must match the actual files in the repo root exactly
+      core.loadMarkdown('part1', 'part1.md');
+      core.loadMarkdown('part2', 'part2.md');
     });
   </script>
 </body>
