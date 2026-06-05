@@ -1070,18 +1070,20 @@
         } else {
           text = item.text || '';
         }
+        // Newer versions do NOT include the checkbox HTML in the parsed text, so we prepend it
+        if (isTask) {
+          text = `<input type="checkbox" ${isChecked ? 'checked' : ''} disabled> ` + text;
+        }
       } else {
-        // Older Marked.js versions pass separate parameters
+        // Older Marked.js versions (v4.3.0) pass separate parameters.
+        // The `item` (text) ALREADY contains the checkbox HTML inside it!
         text = item || '';
         isTask = task || false;
         isChecked = checked || false;
       }
 
       if (isTask) {
-        return `<li class="task-list-item">
-          <input type="checkbox" ${isChecked ? 'checked' : ''} disabled>
-          ${text.replace(/^\[[ xX]\]\s*/, '')}
-        </li>`;
+        return `<li class="task-list-item">${text}</li>`;
       }
       return `<li>${text}</li>`;
     };
