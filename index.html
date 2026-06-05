@@ -19,6 +19,8 @@
   
   <!-- Marked.js v4.3.0 (pinned) for parsing Markdown -->
   <script src="https://cdn.jsdelivr.net/npm/marked@4.3.0/marked.min.js"></script>
+  <!-- DOMPurify for sanitizing HTML (preventing XSS) -->
+  <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.6/dist/purify.min.js"></script>
 
   <style>
     :root {
@@ -1107,6 +1109,20 @@
   <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-properties.min.js"></script>
 
   <script>
+    // HTML Escaping Utility for security (anti-XSS)
+    const escapeHTML = (str) => {
+      if (!str) return '';
+      return str.replace(/[&<>'"]/g, 
+        tag => ({
+          '&': '&amp;',
+          '<': '&lt;',
+          '>': '&gt;',
+          "'": '&#39;',
+          '"': '&quot;'
+        }[tag] || tag)
+      );
+    };
+
     // Global State for Markdown Data cache
     let mdCache = {
       part1: { text: '', ready: false, headings: [] },
@@ -1235,7 +1251,9 @@
           // Normalize HackMD syntax: convert "```java=" or "```java=num" to "```java"
           cleanText = cleanText.replace(/```(\w+)=.*/g, '```$1');
 
-          targetDiv.innerHTML = marked.parse(cleanText);
+          // Parse markdown and sanitize HTML output using DOMPurify to prevent XSS attacks
+          const parsedHtml = marked.parse(cleanText);
+          targetDiv.innerHTML = typeof DOMPurify !== 'undefined' ? DOMPurify.sanitize(parsedHtml) : parsedHtml;
 
           // Intercept links to external Part-2 / Part-1 and handle them locally
           const links = targetDiv.querySelectorAll('a');
@@ -1354,7 +1372,7 @@
               const isChecked = line.includes('[x]');
               if (isChecked) doneTasks++;
               
-              const taskText = line.replace(/^.*-\s+\[[ xX]\]\s*/, '').trim();
+              const taskText = escapeHTML(line.replace(/^.*-\s+\[[ xX]\]\s*/, '').trim());
               
               checklistsHtml += `
                 <div class="terminal-row" style="padding: 12px 16px; margin-bottom: 8px; font-size: 13px;">
@@ -1434,12 +1452,14 @@
                 matchCount++;
                 // Clean markdown tags slightly for cleaner terminal display
                 const cleanLine = line.replace(/[#*`=_\-\[\]]/g, '').trim();
+                const escapedLine = escapeHTML(cleanLine);
+                const escapedDay = escapeHTML(currentDay);
                 
                 resultsHtml += `
                   <div class="terminal-row" style="padding: 16px 20px;">
                     <div>
-                      <span style="color: var(--accent-color); font-weight: 600; margin-right: 15px;">[${key.toUpperCase()} // ${currentDay}]</span>
-                      <span style="color: var(--text-main); font-family: var(--font-mono);">${cleanLine || '此列含有格式標記或空格'}</span>
+                      <span style="color: var(--accent-color); font-weight: 600; margin-right: 15px;">[${key.toUpperCase()} // ${escapedDay}]</span>
+                      <span style="color: var(--text-main); font-family: var(--font-mono);">${escapedLine || '此列含有格式標記 or 空格'}</span>
                     </div>
                     <span style="color: var(--text-muted); font-size: 12px;">第 ${index + 1} 行</span>
                   </div>
