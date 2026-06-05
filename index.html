@@ -1266,8 +1266,8 @@
           const text = mdCache[key].text;
           if (!text) return;
 
-          // Count days
-          const dayMatches = text.match(/##\s+Day\d+/ig) || [];
+          // Count days (supports emojis like ## 🎉Day100 or spacing like ## Day 100)
+          const dayMatches = text.match(/##.*Day\s*\d+/ig) || [];
           totalDays += dayMatches.length;
 
           // Find task items
@@ -1352,8 +1352,8 @@
 
             lines.forEach((line, index) => {
               // Track current day header context
-              if (line.trim().startsWith('## Day')) {
-                currentDay = line.replace(/^##\s+/, '').trim();
+              if (/^##.*Day\s*\d+/i.test(line.trim())) {
+                currentDay = line.replace(/^##\s*/, '').trim();
               }
 
               if (line.toLowerCase().includes(query)) {
