@@ -344,13 +344,6 @@
       padding-bottom: 8px;
     }
 
-    .markdown-body h2::before {
-      content: "$ guest@nexus:~#";
-      color: var(--accent-color);
-      font-size: 0.9rem;
-      font-weight: normal;
-    }
-
     .markdown-body h3 {
       font-size: 1.25rem;
       color: var(--accent-color);
@@ -364,6 +357,28 @@
     .markdown-body p {
       margin-bottom: 16px;
       color: var(--text-main);
+    }
+
+    /* Markdown Images control */
+    .markdown-body img {
+      max-width: 100%;
+      height: auto;
+      max-height: 480px;
+      display: block;
+      margin: 24px auto;
+      border-radius: 8px;
+      border: 1px solid var(--border-subtle);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+      object-fit: contain;
+      background-color: rgba(255, 255, 255, 0.02);
+      padding: 6px;
+      transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .markdown-body img:hover {
+      transform: scale(1.01);
+      border-color: rgba(88, 166, 255, 0.35);
+      box-shadow: 0 6px 24px rgba(88, 166, 255, 0.15);
     }
 
     .markdown-body a {
@@ -462,7 +477,6 @@
       background: transparent !important;
       padding: 0 !important;
       border-radius: 0 !important;
-      color: #f3f4f6 !important;
     }
 
     /* Blockquotes */
@@ -1016,9 +1030,13 @@
   <!-- Toast Notification System Container -->
   <div id="toast-container"></div>
 
-  <!-- Prism.js core and autoloader -->
+  <!-- Prism.js Core and Language Modules (Explicitly loaded for speed & offline reliability) -->
   <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-clike.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-java.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-sql.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-properties.min.js"></script>
 
   <script>
     // Global State for Markdown Data cache
