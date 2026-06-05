@@ -7,7 +7,7 @@
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
   <meta name="referrer" content="no-referrer">
-  <title>Learning-official // Java 學習歷程中樞</title>
+  <title>我要學會Java</title>
   
   <!-- FontAwesome Icons -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
@@ -893,7 +893,8 @@
       font-weight: bold;
     }
     #sidebar-like-btn.liked i,
-    #dash-like-card.liked i {
+    #dash-like-card.liked i,
+    #home-like-icon.fa-solid.fa-heart {
       animation: heartBeat 0.8s ease-in-out;
       color: var(--danger-color);
     }
@@ -926,7 +927,7 @@
   <!-- Mobile Top Header -->
   <div class="mobile-header">
     <div class="workspace-header" style="margin: 0; padding: 0;">
-      <span></span> LEARNING-OFFICIAL // JAVA
+      <span></span> 我要學會Java
     </div>
     <button class="menu-btn" id="menuToggleBtn">
       <i class="fa-solid fa-bars"></i>
@@ -936,11 +937,14 @@
   <!-- Left Sidebar (Workspace Tree / Tabs) -->
   <aside id="sidebar">
     <div class="workspace-header">
-      <span></span> LEARNING-OFFICIAL // JAVA_WORKSPACE
+      <span></span> 我要學會Java // WORKSPACE
     </div>
     
     <!-- Tab list -->
-    <button class="tree-node active" id="btn-part1" onclick="ui.switch('part1')">
+    <button class="tree-node active" id="btn-about" onclick="ui.switch('about')">
+      <i class="fa-solid fa-house-user"></i> 個人學習首頁 // Home
+    </button>
+    <button class="tree-node" id="btn-part1" onclick="ui.switch('part1')">
       <i class="fa-solid fa-file-code"></i> Java 學習歷程 Part 1
     </button>
     <button class="tree-node" id="btn-part2" onclick="ui.switch('part2')">
@@ -952,16 +956,13 @@
     <button class="tree-node" id="btn-search" onclick="ui.switch('search')">
       <i class="fa-solid fa-terminal"></i> 全文關鍵字探測
     </button>
-    <button class="tree-node" id="btn-about" onclick="ui.switch('about')">
-      <i class="fa-solid fa-address-card"></i> 實體帳戶主機資訊
-    </button>
     <button class="tree-node like-btn-sidebar" id="sidebar-like-btn" onclick="core.likePage()">
       <i class="fa-regular fa-heart" id="like-icon" style="color: var(--danger-color);"></i> 點讚支持 (<span id="like-count">0</span>)
     </button>
 
     <!-- Sub-menu: Dynamic Header Table of Contents -->
-    <div class="submenu-title" id="tocTitle" style="display: block;">章節目錄 (TOC)</div>
-    <div class="toc-container" id="tocContainer" style="display: block;">
+    <div class="submenu-title" id="tocTitle" style="display: none;">章節目錄 (TOC)</div>
+    <div class="toc-container" id="tocContainer" style="display: none;">
       <div id="tocList">
         <!-- Will be populated dynamically -->
       </div>
@@ -995,7 +996,7 @@
     </div>
 
     <!-- TAB 1: Part 1 Document -->
-    <section id="tab-part1" class="editor-section active">
+    <section id="tab-part1" class="editor-section">
       <h2><i class="fa-solid fa-file-code" style="color: var(--accent-color);"></i> Java 學習歷程（Part-1）</h2>
       <div class="idx-panel">
         <div class="markdown-body" id="part1-content">
@@ -1111,40 +1112,107 @@
       <div id="search-results-wrapper"></div>
     </section>
 
-    <!-- TAB 5: User Information / About -->
-    <section id="tab-about" class="editor-section">
-      <h2><i class="fa-solid fa-address-card" style="color: var(--accent-color);"></i> 實體帳戶主機資訊</h2>
+    <!-- TAB 5: User Information / Home Page -->
+    <section id="tab-about" class="editor-section active">
+      <h2><i class="fa-solid fa-house-user" style="color: var(--accent-color);"></i> 個人學習首頁 // Home</h2>
       
-      <div class="idx-panel">
-        <div class="profile-card">
-          <div class="profile-avatar">
-            <i class="fa-solid fa-terminal"></i>
+      <div class="detail-grid">
+        <!-- Left Side: Profile, Thoughts & Bio -->
+        <div style="display: flex; flex-direction: column; gap: 24px;">
+          <div class="idx-panel" style="margin-bottom: 0;">
+            <div class="profile-card">
+              <div class="profile-avatar">
+                <i class="fa-solid fa-terminal"></i>
+              </div>
+              <div class="profile-info">
+                <h3>小八</h3>
+                <p>Java 軟體工程開發探索者 // 全端技術研修生</p>
+              </div>
+            </div>
+            
+            <h3 style="border-bottom: 1px dashed var(--border-subtle); padding-bottom: 8px; margin-top: 20px;">想說的話與學習理念</h3>
+            <blockquote style="margin-top: 15px;">
+              「我要學會Java！不論後面有多少困難，這一次，一定要堅持到底。最累人的不是學習，是寫筆記，不過也正是如此，我才可以將這些技術概念真正刻在腦海中。加油！」
+            </blockquote>
           </div>
-          <div class="profile-info">
-            <h3>小八</h3>
-            <p>Java 軟體工程開發探索者 // 全端技術研修生</p>
+
+          <div class="idx-panel" style="margin-bottom: 0;">
+            <h3 style="border-bottom: 1px dashed var(--border-subtle); padding-bottom: 8px;">我的學習歷程與經歷</h3>
+            <div style="display: flex; flex-direction: column; gap: 16px; margin-top: 20px;">
+              <div class="terminal-row" style="margin: 0; padding: 15px 20px; flex-direction: column; align-items: flex-start; gap: 8px;">
+                <div style="color: var(--success-color); font-weight: 600;"><i class="fa-solid fa-calendar-check" style="margin-right: 8px;"></i> 第一階段：Java SE 基礎打底</div>
+                <div style="color: var(--text-main); font-size: 13.5px; line-height: 1.6;">
+                  從編譯指令開始，精通基本語法、物件導向核心三大特性（繼承、封裝、多型）、集合框架（Collection Framework）、例外處理（Exception Handling）、多執行緒（Multi-Threading）與網路 IO 等底層知識。
+                </div>
+              </div>
+              <div class="terminal-row" style="margin: 0; padding: 15px 20px; flex-direction: column; align-items: flex-start; gap: 8px;">
+                <div style="color: var(--success-color); font-weight: 600;"><i class="fa-solid fa-laptop-code" style="margin-right: 8px;"></i> 第二階段：Spring Boot 專案實戰開發</div>
+                <div style="color: var(--text-main); font-size: 13.5px; line-height: 1.6;">
+                  主導實作「使用者資料管控小專案 Part-1 & Part-2」，掌握 Spring MVC 架構、Spring Data JPA 與資料庫對接。整合 JWT Token 認證機制、BCrypt 密碼雜湊安全防護，並使用 Spring Mail 發送隨機驗證信件。
+                </div>
+              </div>
+              <div class="terminal-row" style="margin: 0; padding: 15px 20px; flex-direction: column; align-items: flex-start; gap: 8px;">
+                <div style="color: var(--success-color); font-weight: 600;"><i class="fa-solid fa-cubes-stacked" style="margin-right: 8px;"></i> 未來展望：系統架構優化與高併發</div>
+                <div style="color: var(--text-main); font-size: 13.5px; line-height: 1.6;">
+                  計畫探索「高併發 Stock 超賣問題」、「Spring Async 執行緒池優化」、以及「Hibernate Join Fetch 解決 N+1 查詢問題」，朝全端架構與分散式系統開發者邁進。
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
-        
-        <h3 style="border-bottom: 1px dashed var(--border-subtle); padding-bottom: 8px; margin-top: 30px;">核心開發技術棧 (Skills Stack)</h3>
-        <div class="tech-stack">
-          <div class="tech-tag"><i class="fa-brands fa-java" style="color: #F89820; margin-right: 8px;"></i>Java SE / EE</div>
-          <div class="tech-tag"><i class="fa-solid fa-leaf" style="color: #6DB33F; margin-right: 8px;"></i>Spring Boot</div>
-          <div class="tech-tag"><i class="fa-solid fa-database" style="color: #00758F; margin-right: 8px;"></i>Hibernate / JPA</div>
-          <div class="tech-tag"><i class="fa-solid fa-cubes" style="color: #58A6FF; margin-right: 8px;"></i>Maven / Gradle</div>
-          <div class="tech-tag"><i class="fa-brands fa-git-alt" style="color: #F05032; margin-right: 8px;"></i>Git / GitHub</div>
-          <div class="tech-tag"><i class="fa-brands fa-docker" style="color: #2496ED; margin-right: 8px;"></i>Tomcat / Docker</div>
         </div>
 
-        <h3 style="border-bottom: 1px dashed var(--border-subtle); padding-bottom: 8px; margin-top: 40px;">通訊介面與連線渠道</h3>
-        <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 15px;">
-          <div class="terminal-row" style="margin: 0; padding: 15px 20px;">
-            <span><i class="fa-solid fa-envelope" style="color: var(--accent-color); margin-right: 12px;"></i>聯絡信箱</span>
-            <span style="color: #fff;">xfrat.ming@gmail.com</span>
+        <!-- Right Side: Metrics Snapshot, Skills, Contacts -->
+        <div style="display: flex; flex-direction: column; gap: 24px;">
+          <!-- Progress Snapshot -->
+          <div class="idx-panel" style="margin-bottom: 0;">
+            <h3 style="border-bottom: 1px dashed var(--border-subtle); padding-bottom: 8px;">Java 學習進度快照</h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 15px;">
+              <div class="terminal-row" style="margin: 0; padding: 12px 16px; flex-direction: column; align-items: flex-start;">
+                <span style="color: var(--text-muted); font-size: 11px; text-transform: uppercase;">總學習天數</span>
+                <span style="font-size: 20px; font-weight: 700; color: var(--accent-color); margin-top: 4px;" id="home-total-days">0 天</span>
+              </div>
+              <div class="terminal-row" style="margin: 0; padding: 12px 16px; flex-direction: column; align-items: flex-start;">
+                <span style="color: var(--text-muted); font-size: 11px; text-transform: uppercase;">任務完成度</span>
+                <span style="font-size: 20px; font-weight: 700; color: var(--success-color); margin-top: 4px;" id="home-task-percent">0%</span>
+              </div>
+              <div class="terminal-row" style="margin: 0; padding: 12px 16px; flex-direction: column; align-items: flex-start; cursor: pointer;" onclick="core.likePage()">
+                <span style="color: var(--text-muted); font-size: 11px; text-transform: uppercase;">累積點讚數</span>
+                <span style="font-size: 20px; font-weight: 700; color: var(--danger-color); margin-top: 4px; display: flex; align-items: center; gap: 6px;">
+                  <i class="fa-regular fa-heart" id="home-like-icon"></i>
+                  <span id="home-like-count">0</span>
+                </span>
+              </div>
+              <div class="terminal-row" style="margin: 0; padding: 12px 16px; flex-direction: column; align-items: flex-start;">
+                <span style="color: var(--text-muted); font-size: 11px; text-transform: uppercase;">累積訪客數</span>
+                <div style="margin-top: 6px; height: 20px; display: flex; align-items: center;">
+                  <img src="https://api.visitorbadge.io/api/VisitorHit?user=learning-official&repo=learning-official.github.io&countColor=%2358a6ff" alt="Visitor Count" style="height: 20px; border: none; background: transparent; padding: 0; margin: 0; box-shadow: none;" />
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="terminal-row" style="margin: 0; padding: 15px 20px;">
-            <span><i class="fa-brands fa-github" style="color: var(--accent-color); margin-right: 12px;"></i>GitHub 帳戶主頁</span>
-            <a href="https://github.com/learning-official" target="_blank" style="color: var(--accent-color); text-decoration: none;">GitHub @learning-official</a>
+
+          <div class="idx-panel" style="margin-bottom: 0;">
+            <h3 style="border-bottom: 1px dashed var(--border-subtle); padding-bottom: 8px;">核心開發技術棧 (Skills)</h3>
+            <div class="tech-stack" style="margin-top: 15px;">
+              <div class="tech-tag"><i class="fa-brands fa-java" style="color: #F89820; margin-right: 8px;"></i>Java SE / EE</div>
+              <div class="tech-tag"><i class="fa-solid fa-leaf" style="color: #6DB33F; margin-right: 8px;"></i>Spring Boot</div>
+              <div class="tech-tag"><i class="fa-solid fa-database" style="color: #00758F; margin-right: 8px;"></i>Hibernate / JPA</div>
+              <div class="tech-tag"><i class="fa-solid fa-cubes" style="color: #58A6FF; margin-right: 8px;"></i>Maven / Gradle</div>
+              <div class="tech-tag"><i class="fa-brands fa-git-alt" style="color: #F05032; margin-right: 8px;"></i>Git / GitHub</div>
+              <div class="tech-tag"><i class="fa-brands fa-docker" style="color: #2496ED; margin-right: 8px;"></i>Tomcat / Docker</div>
+            </div>
+
+            <h3 style="border-bottom: 1px dashed var(--border-subtle); padding-bottom: 8px; margin-top: 30px;">通訊介面與連線渠道</h3>
+            <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
+              <div class="terminal-row" style="margin: 0; padding: 12px 16px; font-size: 13px;">
+                <span><i class="fa-solid fa-envelope" style="color: var(--accent-color); margin-right: 12px;"></i>聯絡信箱</span>
+                <span style="color: #fff;">xfrat.ming@gmail.com</span>
+              </div>
+              <div class="terminal-row" style="margin: 0; padding: 12px 16px; font-size: 13px;">
+                <span><i class="fa-brands fa-github" style="color: var(--accent-color); margin-right: 12px;"></i>GitHub 主頁</span>
+                <a href="https://github.com/learning-official" target="_blank" style="color: var(--accent-color); text-decoration: none;">@learning-official</a>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -1292,10 +1360,12 @@
       async initLikes() {
         const sidebarLikeCount = document.getElementById('like-count');
         const dashLikeCount = document.getElementById('dash-like-count');
+        const homeLikeCount = document.getElementById('home-like-count');
         const sidebarLikeBtn = document.getElementById('sidebar-like-btn');
         const sidebarLikeIcon = document.getElementById('like-icon');
         const dashLikeCard = document.getElementById('dash-like-card');
         const dashLikeIcon = document.getElementById('dash-like-icon');
+        const homeLikeIcon = document.getElementById('home-like-icon');
         const dashLikeDesc = document.getElementById('dash-like-desc');
 
         // Check localStorage for liked status
@@ -1309,6 +1379,9 @@
           if (dashLikeIcon) {
             dashLikeIcon.className = 'fa-solid fa-heart';
           }
+          if (homeLikeIcon) {
+            homeLikeIcon.className = 'fa-solid fa-heart';
+          }
           if (dashLikeDesc) {
             dashLikeDesc.innerText = '您已點讚，感謝支持！';
           }
@@ -1321,6 +1394,7 @@
             const count = data.count || 0;
             if (sidebarLikeCount) sidebarLikeCount.innerText = count;
             if (dashLikeCount) dashLikeCount.innerText = count;
+            if (homeLikeCount) homeLikeCount.innerText = count;
           }
         } catch (err) {
           console.warn('[Learning-official] Failed to fetch likes:', err);
@@ -1341,14 +1415,17 @@
         const sidebarLikeIcon = document.getElementById('like-icon');
         const dashLikeCard = document.getElementById('dash-like-card');
         const dashLikeIcon = document.getElementById('dash-like-icon');
+        const homeLikeIcon = document.getElementById('home-like-icon');
         const sidebarLikeCount = document.getElementById('like-count');
         const dashLikeCount = document.getElementById('dash-like-count');
+        const homeLikeCount = document.getElementById('home-like-count');
         const dashLikeDesc = document.getElementById('dash-like-desc');
 
         if (sidebarLikeBtn) sidebarLikeBtn.classList.add('liked');
         if (dashLikeCard) dashLikeCard.classList.add('liked');
         if (sidebarLikeIcon) sidebarLikeIcon.className = 'fa-solid fa-heart';
         if (dashLikeIcon) dashLikeIcon.className = 'fa-solid fa-heart';
+        if (homeLikeIcon) homeLikeIcon.className = 'fa-solid fa-heart';
         if (dashLikeDesc) dashLikeDesc.innerText = '您已點讚，感謝支持！';
 
         // Animate icons
@@ -1360,11 +1437,16 @@
           dashLikeIcon.style.animation = 'none';
           setTimeout(() => { dashLikeIcon.style.animation = 'heartBeat 0.8s ease-in-out'; }, 10);
         }
+        if (homeLikeIcon) {
+          homeLikeIcon.style.animation = 'none';
+          setTimeout(() => { homeLikeIcon.style.animation = 'heartBeat 0.8s ease-in-out'; }, 10);
+        }
 
         let currentCount = parseInt(sidebarLikeCount ? sidebarLikeCount.innerText : '0', 10);
         currentCount++;
         if (sidebarLikeCount) sidebarLikeCount.innerText = currentCount;
         if (dashLikeCount) dashLikeCount.innerText = currentCount;
+        if (homeLikeCount) homeLikeCount.innerText = currentCount;
 
         showToast('感謝您的點讚支持！🎉', 'success');
 
@@ -1375,6 +1457,7 @@
             const serverCount = data.count || currentCount;
             if (sidebarLikeCount) sidebarLikeCount.innerText = serverCount;
             if (dashLikeCount) dashLikeCount.innerText = serverCount;
+            if (homeLikeCount) homeLikeCount.innerText = serverCount;
           }
         } catch (err) {
           console.error('[Learning-official] Failed to increment likes:', err);
@@ -1436,6 +1519,7 @@
           Prism.highlightAllUnder(targetDiv);
           const activeBtn = document.querySelector('.tree-node.active');
           if (activeBtn && activeBtn.id === `btn-${partKey}`) generateTOC(partKey);
+          core.updateDashboardMetrics();
           showToast(`${filename} 載入成功`, 'success');
         };
 
@@ -1543,15 +1627,23 @@
 
         // Set UI values
         document.getElementById('dash-total-days').innerText = totalDays;
+        const homeTotalDays = document.getElementById('home-total-days');
+        if (homeTotalDays) homeTotalDays.innerText = `${totalDays} 天`;
         
         if (totalTasks > 0) {
           const percent = Math.round((doneTasks / totalTasks) * 100);
           document.getElementById('dash-task-percent').innerText = `${percent}%`;
           document.getElementById('dash-task-percent').className = `metric-value ${percent === 100 ? 'success' : 'info'}`;
           document.getElementById('dash-task-ratio').innerText = `${doneTasks} / ${totalTasks} 項目已完成`;
+          
+          const homeTaskPercent = document.getElementById('home-task-percent');
+          if (homeTaskPercent) homeTaskPercent.innerText = `${percent}%`;
         } else {
           document.getElementById('dash-task-percent').innerText = '0%';
           document.getElementById('dash-task-ratio').innerText = '0 / 0 項目已完成';
+          
+          const homeTaskPercent = document.getElementById('home-task-percent');
+          if (homeTaskPercent) homeTaskPercent.innerText = '0%';
         }
 
         if (checklistsHtml === '') {
