@@ -5560,11 +5560,13 @@ tags: [Java]
 #### 學習重點 : Spring Boot - RESTful API 深入研究
 - 名詞解釋 
     - 由於很多名詞一直出現，但又搞不清楚，所以我稍微統整了一下！
+    ---
     #### Resources（資源）⭐⭐⭐⭐
     - 它就是被Http method操作的東西，可以是物件、狀態、紀錄等，只要跟前後端操作有關的，都可以說它是一種資源，其只會有一個**唯一Url指向**，操作可以不同（這就剛好符合REST風格的寫法）。
     #### Endpoint ⭐⭐⭐⭐⭐⭐
     - 在API當中，是一種**特定**的URL，其中可能有特定的參數、動作等...，它是處理前端與後端的接頭。
     - 它與一般URL不一樣的點在於 -> 一般URL可能長這樣 `/api/points`，但enpoint是 `[GET] /api/points`、`[POST] /api/points`，**這些都是不同的endpoint，但卻是同一個URL**。
+
     #### Richardson Maturity Model ⭐⭐⭐⭐⭐⭐⭐⭐
     - 該模型用來評估一個API是否真的具有REST風格，共分為四級。
     這邊引用 [Shiny的軟件開發的瑣碎閒聊(8)](https://www.threads.com/@shiny2024hk/post/DBJcneBzDHt?xmt=AQF0iJ7Ox1Pt_h19Kb1YUQe4HTeUjCyxjeivOSmaxgy1UQ) 所展示的四個REST風格等級。
