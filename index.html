@@ -1027,12 +1027,32 @@
       part2: { text: '', ready: false, headings: [] }
     };
 
-    // Custom renderer for Marked.js to handle checkboxes
+    // Custom renderer for Marked.js to handle checkboxes (compatible with all versions)
     const renderer = new marked.Renderer();
-    renderer.listitem = function(text, task, checked) {
-      if (task) {
+    renderer.listitem = function(item, task, checked) {
+      let text = '';
+      let isTask = false;
+      let isChecked = false;
+
+      if (item && typeof item === 'object') {
+        // Newer Marked.js versions (v5+) pass a single token object
+        isTask = item.task || false;
+        isChecked = item.checked || false;
+        if (this.parser && item.tokens) {
+          text = this.parser.parse(item.tokens).trim();
+        } else {
+          text = item.text || '';
+        }
+      } else {
+        // Older Marked.js versions pass separate parameters
+        text = item || '';
+        isTask = task || false;
+        isChecked = checked || false;
+      }
+
+      if (isTask) {
         return `<li class="task-list-item">
-          <input type="checkbox" ${checked ? 'checked' : ''} disabled>
+          <input type="checkbox" ${isChecked ? 'checked' : ''} disabled>
           ${text.replace(/^\[[ xX]\]\s*/, '')}
         </li>`;
       }
