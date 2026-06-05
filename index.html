@@ -6,7 +6,7 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <title>Nexus // Java 學習歷程中樞</title>
+  <title>Learning-official // Java 學習歷程中樞</title>
   
   <!-- FontAwesome Icons -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
@@ -22,7 +22,7 @@
 
   <style>
     :root {
-      /* Nexus 核心深色調組態 */
+      /* Learning-official 核心深色調組態 */
       --bg-editor: #0E1117;
       --bg-sidebar: rgba(22, 26, 34, 0.75);
       --bg-panel: rgba(33, 38, 45, 0.4);
@@ -270,7 +270,7 @@
       position: relative;
     }
 
-    /* Panels (Nexus Style Cards) */
+    /* Panels (Learning-official Style Cards) */
     .idx-panel {
       background: var(--bg-panel);
       backdrop-filter: blur(16px);
@@ -403,6 +403,8 @@
       background: rgba(88, 166, 255, 0.12);
       padding: 2px 6px;
       border-radius: 4px;
+      display: inline !important;
+      white-space: normal !important;
     }
 
     .markdown-body ul, 
@@ -415,27 +417,28 @@
       margin-bottom: 8px;
     }
 
-    /* Styled Checkboxes (Nexus Style) */
+    /* Styled Checkboxes (Learning-official Style) */
     .markdown-body li.task-list-item {
       list-style-type: none;
-      position: relative;
-      padding-left: 28px;
+      padding-left: 0 !important;
     }
 
     .markdown-body li.task-list-item input[type="checkbox"] {
-      position: absolute;
-      left: 0;
-      top: 5px;
-      width: 18px;
-      height: 18px;
+      display: inline-block !important;
+      vertical-align: middle !important;
+      margin-right: 8px !important;
+      margin-top: 0 !important;
+      margin-bottom: 3px !important;
+      width: 16px;
+      height: 16px;
       appearance: none;
       -webkit-appearance: none;
       background-color: var(--bg-input);
       border: 1px solid var(--border-subtle);
       border-radius: 4px;
       cursor: pointer;
-      display: inline-block;
       outline: none;
+      position: relative;
       transition: all 0.2s;
     }
 
@@ -451,8 +454,8 @@
       color: var(--success-color);
       font-size: 11px;
       position: absolute;
-      top: 2px;
-      left: 3px;
+      top: 1px;
+      left: 2px;
     }
 
     /* Code Block styling - Terminal look */
@@ -474,6 +477,7 @@
       padding: 2px 6px;
       border-radius: 4px;
       color: var(--danger-color);
+      display: inline !important;
     }
 
     .markdown-body pre code {
@@ -481,6 +485,7 @@
       padding: 0 !important;
       border-radius: 0 !important;
       color: inherit !important; /* Allow Prism to paint tokens */
+      display: block !important; /* Code blocks inside pre must remain block layout */
     }
 
     /* Blockquotes */
@@ -823,7 +828,7 @@
   <!-- Mobile Top Header -->
   <div class="mobile-header">
     <div class="workspace-header" style="margin: 0; padding: 0;">
-      <span></span> NEXUS // JAVA
+      <span></span> LEARNING-OFFICIAL // JAVA
     </div>
     <button class="menu-btn" id="menuToggleBtn">
       <i class="fa-solid fa-bars"></i>
@@ -833,7 +838,7 @@
   <!-- Left Sidebar (Workspace Tree / Tabs) -->
   <aside id="sidebar">
     <div class="workspace-header">
-      <span></span> NEXUS // JAVA_WORKSPACE
+      <span></span> LEARNING-OFFICIAL // JAVA_WORKSPACE
     </div>
     
     <!-- Tab list -->
@@ -955,7 +960,7 @@
             <span class="status-tag">ACTIVE</span>
           </div>
           <div class="terminal-row" style="padding: 15px 20px;">
-            <div><span style="color: var(--accent-color);">[IDE Env]</span> Nexus Custom Workstation</div>
+            <div><span style="color: var(--accent-color);">[IDE Env]</span> Learning-official Workstation</div>
             <span class="status-tag">ACTIVE</span>
           </div>
           <div class="terminal-row" style="padding: 15px 20px;">
@@ -1159,7 +1164,7 @@
           ? window.location.href
           : window.location.href.substring(0, window.location.href.lastIndexOf('/') + 1);
         const fullUrl = base + filename;
-        console.log(`[Nexus] Fetching: ${fullUrl}`);
+        console.log(`[Learning-official] Fetching: ${fullUrl}`);
 
         const renderMarkdown = (text) => {
           mdCache[partKey].text = text;
@@ -1170,6 +1175,28 @@
           cleanText = cleanText.replace(/```(\w+)=.*/g, '```$1');
 
           targetDiv.innerHTML = marked.parse(cleanText);
+
+          // Intercept links to external Part-2 / Part-1 and handle them locally
+          const links = targetDiv.querySelectorAll('a');
+          links.forEach(a => {
+            const href = a.getAttribute('href') || '';
+            if (href.includes('Java_learning_2') || href.includes('part2.md') || href.includes('Java_learning-2')) {
+              a.href = '#';
+              a.removeAttribute('target');
+              a.onclick = (e) => {
+                e.preventDefault();
+                ui.switch('part2');
+              };
+            } else if (href.includes('Java_learning_1') || href.includes('part1.md') || href.includes('Java_learning-1')) {
+              a.href = '#';
+              a.removeAttribute('target');
+              a.onclick = (e) => {
+                e.preventDefault();
+                ui.switch('part1');
+              };
+            }
+          });
+
           const headings = targetDiv.querySelectorAll('h2, h3');
           mdCache[partKey].headings = Array.from(headings).map((h, i) => {
             if (!h.id) h.id = `${partKey}-heading-${i}`;
@@ -1201,7 +1228,7 @@
           const text = await res.text();
           renderMarkdown(text);
         } catch (err) {
-          console.warn(`[Nexus] fetch failed (${err.message}), trying XHR fallback...`);
+          console.warn(`[Learning-official] fetch failed (${err.message}), trying XHR fallback...`);
           // XHR fallback for edge-case browser/CORS scenarios
           const xhr = new XMLHttpRequest();
           xhr.open('GET', fullUrl, true);
