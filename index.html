@@ -1309,7 +1309,7 @@
         }
 
         try {
-          const res = await fetch('https://api.counterapi.dev/v1/learning-official/likes');
+          const res = await fetch('https://api.counterapi.dev/v1/learning-official/likes/');
           if (res.ok) {
             const data = await res.json();
             const count = data.count || 0;
