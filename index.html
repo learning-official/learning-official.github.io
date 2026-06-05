@@ -941,6 +941,13 @@
           <div class="metric-value" id="dash-file-size">0 KB</div>
           <div class="metric-desc">本地日誌存檔容量</div>
         </div>
+        <div class="metric-card">
+          <h4>系統累積訪客數</h4>
+          <div class="metric-value" style="display: flex; align-items: center; justify-content: flex-start; height: 38px; margin-bottom: 8px; margin-top: 4px;">
+            <img src="https://api.visitorbadge.io/api/VisitorHit?user=learning-official&repo=learning-official.github.io&countColor=%2358a6ff" alt="Visitor Count" style="height: 28px; border: none; background: transparent; padding: 0; margin: 0; box-shadow: none; border-radius: 0;" />
+          </div>
+          <div class="metric-desc">自部署以來的總瀏覽人次</div>
+        </div>
       </div>
 
       <!-- Detail Panels -->
@@ -1266,9 +1273,18 @@
           const text = mdCache[key].text;
           if (!text) return;
 
-          // Count days (supports emojis like ## 🎉Day100 or spacing like ## Day 100)
-          const dayMatches = text.match(/##.*Day\s*\d+/ig) || [];
-          totalDays += dayMatches.length;
+          // Count days (supports emojis like ## 🎉Day100 or spacing like ## Day 100, ignoring code blocks)
+          let inCodeBlock = false;
+          text.split('\n').forEach(line => {
+            const trimmed = line.trim();
+            if (trimmed.startsWith('```')) {
+              inCodeBlock = !inCodeBlock;
+              return;
+            }
+            if (!inCodeBlock && /^\s*##\s+.*Day\s*\d+/i.test(line)) {
+              totalDays++;
+            }
+          });
 
           // Find task items
           const lines = text.split('\n');
@@ -1349,10 +1365,15 @@
 
             const lines = text.split('\n');
             let currentDay = '未知天數目錄';
+            let inSearchCodeBlock = false;
 
             lines.forEach((line, index) => {
+              const trimmed = line.trim();
+              if (trimmed.startsWith('```')) {
+                inSearchCodeBlock = !inSearchCodeBlock;
+              }
               // Track current day header context
-              if (/^##.*Day\s*\d+/i.test(line.trim())) {
+              if (!inSearchCodeBlock && /^\s*##\s+.*Day\s*\d+/i.test(line)) {
                 currentDay = line.replace(/^##\s*/, '').trim();
               }
 
