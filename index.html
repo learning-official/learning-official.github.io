@@ -1218,6 +1218,11 @@
       return `<li>${text}</li>`;
     };
 
+    renderer.image = function(href, title, text) {
+      const titleAttr = title ? `title="${title}"` : '';
+      return `<img src="${href}" alt="${text}" ${titleAttr} referrerpolicy="no-referrer" />`;
+    };
+
     marked.setOptions({
       renderer: renderer,
       gfm: true,
