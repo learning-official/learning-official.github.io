@@ -1858,7 +1858,7 @@ CREATE TABLE categories(
     - 這邊很神奇的是可以寫String PermissionId作為參數，而不是Permission物件（這樣還要自行建物件），這是因為JPA在method語法發現是Permission「的」Id，因此自動找到 Permission實體 `@Id` 註解的String id，這樣超級省空間的啦~
 - 實際User刪除功能應用 : ⭐⭐⭐⭐⭐
     - 流程 : 透過account找操作者（operator），透過DTO設計的刪除Request找目標刪除者（target）➝ 判斷操作是否為本人or具刪除權限之人 ➝ 若不是則拋出例外，若是則執行操作並連帶購物車一同刪除 ➝ 回傳Response。
-    ![image](https://hackmd.io/_uploads/SkzIlMz1zl.png)
+    ![螢幕擷取畫面 2026-05-13 225249](https://hackmd.io/_uploads/Bk9BFdebzx.png)
     - 中間註解的部分是原本問AI時建議列出的權限List，一個一個match看看是否有符合刪除權限的ID，但總覺得要把整張表翻出來，還不如精準打擊。
     
 ## Day134
@@ -2025,23 +2025,23 @@ CREATE TABLE categories(
 #### 學習重點 : Webhook實作、綠界API串接
 - Webhook API實作 ⭐⭐⭐⭐
     - 為了對應外部系統，我們需要設計一些endpoints來給外部Webhook呼叫，因此我獨立出了一個WebhookController。
-    ![image](https://hackmd.io/_uploads/BytbRsWefx.png)
+    ![螢幕擷取畫面 2026-05-25 190946](https://hackmd.io/_uploads/ByLtrdx-fx.png)
     - 由於串接的是外部系統，因此不能使用Response這種自製的物件作回傳，因此我回歸到使用ResponseEntity這種正規的Http status code回傳。
     - 而我在OrderService層當中寫了一個處理付款更新狀態的method : 
-    ![image](https://hackmd.io/_uploads/BJN3Jh-gMg.png)
+    ![螢幕擷取畫面 2026-05-25 191651](https://hackmd.io/_uploads/rynTSdlZzx.png)
 - 綠界串接 ⭐⭐⭐⭐⭐⭐
     - 由於綠界的付款API測試無法直接連到localhost，因此需要先使用 **ngrok**，它可以生成一個臨時網址連到本地端，以供外部系統連結我設計的API。
     - 以下是ngrok在終端機執行的圖 : 
-    ![image](https://hackmd.io/_uploads/r1Ob-3beMx.png)
+    ![螢幕擷取畫面 2026-05-25 192030](https://hackmd.io/_uploads/BkbSDueZMe.png)
     - 下面是綠界串接的流程 : 填入訂單編號（MerchantTradeNo）、串接API網址（ReturnURL）
-    ![image](https://hackmd.io/_uploads/BJYCZ3Zezx.png)
-    ![image](https://hackmd.io/_uploads/Skc0ZhZefe.png)
+    ![螢幕擷取畫面 2026-05-25 192545](https://hackmd.io/_uploads/rJ9rvdlWGx.png)
+    ![螢幕擷取畫面 2026-05-25 192600](https://hackmd.io/_uploads/By48P_gbfx.png)
     - 接著我在自己一個與綠界對接DTO檔，getMerhantTradeNo放入orderDao去尋找即可啦！
 - 實測結果
     - 以下是付款成功後，**ngrok、綠界、本地端DB** 的結果圖
-    ![image](https://hackmd.io/_uploads/Bym1Q3bgGg.png)
-    ![image](https://hackmd.io/_uploads/Hy_kQnbgze.png)
-    ![image](https://hackmd.io/_uploads/HJAymn-gze.png)
+    ![螢幕擷取畫面 2026-05-25 193003](https://hackmd.io/_uploads/rJR8wdxbGe.png)
+    ![螢幕擷取畫面 2026-05-25 193018](https://hackmd.io/_uploads/SyEvD_eWzg.png)
+    ![螢幕擷取畫面 2026-05-25 192844](https://hackmd.io/_uploads/rkdvD_lZMl.png)
 
 ## Day146
 #### 學習重點 : @Transactional基礎
@@ -2052,12 +2052,12 @@ CREATE TABLE categories(
     - 使用Transactional有兩個準則 : 只能掛在public方法、只掛可能需要rollback的method，且掛在依賴的最外層即可。
     - 為甚麼只要掛在最外層呢？因為Transactional是根據Exception來做rollback的，只要依賴的某一層出現規定例外則會自動rollback。
     - 例子 : 像是我在刪除使用者時，會先刪除使用者的購物車相關資料，再刪除使用者。若在其中兩行執行的過程出錯了，我不應該讓資料出現殘缺，因此需掛上Tansactional。
-    ![image](https://hackmd.io/_uploads/BkBLgFGeMe.png)
-    ![image](https://hackmd.io/_uploads/r1sOxYMgGe.png)
+    ![螢幕擷取畫面 2026-05-26 100405](https://hackmd.io/_uploads/r13aPOg-fg.png)
+    ![螢幕擷取畫面 2026-05-26 100719](https://hackmd.io/_uploads/H1bAwOxWfg.png)
 - 實測 ⭐⭐⭐⭐⭐⭐
     - 若我沒有掛上@Transactional（故意註解掉），又故意在兩行之間報錯就會發生以下事情 :
-    ![image](https://hackmd.io/_uploads/HycIMKGgzl.png)
-    ![image](https://hackmd.io/_uploads/ryDUzKGlMl.png)
+    ![螢幕擷取畫面 2026-05-26 101454](https://hackmd.io/_uploads/ryKADdl-ze.png)
+    ![螢幕擷取畫面 2026-05-26 101436](https://hackmd.io/_uploads/B1A0vdl-ze.png)
     - 結果 : cart的user資料消失了，但使用者沒消失，這就是不一致性。
     - 若我掛上Transactional，則就會自動rollback。
 
@@ -2193,7 +2193,7 @@ CREATE TABLE categories(
     - 以簡單理解AOP的概念來看👉創造切面➝建立Pointcut➝執行邏輯
 - 實際架構 ⭐⭐⭐⭐⭐⭐
     - 建立Aspect class，建立Pointcut，確認切入點 : 
-    ![image](https://hackmd.io/_uploads/HJR5R1ogGg.png)
+    ![螢幕擷取畫面 2026-06-01 193543](https://hackmd.io/_uploads/SJr4udlbMx.png)
     - 我以User的JWT來練習，當偵測到非(Login、Registration、forgetPassword)的方法被execute時，會先到jwtAuth的切面來做驗證，不過這個偵測邏輯應該會在幾天內被我改掉ww，因為似乎可以直接設計一個註解來擋掉不需驗證的User功能。
     #### 甚麼是RequestContextHolder？
     - 簡單來說，當API打進來後，Spring會建立一個執行緒ThreadLocal記錄下請求的資訊，含有HttpServletRequest的資訊。
@@ -2206,21 +2206,21 @@ CREATE TABLE categories(
 - UnAuth註解新增 ⭐⭐⭐⭐⭐⭐
     - 由於昨天的execution需要先排除「指定」的method，像是login、registration等。
     - 而今天我建立了一個註解(可以說是標記)，讓這個註解作用於需被排除的方法上。
-    ![image](https://hackmd.io/_uploads/HkQ-ayhxMx.png)
-    ![image](https://hackmd.io/_uploads/BkCQpynezl.png)
+    ![螢幕擷取畫面 2026-06-02 134107](https://hackmd.io/_uploads/SkrKd_xZfx.png)
+    ![螢幕擷取畫面 2026-06-02 134149](https://hackmd.io/_uploads/rk2YuugZfe.png)
     - 透過標記method，讓我們可以直接在Before的偵測內容中，排除被 `@UnAuth` 標記的method。
-    ![image](https://hackmd.io/_uploads/HJR_ak3lMe.png)
+    ![螢幕擷取畫面 2026-06-02 134310](https://hackmd.io/_uploads/SkBcuueZfx.png)
 - Log切面設計 ⭐⭐⭐⭐⭐⭐
     - 在日誌紀錄中，通常會記錄一個method的開始事件與結束事件，因此會用Around來做，但由於around會經歷一個method的開始與結束，因此會需要透過ProceedingJoinPoint來「控制方法的動作」。
     - Around使用的ProceedJoinPoint有點像是上帝視角？除了取得參數、名稱之外，還能夠使用 `.proceed()` 來啟動method。
-    ![image](https://hackmd.io/_uploads/S1QXle3lfg.png)
+    ![螢幕擷取畫面 2026-06-02 135425](https://hackmd.io/_uploads/Hylidul-Me.png)
     - 由於呼叫方是切面class，接收最後的Response也會丟給proceed方法，因此需要用Object接住後，再做回傳。
 - 順序問題 ⭐⭐⭐
     - 假設某個方法會被攔截做JWT驗證，又需要Log做紀錄，那誰會先攔截到呢?是Before還是Around？
     - 這時候不確定攔截的順序就會造成很多問題，因此會用 `@Order(級別)` 來確立順序。
     - 簡單來說，加上Order後，LogAspect跟AuthAspect就會按照順序來進行攔截。
-    ![image](https://hackmd.io/_uploads/SkhqZehefl.png)
-    ![image](https://hackmd.io/_uploads/HyRK-lngMl.png)
+    ![螢幕擷取畫面 2026-06-02 140044](https://hackmd.io/_uploads/rkl3_OxZMg.png)
+    ![螢幕擷取畫面 2026-06-02 140030](https://hackmd.io/_uploads/Bkm2dOlbzx.png)
     - 這邊將驗證優先，再來才做log，可以避免掉一些無效訪問導致Log資料量過大的問題。
  
 ## Day154
@@ -2230,7 +2230,7 @@ CREATE TABLE categories(
     - 另外，由於Service中部分程式的Permission偵測沒有加上，我今天也順便把權限驗證的部分完成了！
 - PermissionCode ⭐⭐⭐
     - 由於Permission的Code如果直接寫在Service層做偵測，可能有Hard coding的問題，因此我獨立了一個enum出來專門處理PermissionCode。
-    ![image](https://hackmd.io/_uploads/ByO7CsaeGx.png)
+    ![螢幕擷取畫面 2026-06-03 213728](https://hackmd.io/_uploads/SJSgFugWfg.png)
 
 ## Day155
 #### 學習重點 : 權限切面建立與註解應用、專案Part-2收尾
