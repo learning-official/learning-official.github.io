@@ -789,6 +789,19 @@
     .toast-error i { color: var(--danger-color); }
     .toast-info i { color: var(--accent-color); }
 
+    /* Responsive layouts & elements */
+    .detail-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 28px;
+    }
+
+    .search-form-group {
+      display: flex;
+      gap: 16px;
+      align-items: flex-end;
+    }
+
     /* Responsive adjustments */
     @media (max-width: 992px) {
       body {
@@ -810,12 +823,52 @@
 
       main {
         margin-top: 60px;
-        padding: 24px;
+        padding: 16px;
+      }
+
+      .idx-panel {
+        padding: 20px;
+        margin-bottom: 16px;
+      }
+
+      h2 {
+        font-size: 18px;
+        margin-bottom: 16px;
       }
 
       .mobile-header {
         display: flex;
       }
+
+      .detail-grid {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 16px;
+      }
+    }
+
+    @media (max-width: 576px) {
+      .profile-card {
+        flex-direction: column;
+        text-align: center;
+        gap: 16px;
+      }
+      .search-form-group {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+      }
+      .search-form-group .run-btn {
+        height: 44px;
+        width: 100%;
+      }
+    }
+
+    /* Make markdown tables responsive */
+    .markdown-body table {
+      display: block;
+      width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
     }
   </style>
 </head>
@@ -951,7 +1004,7 @@
       </div>
 
       <!-- Detail Panels -->
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 28px;">
+      <div class="detail-grid">
         <div class="idx-panel" style="margin-bottom: 0;">
           <h3><i class="fa-solid fa-list-check" style="color: var(--success-color); margin-right: 8px;"></i> 預計學習細項監控</h3>
           <div id="dash-checklists-wrapper" style="max-height: 350px; overflow-y: auto; font-family: inherit;">
@@ -985,7 +1038,7 @@
     <section id="tab-search" class="editor-section">
       <h2><i class="fa-solid fa-terminal" style="color: var(--accent-color);"></i> 全文關鍵字探測</h2>
       <div class="idx-panel" style="padding: 24px;">
-        <div style="display: flex; gap: 16px; align-items: flex-end;">
+        <div class="search-form-group">
           <div class="code-property" style="flex: 1; margin: 0;">
             <label>請輸入您要搜尋的 Java 語法、概念或 Day (例如：Collection, static, 多型)</label>
             <input type="text" id="search-input" placeholder="輸入搜尋字句..." onkeyup="if(event.key === 'Enter') core.executeSearch()">
@@ -1152,9 +1205,9 @@
         }
 
         // Close mobile sidebar if open
-        const sidebar = document.getElementById('sidebar');
-        sidebar.classList.remove('open');
-        document.getElementById('menuToggleBtn').querySelector('i').className = 'fa-solid fa-bars';
+        if (typeof toggleSidebar === 'function') {
+          toggleSidebar(false);
+        }
       }
     };
 
@@ -1466,19 +1519,43 @@
       };
     }
 
-    // Mobile Sidebar UI Toggle
+    // Mobile Sidebar UI Toggle with backdrop overlay
     const menuToggleBtn = document.getElementById('menuToggleBtn');
     const sidebar = document.getElementById('sidebar');
     
-    menuToggleBtn.addEventListener('click', () => {
-      sidebar.classList.toggle('open');
+    // Create overlay dynamically if it doesn't exist
+    let overlay = document.getElementById('sidebar-overlay');
+    if (!overlay) {
+      overlay = document.createElement('div');
+      overlay.id = 'sidebar-overlay';
+      overlay.style.cssText = 'display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 9; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); transition: opacity 0.3s ease; opacity: 0;';
+      document.body.appendChild(overlay);
+    }
+
+    function toggleSidebar(open) {
+      const shouldOpen = open !== undefined ? open : !sidebar.classList.contains('open');
       const icon = menuToggleBtn.querySelector('i');
-      if (sidebar.classList.contains('open')) {
+      
+      if (shouldOpen) {
+        sidebar.classList.add('open');
         icon.className = 'fa-solid fa-xmark';
+        overlay.style.display = 'block';
+        setTimeout(() => { overlay.style.opacity = '1'; }, 10);
       } else {
+        sidebar.classList.remove('open');
         icon.className = 'fa-solid fa-bars';
+        overlay.style.opacity = '0';
+        overlay.addEventListener('transitionend', function handler() {
+          if (!sidebar.classList.contains('open')) {
+            overlay.style.display = 'none';
+          }
+          overlay.removeEventListener('transitionend', handler);
+        });
       }
-    });
+    }
+    
+    menuToggleBtn.addEventListener('click', () => toggleSidebar());
+    overlay.addEventListener('click', () => toggleSidebar(false));
 
     // Particle Background Effect on Canvas
     function initCanvasAnimation() {
