@@ -982,7 +982,7 @@
             <i class="fa-solid fa-terminal"></i>
           </div>
           <div class="profile-info">
-            <h3>Terry</h3>
+            <h3>小八</h3>
             <p>Java 軟體工程開發探索者 // 全端技術研修生</p>
           </div>
         </div>
@@ -1001,11 +1001,11 @@
         <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 15px;">
           <div class="terminal-row" style="margin: 0; padding: 15px 20px;">
             <span><i class="fa-solid fa-envelope" style="color: var(--accent-color); margin-right: 12px;"></i>聯絡信箱</span>
-            <span style="color: #fff;">terry@example.com</span>
+            <span style="color: #fff;">xfrat.ming@gmail.com</span>
           </div>
           <div class="terminal-row" style="margin: 0; padding: 15px 20px;">
             <span><i class="fa-brands fa-github" style="color: var(--accent-color); margin-right: 12px;"></i>GitHub 帳戶主頁</span>
-            <a href="https://github.com" target="_blank" style="color: var(--accent-color); text-decoration: none;">GitHub @Terry</a>
+            <a href="https://github.com/learning-official" target="_blank" style="color: var(--accent-color); text-decoration: none;">GitHub @learning-official</a>
           </div>
         </div>
       </div>
@@ -1109,66 +1109,67 @@
     const core = {
       async loadMarkdown(partKey, filename) {
         const targetDiv = document.getElementById(`${partKey}-content`);
-        
+
         if (window.location.protocol === 'file:') {
           document.getElementById('localWarning').style.display = 'block';
         }
 
-        // Build the full URL for debugging
-        const fullUrl = new URL(filename, window.location.href).href;
+        // Build absolute URL based on current page location
+        const base = window.location.href.endsWith('/')
+          ? window.location.href
+          : window.location.href.substring(0, window.location.href.lastIndexOf('/') + 1);
+        const fullUrl = base + filename;
         console.log(`[Nexus] Fetching: ${fullUrl}`);
 
-        try {
-          const res = await fetch(fullUrl);
-          if (!res.ok) throw new Error(`HTTP ${res.status} — 伺服器回應錯誤\n請求 URL：${fullUrl}`);
-          
-          let text = await res.text();
-          
-          // Cache the content
+        const renderMarkdown = (text) => {
           mdCache[partKey].text = text;
           mdCache[partKey].ready = true;
-          
-          // Clear Front Matter metadata tags if any
           const cleanText = text.replace(/^---[\s\S]*?---/, '');
-          
-          // Render HTML
-          const renderedHtml = marked.parse(cleanText);
-          targetDiv.innerHTML = renderedHtml;
-
-          // Parse headings from the rendered DOM for TOC
+          targetDiv.innerHTML = marked.parse(cleanText);
           const headings = targetDiv.querySelectorAll('h2, h3');
           mdCache[partKey].headings = Array.from(headings).map((h, i) => {
             if (!h.id) h.id = `${partKey}-heading-${i}`;
-            return {
-              id: h.id,
-              text: h.innerText.replace(/^[⭐#\s]+/, ''),
-              tagName: h.tagName
-            };
+            return { id: h.id, text: h.innerText.replace(/^[⭐#\s]+/, ''), tagName: h.tagName };
           });
-
-          // Prism high-lighting
           Prism.highlightAllUnder(targetDiv);
-
-          // Update TOC if it is the currently visible tab
           const activeBtn = document.querySelector('.tree-node.active');
-          if (activeBtn && activeBtn.id === `btn-${partKey}`) {
-            generateTOC(partKey);
-          }
+          if (activeBtn && activeBtn.id === `btn-${partKey}`) generateTOC(partKey);
+          showToast(`${filename} 載入成功`, 'success');
+        };
 
-        } catch (err) {
-          console.error(err);
+        const showError = (statusInfo) => {
           targetDiv.innerHTML = `
             <div style="padding: 24px; background: rgba(255,123,114,0.1); border: 1px solid rgba(255,123,114,0.2); border-radius: 8px;">
               <h4 style="color: var(--danger-color); margin-bottom: 8px;"><i class="fa-solid fa-terminal"></i> 檔案加載終止</h4>
-              <p>載入 <code>${filename}</code> 發生通訊異常。</p>
-              <p style="color: var(--text-muted); font-size: 13px; margin-top: 8px;">Error trace: ${err.message}</p>
-              <p style="margin-top: 12px; font-size: 13px;">🔍 請直接點擊以下連結測試檔案是否可存取：<br>
+              <p>無法讀取 <code>${filename}</code>（${statusInfo}）</p>
+              <p style="margin-top: 12px; font-size: 13px;">🔍 請點擊此連結確認檔案是否存在於伺服器：<br>
                 <a href="${fullUrl}" target="_blank" style="color: var(--accent-color); word-break: break-all;">${fullUrl}</a>
               </p>
-              <p style="color: var(--text-muted); font-size: 12px; margin-top: 8px;">若連結顯示 404，代表該檔案尚未出現在 GitHub Pages 伺服器上。</p>
+              <p style="color: var(--text-muted); font-size: 12px; margin-top: 8px;">若連結顯示 404，請確認 <code>${filename}</code> 已正確上傳至 GitHub Repository 根目錄，並等待 GitHub Pages 重新部署（約 1-3 分鐘）。</p>
             </div>
           `;
-          showToast(`載入 ${filename} 失敗 (${err.message.split('\\n')[0]})`, 'error');
+          showToast(`載入 ${filename} 失敗：${statusInfo}`, 'error');
+        };
+
+        try {
+          const res = await fetch(fullUrl, { cache: 'no-store' });
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
+          const text = await res.text();
+          renderMarkdown(text);
+        } catch (err) {
+          console.warn(`[Nexus] fetch failed (${err.message}), trying XHR fallback...`);
+          // XHR fallback for edge-case browser/CORS scenarios
+          const xhr = new XMLHttpRequest();
+          xhr.open('GET', fullUrl, true);
+          xhr.onload = () => {
+            if (xhr.status >= 200 && xhr.status < 300) {
+              renderMarkdown(xhr.responseText);
+            } else {
+              showError(`HTTP ${xhr.status}`);
+            }
+          };
+          xhr.onerror = () => showError('網路連線異常');
+          xhr.send();
         }
       },
 
