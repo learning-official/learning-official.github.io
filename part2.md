@@ -3435,7 +3435,7 @@ CREATE TABLE categories(
     ```
     - 但這邊要注意的是，過濾流中所連結的Buffer區，其實就是寫入流的Buffer區！
     - 我覺得這張圖畫得很好，偷過來用一下w。
-    ![螢幕擷取畫面 2026-04-07 133952](https://hackmd.io/_uploads/Hk-y3_xWMl.png)
+    ![image](https://hackmd.io/_uploads/Hk1CuGG2bx.png)
     [- Made By Kody Simpson](https://www.youtube.com/watch?v=W5OChVAoYm0&list=PLfu_Bpi_zcDO4CdNYNS2Wten1vLuQfgp7&index=5)
 - 明天我應該會先把BufferedStream完結之後再來研究try-resources的用法！
 
@@ -3454,9 +3454,9 @@ CREATE TABLE categories(
 - 流程圖 : ⭐⭐⭐⭐⭐⭐
     - 我又偷了兩張圖來這邊ww，這個人真的講得很好，推一個！
     - 當我們針對Output的Buffered類別過濾時，會先 **等byte array滿了自動flush** 或者 **被手動flush後**，才會再去硬碟拿資料！
-    ![螢幕擷取畫面 2026-04-08 222343](https://hackmd.io/_uploads/r1j3jOgbzl.png)
+    ![image](https://hackmd.io/_uploads/r1kZSk4nWl.png)
     - 這是Input的部分 : 
-    ![螢幕擷取畫面 2026-04-08 222433](https://hackmd.io/_uploads/ry4TouxbGl.png)
+    ![image](https://hackmd.io/_uploads/BkXBSJ43Ze.png)
     [Made By - Kody Simpson](https://www.youtube.com/watch?v=baHz_RmMt5I&list=PLfu_Bpi_zcDO4CdNYNS2Wten1vLuQfgp7&index=6)
 - 實際程式架構 : ⭐⭐
     - 其實跟昨天的Filter一樣，只是名稱換一下，過濾功能不同而已w
@@ -3636,11 +3636,11 @@ CREATE TABLE categories(
     }
     ```
     - 拋出時，可以於參數加上其他例外，以及訊息，這樣若例外被丟出時，會在Terminal印出這樣的訊息 : 
-    ![螢幕擷取畫面 2026-04-13 224605](https://hackmd.io/_uploads/HyOOjug-Gx.png)
+    ![image](https://hackmd.io/_uploads/SJy6bYc3bl.png)
 - 更貼近的例外繼承 ⭐⭐⭐⭐⭐
     - 若我們繼承Exception，是否代表我們也可以繼承上層Throwable或者繼承下層更細的例外？
     - 可以！但不建議往上層進繼承，盡量 **繼承最貼近自身的例外**，像這邊可以繼承 `IllegalArgumentException` 取代 `Exception`，仔細看這個例外的簡介 : 
-    ![螢幕擷取畫面 2026-04-13 225258](https://hackmd.io/_uploads/BJg5Ys_x-fx.png)
+    ![image](https://hackmd.io/_uploads/SJcI7Fc3bl.png)
     - 很符合我們不希望傳入負的年齡的概念！
 
  ## Day104
@@ -3790,13 +3790,13 @@ CREATE TABLE categories(
 #### 學習重點 : Optional method理解
 - filter ⭐⭐⭐⭐⭐
     - 深入來看filter的定義 : 
-![螢幕擷取畫面 2026-04-20 203047](https://hackmd.io/_uploads/rJ-Mo_e-Ge.png)
+![image](https://hackmd.io/_uploads/SyXY3cX6-l.png)
     - 基本上 --> 🌟會需要使用到filter，就是需要進行驗證or判斷時🌟，且最重要的是要「**跟Optional容器內的T型別有關**」的判斷 --> which means 當我的邏輯跟 `<T>` 無關時，就不太需要寫在Optional聲明式當中。
-    ![螢幕擷取畫面 2026-04-20 203847](https://hackmd.io/_uploads/Byizsug-Gx.png)
+    ![image](https://hackmd.io/_uploads/B1mDR9Q6Zx.png)
     - 像是上面的程式，tpu跟 `Optional<User>` 無關，因此不需filter，而是直接if else，再進入聲明式。
 - map ⭐⭐⭐⭐⭐
     - map的定義長這樣 :  
-    ![螢幕擷取畫面 2026-04-20 204945](https://hackmd.io/_uploads/ry87iOgWfl.png)
+    ![image](https://hackmd.io/_uploads/HkbQZjQa-x.png)
     - 看得很亂，我嘗試釐清，T源自於一開始包裝的 `Optional<T>`，而U呢??
     - U源自於「泛型方法」所定義，這個看似很玄學，但回到 [Day27 : Generics - 2](https://hackmd.io/@learning-official/Java_learning##Day27)中，似乎就很清楚了。
     - 而map定義回傳的是 `Optional<U>`，因此我們在實作mapper時，最終回傳的型態即是U。
@@ -3927,15 +3927,15 @@ CREATE TABLE categories(
 - 商品資料表建立 ⭐⭐⭐
     - 我覺得我該來好好練習SQL語法了，很多都不太知道要怎麼寫，只能求助AI，QAQ。
     - 目前的建立方式如下 : 
-    ![螢幕擷取畫面 2026-04-27 212846](https://hackmd.io/_uploads/SyEaqdeWfe.png)
+    ![image](https://hackmd.io/_uploads/B199EyT6-l.png)
 - 商品三層架構 ⭐⭐⭐⭐
     #### GenerativeValue
     - 一樣透過Controller-Service-Dao來做分層，其中Dao連結Merchandise的Model，而商品的Model有個特別之處在於會需要利用GenerativeValue給定的方式來生成ID : 
-    ![螢幕擷取畫面 2026-04-27 214002](https://hackmd.io/_uploads/HkxRqdgbMx.png)
+    ![image](https://hackmd.io/_uploads/HJyHPkTpZx.png)
     - 這邊利用 `IDENTITY` 意旨交給MySQL來自動遞增ID（`AUTO_INCREMENT`），當我們使用 `.save` 存入商品物件（不含ID）時，函式會回傳商品物件（含ID），此時可以接收該物件進行後續動作。
     #### 上架與查詢
     - 這邊參考 PCHome 24H 的網址來模仿，目前將CR做完，明天來試試看將User連結到商品！
-    ![螢幕擷取畫面 2026-04-27 214312](https://hackmd.io/_uploads/rJ2Cq_ebGx.png)
+    ![image](https://hackmd.io/_uploads/rJHtOkTTWe.png)
 ## Day118
 #### 學習重點 : Spring Data JPA - @ManyToOne、Cart建立
 - @ManyToOne ⭐⭐⭐⭐⭐⭐
@@ -3945,22 +3945,22 @@ CREATE TABLE categories(
     - 透過以上的概念，可以知道買家與商品呈現 **多對多** 的情況，因此需要建立中間表（Cart）來連結兩個實體。
 - Cart購物車建立 ⭐⭐⭐⭐⭐
     - 指定Merchandise與User為ManyToOne，並加入id與quantity變數。
-    ![螢幕擷取畫面 2026-04-28 113642](https://hackmd.io/_uploads/BJj9cOxbfe.png)
+    ![image](https://hackmd.io/_uploads/Syd8siT6Zg.png)
     - 這邊先暫時用 `@JsonIgnore` --> 當取得購物車時，會過濾敏感的User隱私資訊。
 - User_Id重建 ⭐⭐⭐
     - 原本User是利用 `AUTO_INCREMENT` 遞增id，但若應用在多資料庫時，可能因為 **id重複導致出錯**，且id若為自增，就 **有資安疑慮**，因此使用UUID隨機碼更為適合！
-    ![螢幕擷取畫面 2026-04-28 114204](https://hackmd.io/_uploads/B1dicOe-Ml.png)
+    ![image](https://hackmd.io/_uploads/rkF92jpaWg.png)
 - 實際測試 ⭐⭐
     - 我利用自建的商品list功能+User註冊功能先取得UUID以及商品ID，由於我還沒寫加入購物車的功能，先暫時手動加入w
     - 實際取得User購物車內容長這樣 : 
-    ![螢幕擷取畫面 2026-04-28 114512](https://hackmd.io/_uploads/HykncOgbGx.png)
+    ![image](https://hackmd.io/_uploads/B1V8Tia6-l.png)
 ## Day119
 #### 學習重點 : Spring Data JPA - 購物車功能實作
 - 購物車新增商品功能 ⭐⭐⭐⭐
     - 這個功能有幾個步驟需要釐清 ：
     - 取得商品ID --> 根據使用者ID尋找其購物車，並檢查是否有該商品的購物車資料 --> 檢查庫存是否大於使用者所選數量（含購物車原本可能有的） --> 若大於則.save，若小於則拋出例外。
-    ![螢幕擷取畫面 2026-04-29 231451](https://hackmd.io/_uploads/H1WuqdgWGx.png)
-    ![螢幕擷取畫面 2026-04-29 231504](https://hackmd.io/_uploads/r1du5OxWMg.png)
+    ![image](https://hackmd.io/_uploads/ryT_lokCZg.png)
+    ![image](https://hackmd.io/_uploads/HytKxjk0-x.png)
     - 目前code是沒問題了，但實測還需要在驗證，但這是明天的事了www，最近太累了QAQ。
 
 ## Day120
@@ -4030,10 +4030,10 @@ CREATE TABLE categories(
 - 完善購物車查詢的回應 ⭐⭐⭐
     - 原本回應購物車前端的是單純的 `List<Cart>`，但我想在查詢後取得的是一個Response以統一回應格式，並且順便加入狀態。
     - 以下是我改之後的結果 : 
-    ![螢幕擷取畫面 2026-05-05 232551](https://hackmd.io/_uploads/BJjotdg-Mx.png)
+    ![image](https://hackmd.io/_uploads/S1fMnFvAWl.png)
     - 實測成功！
-    ![螢幕擷取畫面 2026-05-05 232846](https://hackmd.io/_uploads/BJ8hKOl-Mg.png)
-    ![螢幕擷取畫面 2026-05-05 233029](https://hackmd.io/_uploads/BygFnFdxZfg.png)
+    ![image](https://hackmd.io/_uploads/r1QAhtDAZe.png)
+    ![image](https://hackmd.io/_uploads/SkOmTYP0Wl.png)
 
 ## Day126
 #### 學習重點 : 商品類別新增、FetchType淺分析
@@ -4163,12 +4163,12 @@ CREATE TABLE categories(
         - 若要賣家想刪除商品必須考慮到一個問題 : 若有使用者加入該商品進購物車，則 **必須先移除** 購物車資料庫中所有該商品連結的資料。
         - 若直接刪除商品，會 **有Foreign Key的限制** 而無法執行delete。
         - 以下是我的實作部分 : 
-        ![螢幕擷取畫面 2026-05-11 230923](https://hackmd.io/_uploads/H1svF_eWGl.png)
+        ![image](https://hackmd.io/_uploads/ryMVbu1yMg.png)
         - 其中先執行刪除購物車的 `deleteAll(cartDao.findByMerchandise(m));`
         - 再來才是刪除商品，後回傳MerchandiseResponse。
     - User刪除實作
         - 這部分我沒有做很細，只是單純透過id去刪除，之後可能需要加個驗證之類的w
-        ![螢幕擷取畫面 2026-05-11 231903](https://hackmd.io/_uploads/ry4OY_eZfe.png)
+        ![image](https://hackmd.io/_uploads/rk7OQdyJMx.png)
 
 ## Day132
 #### 學習重點 : 權限管理系統設計-1
@@ -4205,7 +4205,7 @@ CREATE TABLE categories(
     - 這邊很神奇的是可以寫String PermissionId作為參數，而不是Permission物件（這樣還要自行建物件），這是因為JPA在method語法發現是Permission「的」Id，因此自動找到 Permission實體 `@Id` 註解的String id，這樣超級省空間的啦~
 - 實際User刪除功能應用 : ⭐⭐⭐⭐⭐
     - 流程 : 透過account找操作者（operator），透過DTO設計的刪除Request找目標刪除者（target）➝ 判斷操作是否為本人or具刪除權限之人 ➝ 若不是則拋出例外，若是則執行操作並連帶購物車一同刪除 ➝ 回傳Response。
-    ![螢幕擷取畫面 2026-05-13 225249](https://hackmd.io/_uploads/Bk9BFdebzx.png)
+    ![image](https://hackmd.io/_uploads/SkzIlMz1zl.png)
     - 中間註解的部分是原本問AI時建議列出的權限List，一個一個match看看是否有符合刪除權限的ID，但總覺得要把整張表翻出來，還不如精準打擊。
     
 ## Day134
@@ -4372,23 +4372,23 @@ CREATE TABLE categories(
 #### 學習重點 : Webhook實作、綠界API串接
 - Webhook API實作 ⭐⭐⭐⭐
     - 為了對應外部系統，我們需要設計一些endpoints來給外部Webhook呼叫，因此我獨立出了一個WebhookController。
-    ![螢幕擷取畫面 2026-05-25 190946](https://hackmd.io/_uploads/ByLtrdx-fx.png)
+    ![image](https://hackmd.io/_uploads/BytbRsWefx.png)
     - 由於串接的是外部系統，因此不能使用Response這種自製的物件作回傳，因此我回歸到使用ResponseEntity這種正規的Http status code回傳。
     - 而我在OrderService層當中寫了一個處理付款更新狀態的method : 
-    ![螢幕擷取畫面 2026-05-25 191651](https://hackmd.io/_uploads/rynTSdlZzx.png)
+    ![image](https://hackmd.io/_uploads/BJN3Jh-gMg.png)
 - 綠界串接 ⭐⭐⭐⭐⭐⭐
     - 由於綠界的付款API測試無法直接連到localhost，因此需要先使用 **ngrok**，它可以生成一個臨時網址連到本地端，以供外部系統連結我設計的API。
     - 以下是ngrok在終端機執行的圖 : 
-    ![螢幕擷取畫面 2026-05-25 192030](https://hackmd.io/_uploads/BkbSDueZMe.png)
+    ![image](https://hackmd.io/_uploads/r1Ob-3beMx.png)
     - 下面是綠界串接的流程 : 填入訂單編號（MerchantTradeNo）、串接API網址（ReturnURL）
-    ![螢幕擷取畫面 2026-05-25 192545](https://hackmd.io/_uploads/rJ9rvdlWGx.png)
-    ![螢幕擷取畫面 2026-05-25 192600](https://hackmd.io/_uploads/By48P_gbfx.png)
+    ![image](https://hackmd.io/_uploads/BJYCZ3Zezx.png)
+    ![image](https://hackmd.io/_uploads/Skc0ZhZefe.png)
     - 接著我在自己一個與綠界對接DTO檔，getMerhantTradeNo放入orderDao去尋找即可啦！
 - 實測結果
     - 以下是付款成功後，**ngrok、綠界、本地端DB** 的結果圖
-    ![螢幕擷取畫面 2026-05-25 193003](https://hackmd.io/_uploads/rJR8wdxbGe.png)
-    ![螢幕擷取畫面 2026-05-25 193018](https://hackmd.io/_uploads/SyEvD_eWzg.png)
-    ![螢幕擷取畫面 2026-05-25 192844](https://hackmd.io/_uploads/rkdvD_lZMl.png)
+    ![image](https://hackmd.io/_uploads/Bym1Q3bgGg.png)
+    ![image](https://hackmd.io/_uploads/Hy_kQnbgze.png)
+    ![image](https://hackmd.io/_uploads/HJAymn-gze.png)
 
 ## Day146
 #### 學習重點 : @Transactional基礎
@@ -4399,12 +4399,12 @@ CREATE TABLE categories(
     - 使用Transactional有兩個準則 : 只能掛在public方法、只掛可能需要rollback的method，且掛在依賴的最外層即可。
     - 為甚麼只要掛在最外層呢？因為Transactional是根據Exception來做rollback的，只要依賴的某一層出現規定例外則會自動rollback。
     - 例子 : 像是我在刪除使用者時，會先刪除使用者的購物車相關資料，再刪除使用者。若在其中兩行執行的過程出錯了，我不應該讓資料出現殘缺，因此需掛上Tansactional。
-    ![螢幕擷取畫面 2026-05-26 100405](https://hackmd.io/_uploads/r13aPOg-fg.png)
-    ![螢幕擷取畫面 2026-05-26 100719](https://hackmd.io/_uploads/H1bAwOxWfg.png)
+    ![image](https://hackmd.io/_uploads/BkBLgFGeMe.png)
+    ![image](https://hackmd.io/_uploads/r1sOxYMgGe.png)
 - 實測 ⭐⭐⭐⭐⭐⭐
     - 若我沒有掛上@Transactional（故意註解掉），又故意在兩行之間報錯就會發生以下事情 :
-    ![螢幕擷取畫面 2026-05-26 101454](https://hackmd.io/_uploads/ryKADdl-ze.png)
-    ![螢幕擷取畫面 2026-05-26 101436](https://hackmd.io/_uploads/B1A0vdl-ze.png)
+    ![image](https://hackmd.io/_uploads/HycIMKGgzl.png)
+    ![image](https://hackmd.io/_uploads/ryDUzKGlMl.png)
     - 結果 : cart的user資料消失了，但使用者沒消失，這就是不一致性。
     - 若我掛上Transactional，則就會自動rollback。
 
@@ -4540,7 +4540,7 @@ CREATE TABLE categories(
     - 以簡單理解AOP的概念來看👉創造切面➝建立Pointcut➝執行邏輯
 - 實際架構 ⭐⭐⭐⭐⭐⭐
     - 建立Aspect class，建立Pointcut，確認切入點 : 
-    ![螢幕擷取畫面 2026-06-01 193543](https://hackmd.io/_uploads/SJr4udlbMx.png)
+    ![image](https://hackmd.io/_uploads/HJR5R1ogGg.png)
     - 我以User的JWT來練習，當偵測到非(Login、Registration、forgetPassword)的方法被execute時，會先到jwtAuth的切面來做驗證，不過這個偵測邏輯應該會在幾天內被我改掉ww，因為似乎可以直接設計一個註解來擋掉不需驗證的User功能。
     #### 甚麼是RequestContextHolder？
     - 簡單來說，當API打進來後，Spring會建立一個執行緒ThreadLocal記錄下請求的資訊，含有HttpServletRequest的資訊。
@@ -4553,21 +4553,21 @@ CREATE TABLE categories(
 - UnAuth註解新增 ⭐⭐⭐⭐⭐⭐
     - 由於昨天的execution需要先排除「指定」的method，像是login、registration等。
     - 而今天我建立了一個註解(可以說是標記)，讓這個註解作用於需被排除的方法上。
-    ![螢幕擷取畫面 2026-06-02 134107](https://hackmd.io/_uploads/SkrKd_xZfx.png)
-    ![螢幕擷取畫面 2026-06-02 134149](https://hackmd.io/_uploads/rk2YuugZfe.png)
+    ![image](https://hackmd.io/_uploads/HkQ-ayhxMx.png)
+    ![image](https://hackmd.io/_uploads/BkCQpynezl.png)
     - 透過標記method，讓我們可以直接在Before的偵測內容中，排除被 `@UnAuth` 標記的method。
-    ![螢幕擷取畫面 2026-06-02 134310](https://hackmd.io/_uploads/SkBcuueZfx.png)
+    ![image](https://hackmd.io/_uploads/HJR_ak3lMe.png)
 - Log切面設計 ⭐⭐⭐⭐⭐⭐
     - 在日誌紀錄中，通常會記錄一個method的開始事件與結束事件，因此會用Around來做，但由於around會經歷一個method的開始與結束，因此會需要透過ProceedingJoinPoint來「控制方法的動作」。
     - Around使用的ProceedJoinPoint有點像是上帝視角？除了取得參數、名稱之外，還能夠使用 `.proceed()` 來啟動method。
-    ![螢幕擷取畫面 2026-06-02 135425](https://hackmd.io/_uploads/Hylidul-Me.png)
+    ![image](https://hackmd.io/_uploads/S1QXle3lfg.png)
     - 由於呼叫方是切面class，接收最後的Response也會丟給proceed方法，因此需要用Object接住後，再做回傳。
 - 順序問題 ⭐⭐⭐
     - 假設某個方法會被攔截做JWT驗證，又需要Log做紀錄，那誰會先攔截到呢?是Before還是Around？
     - 這時候不確定攔截的順序就會造成很多問題，因此會用 `@Order(級別)` 來確立順序。
     - 簡單來說，加上Order後，LogAspect跟AuthAspect就會按照順序來進行攔截。
-    ![螢幕擷取畫面 2026-06-02 140044](https://hackmd.io/_uploads/rkl3_OxZMg.png)
-    ![螢幕擷取畫面 2026-06-02 140030](https://hackmd.io/_uploads/Bkm2dOlbzx.png)
+    ![image](https://hackmd.io/_uploads/SkhqZehefl.png)
+    ![image](https://hackmd.io/_uploads/HyRK-lngMl.png)
     - 這邊將驗證優先，再來才做log，可以避免掉一些無效訪問導致Log資料量過大的問題。
  
 ## Day154
@@ -4577,7 +4577,7 @@ CREATE TABLE categories(
     - 另外，由於Service中部分程式的Permission偵測沒有加上，我今天也順便把權限驗證的部分完成了！
 - PermissionCode ⭐⭐⭐
     - 由於Permission的Code如果直接寫在Service層做偵測，可能有Hard coding的問題，因此我獨立了一個enum出來專門處理PermissionCode。
-    ![螢幕擷取畫面 2026-06-03 213728](https://hackmd.io/_uploads/SJSgFugWfg.png)
+    ![image](https://hackmd.io/_uploads/ByO7CsaeGx.png)
 
 ## Day155
 #### 學習重點 : 權限切面建立與註解應用、專案Part-2收尾
@@ -4603,7 +4603,7 @@ CREATE TABLE categories(
     
 ## Day156
 #### 學習重點 : 使用者資料管控-電商系統實作（Part-2結業式🥳）
-- 功能綜整與總結 ⭐⭐⭐⭐⭐⭐⭐⭐
+- 功能綜整與總結
     - 總結來說，這次的專案part規模比上次大太多了ouo，所以沒辦法一一列出詳細部分，因此我特地錄了影片+請AI簡短總結我實作的功能！
     - 這裡有專案展示影片 : [點我到Youtube查看！](https://youtu.be/CXSSZ0BkeKE)
     ### 📁 商品分類樹 (Category Management)
@@ -4643,46 +4643,8 @@ CREATE TABLE categories(
     *   **綠界付款成功回呼**：`POST /webhook/api/ecpay/payment` (Form URL-Encoded)
         *   **用法**：由第三方金流（綠界）傳送付款通知以更新訂單狀態為 `PAID`。
 
-## Day157
-#### 學習重點 : var與Collectors簡單理解與應用
-- 甚麼是var？ ⭐⭐⭐
-    - 簡單來說，var用於宣告時，根據「右值型態」決定變數型態的一個關鍵字。
-    - 簡易範例如下 : 
-    ```java=
-    var list = new ArrayList<String>("Alice", "Bob", "Carol");
-    ```
-    - 透過範例可以知道原本是以List<String>宣告，現在變成了var代替，由於我們知道函式回傳的是List<T>，因此這邊用var來接收很剛好！
-    - 但是！如果今天是是這樣 
-    ```java= 
-    var unknown = Yeah.getInstance();
-    ```
-    - 我根本不知道Yeah.getInstance要回傳甚麼，這時候用var就不太合適！
-- Collectors是甚麼？ ⭐⭐⭐⭐⭐⭐
-    - Collectors在stream當中是一個很重要的類別，如字面意思，它是用於「收集」stream內的元素。
-    - 但是為甚麼要從一個箱子收集到另外一個箱子呢？
-        - 重點在於👉若我們今天遇到 **業務邏輯** 要先經過「**驗證、審核、過濾**」等條件時，就可以很簡單的做出過濾箱子，而不需要再自行建箱子+跑迴圈加進去。
-    - 以下是「直接過濾」vs「跑迴圈過濾」的比較 : 
-        - 迴圈過濾 : 
-        ```java=
-        var list = Arrays.asList("Alice", "Bob", "Carol");
-        var fileterList = new ArrayList<String>();
-    
-        for (var e : list){
-            if (e.length() >= 4){
-                fileterList.add(e);
-            }
-        }
-        System.out.println(fileterList);
-        ```
-        - stream.filter.collect : 
-        ```java=
-        var list = Arrays.asList("Alice", "Bob", "Carol");
-        var filterList = list
-                .stream()
-                .filter(s -> s.length() >= 4)
-                .collect(Collectors.toList());
-        System.out.println(filterList);
-        ```
+
+
 
 
 
