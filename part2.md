@@ -480,7 +480,7 @@
             System.out.println("錯誤訊息 : " + e.getMessage());
             throw new BusinessLogicException(
                 9999, 
-                "系統出現未知錯誤，請稍後再試...��"
+                "系統出現未知錯誤，請稍後再試...。"
             );
         }
     }
@@ -810,7 +810,7 @@
 ## Day90
 #### 學習重點 : 執行緒應用 - 小專案寄發mail解決
 - 寄發mail問題 ⭐⭐⭐⭐
-    - 在我之前的小專案實作中，寄發信箱這部分有個問題點，那就���當我POST後，頁面會進入待機狀態 ➞ **等成功sendmail後** 才會跳轉去更新密碼頁面。
+    - 在我之前的小專案實作中，寄發信箱這部分有個問題點，那就是當我POST後，頁面會進入待機狀態 ➞ **等成功sendmail後** 才會跳轉去更新密碼頁面。
     - 而多執行緒剛好可以解決這個問題，一部份讓主執行緒去做跳轉，再另外開出一個 **子執行緒去做sendmail** 的動作！
 - ExecutorService小專案mail寄發應用 ⭐⭐⭐⭐
     - 我這邊使用了Runnable介面搭配ExecutorService來開子執行緒進行mail寄發。
@@ -890,7 +890,7 @@
 #### 學習重點 : Java IO - 甚麼是Stream?
 - Stream是甚麼？ ⭐⭐⭐⭐⭐
     - 在Input跟Output中，程式的運作底層原理就是靠著Stream在運作！但到底甚麼是Stream（流）呢？
-    - 所謂的Stream其實就是「一串長度不��的**Bytes資料序列**」，因此Input Stream讀取資料序列，而Output Stream就是將資料序列呈現or寫入！
+    - 所謂的Stream其實就是「一串長度不一的**Bytes資料序列**」，因此Input Stream讀取資料序列，而Output Stream就是將資料序列呈現or寫入！
     - 如果用簡單的比喻，像是**鍵盤**就是一個**Input Stream**，讀取使用者按下的按鍵，而**螢幕**則是**Output Stream**，呈現出使用者按下按鍵出現的畫面！
 - Java的IO Stream分類 ⭐⭐⭐
     - Java中，Input Stream與Output Stream，**都是抽象類別**！因此會有許多實作，像是昨天看到的**FileWriter、BufferedWriter都是**！底下這張圖就是Stream的架構！
@@ -946,7 +946,7 @@
 - InputStream是甚麼概念？ ⭐⭐⭐
     - 記得在剛開始學習Java的時候，有使用到一個Scanner的物件！而建構式當中所放入的就是 **輸入流** `System.in`！
     - 因此InputSream相對應OutputStream就是在 **讀取** 而不是寫入！
-    - 昨天我在write放參數，這個參數本身就是已��被建置好的資料序列，而輸入流就是 **讀取序列後放入write** 當中作為參數。
+    - 昨天我在write放參數，這個參數本身就是已經被建置好的資料序列，而輸入流就是 **讀取序列後放入write** 當中作為參數。
 - 如何使用InputStream？ ⭐⭐⭐
     - 首先當然就是利用 `System.in` 來做事啦～
     - 基本架構如下 : 
@@ -1172,7 +1172,7 @@
     - Reader透過Unicode編碼的前輟去偵測要一次取幾個bytes來轉碼，像是中文字是3bytes，英文是1byte，此時利用英文跟中文的前輟不同，來去決定後續要再多取幾個byte！
 - 最終型態 : BufferedRW ⭐⭐⭐
     - 綜合上週跟這週所學，並回到最初的起點，可以發現一開始用的BufferedRW就是結合了IOstream與Reader/Writer家族的型態。
-    - 當然，在��邊的BufferedRW又會跟BufferedIO所開的buffer區不太一樣，BufferedRW的緩衝區會利用 `char[]` 來儲存，很好理解嘛！
+    - 當然，在這邊的BufferedRW又會跟BufferedIO所開的buffer區不太一樣，BufferedRW的緩衝區會利用 `char[]` 來儲存，很好理解嘛！
     - 透過try-with-resource，簡化形式後，基本上就會長成下面這個模樣 : 
     ```java=
     public class Main {
@@ -1480,7 +1480,7 @@
 - ORM是甚麼？ ⭐⭐⭐⭐⭐
     - 我覺得在正式實作多model之前，先來理解一下ORM架構可能對之後數據操作會更流暢一些！
     - ORM是（Object-Relational Mapping）的縮寫，亦即**物件關聯資料庫** --> 也就是我做的model會連結到DB當中的欄位。
-    - 🌟JDBC的流程 : 寫好SQL語句 -> 使用Mapper對��值 --> 根據Mapper以及SQL語法利用update更新資料庫。
+    - 🌟JDBC的流程 : 寫好SQL語句 -> 使用Mapper對應值 --> 根據Mapper以及SQL語法利用update更新資料庫。
     - 🌟ORM的流程 : 對model class下註解 --> 使用方法加上參數對應資料庫 --> ORM框架 **自動生成SQL語法做映射**。 
     - 從上方的流程差異，可以發現透過ORM框架，封裝物件來操作資料庫比起純SQL操作更能簡化程式，且不需關心SQL語法怎麼寫，而是專心在怎麼操作物件方法。
 - JPA（Java Persistence API） ⭐⭐⭐⭐
@@ -1805,7 +1805,7 @@ CREATE TABLE categories(
         - 按照前幾天的學習，我同樣新增了一個UserResponse專門來過濾掉敏感資訊。
         - 接著我在UserService當中寫一個listUsers的method : 
         ![image](https://hackmd.io/_uploads/rJZDKbCCWx.png)
-        - 單純先練習，之後有���間再加上權限驗證ww。
+        - 單純先練習，之後有時間再加上權限驗證ww。
         ![image](https://hackmd.io/_uploads/SyrUO-AAZg.png)
         ![image](https://hackmd.io/_uploads/rJZTYbRAZx.png)
 
