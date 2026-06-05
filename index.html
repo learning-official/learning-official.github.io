@@ -1556,6 +1556,7 @@
       updateDashboardMetrics() {
         // Collect metrics from cache
         let totalDays = 0;
+        const uniqueDays = new Set();
         let doneTasks = 0;
         let totalTasks = 0;
         let totalBytes = 0;
@@ -1581,8 +1582,11 @@
               inCodeBlock = !inCodeBlock;
               return;
             }
-            if (!inCodeBlock && /^\s*##\s+.*Day\s*\d+/i.test(line)) {
-              totalDays++;
+            if (!inCodeBlock) {
+              const match = line.match(/^\s*##\s+.*Day\s*(\d+)/i);
+              if (match) {
+                uniqueDays.add(parseInt(match[1], 10));
+              }
             }
           });
 
@@ -1617,6 +1621,8 @@
             }
           });
         });
+
+        totalDays = uniqueDays.size;
 
         // Set UI values
         document.getElementById('dash-total-days').innerText = totalDays;
