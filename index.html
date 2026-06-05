@@ -3,6 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
   <title>Nexus // Java 學習歷程中樞</title>
   
   <!-- FontAwesome Icons -->
@@ -361,13 +364,13 @@
 
     /* Markdown Images control */
     .markdown-body img {
-      max-width: 100%;
-      height: auto;
-      max-height: 480px;
+      max-width: 100% !important;
+      height: auto !important;
+      max-height: 550px !important;
       display: block;
       margin: 24px auto;
       border-radius: 8px;
-      border: 1px solid var(--border-subtle);
+      border: 1px solid var(--border-subtle) !important;
       box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
       object-fit: contain;
       background-color: rgba(255, 255, 255, 0.02);
@@ -377,7 +380,7 @@
 
     .markdown-body img:hover {
       transform: scale(1.01);
-      border-color: rgba(88, 166, 255, 0.35);
+      border-color: rgba(88, 166, 255, 0.35) !important;
       box-shadow: 0 6px 24px rgba(88, 166, 255, 0.15);
     }
 
@@ -455,7 +458,7 @@
     /* Code Block styling - Terminal look */
     .markdown-body pre {
       background-color: var(--bg-input) !important;
-      border: 1px solid var(--border-subtle);
+      border: 1px solid var(--border-subtle) !important;
       border-radius: 8px;
       padding: 20px !important;
       margin: 24px 0 !important;
@@ -477,6 +480,7 @@
       background: transparent !important;
       padding: 0 !important;
       border-radius: 0 !important;
+      color: inherit !important; /* Allow Prism to paint tokens */
     }
 
     /* Blockquotes */
