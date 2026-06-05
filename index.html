@@ -1114,10 +1114,13 @@
           document.getElementById('localWarning').style.display = 'block';
         }
 
+        // Build the full URL for debugging
+        const fullUrl = new URL(filename, window.location.href).href;
+        console.log(`[Nexus] Fetching: ${fullUrl}`);
+
         try {
-          const encodedFilename = encodeURIComponent(filename);
-          const res = await fetch(encodedFilename);
-          if (!res.ok) throw new Error(`HTTP ${res.status} - 無法載入此檔案：${filename}`);
+          const res = await fetch(fullUrl);
+          if (!res.ok) throw new Error(`HTTP ${res.status} — 伺服器回應錯誤\n請求 URL：${fullUrl}`);
           
           let text = await res.text();
           
@@ -1157,11 +1160,15 @@
           targetDiv.innerHTML = `
             <div style="padding: 24px; background: rgba(255,123,114,0.1); border: 1px solid rgba(255,123,114,0.2); border-radius: 8px;">
               <h4 style="color: var(--danger-color); margin-bottom: 8px;"><i class="fa-solid fa-terminal"></i> 檔案加載終止</h4>
-              <p>載入 ${filename} 發生通訊異常。請檢查檔案名稱與目錄結構配置。</p>
+              <p>載入 <code>${filename}</code> 發生通訊異常。</p>
               <p style="color: var(--text-muted); font-size: 13px; margin-top: 8px;">Error trace: ${err.message}</p>
+              <p style="margin-top: 12px; font-size: 13px;">🔍 請直接點擊以下連結測試檔案是否可存取：<br>
+                <a href="${fullUrl}" target="_blank" style="color: var(--accent-color); word-break: break-all;">${fullUrl}</a>
+              </p>
+              <p style="color: var(--text-muted); font-size: 12px; margin-top: 8px;">若連結顯示 404，代表該檔案尚未出現在 GitHub Pages 伺服器上。</p>
             </div>
           `;
-          showToast(`載入 ${filename} 失敗`, 'error');
+          showToast(`載入 ${filename} 失敗 (${err.message.split('\\n')[0]})`, 'error');
         }
       },
 
