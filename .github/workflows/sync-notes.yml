@@ -1,0 +1,28 @@
+name: Sync Notes from HackMD
+
+on:
+  schedule:
+    - cron: '*/30 * * * *' # 每 30 分鐘自動同步一次
+  workflow_dispatch:      # 允許在 GitHub 頁面上手動點擊按鈕立即同步
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Fetch Latest Notes from HackMD
+        run: |
+          curl -L -o part1.md https://hackmd.io/@learning-official/Java_learning/download
+          curl -L -o part2.md https://hackmd.io/@learning-official/Java_learning_2/download
+
+      - name: Commit and Push if changed
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add part1.md part2.md
+          git diff --quiet && git diff --staged --quiet || (git commit -m "chore: sync latest notes from HackMD" && git push)
