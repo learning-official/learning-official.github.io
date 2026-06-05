@@ -1233,20 +1233,46 @@
           showToast(`載入 ${filename} 失敗：${statusInfo}`, 'error');
         };
 
-        // 1. Try Live Sync from HackMD via CORS Proxy
-        const liveUrl = `https://corsproxy.io/?${encodeURIComponent(hackmdUrls[partKey])}`;
-        console.log(`[Learning-official] Trying Live Sync from HackMD: ${hackmdUrls[partKey]}`);
+        // Robust Multi-Proxy Live Fetch function
+        const fetchLiveContent = async (targetUrl) => {
+          const proxies = [
+            (url) => `https://corsproxy.io/?${encodeURIComponent(url)}`,
+            (url) => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
+            (url) => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`
+          ];
 
-        try {
-          const res = await fetch(liveUrl, { cache: 'no-store' });
-          if (!res.ok) throw new Error(`HTTP ${res.status}`);
-          const text = await res.text();
-          if (text.trim().startsWith('<!DOCTYPE html>') || text.trim().startsWith('<html') || text.trim().startsWith('<!doctype')) {
-            throw new Error('Not raw markdown content');
+          let lastError = null;
+          for (let i = 0; i < proxies.length; i++) {
+            const proxyUrl = proxies[i](targetUrl);
+            console.log(`[Learning-official] Trying HackMD Sync via proxy ${i + 1}: ${proxyUrl}`);
+            try {
+              const res = await fetch(proxyUrl, { cache: 'no-store' });
+              if (!res.ok) throw new Error(`HTTP ${res.status}`);
+              const text = await res.text();
+              const trimmed = text.trim();
+              
+              // Validate that it's actually Markdown content and not an HTML error/captcha page
+              if (trimmed.startsWith('<!DOCTYPE html>') || trimmed.startsWith('<html') || trimmed.startsWith('<!doctype')) {
+                throw new Error('Received HTML page instead of raw Markdown');
+              }
+              if (trimmed.length < 200) {
+                throw new Error('Response content too short');
+              }
+              return text; // Success!
+            } catch (err) {
+              console.warn(`[Learning-official] Proxy ${i + 1} failed: ${err.message}`);
+              lastError = err;
+            }
           }
+          throw lastError || new Error('All CORS proxies failed');
+        };
+
+        // 1. Try Live Sync from HackMD via CORS Proxy Rotation
+        try {
+          const text = await fetchLiveContent(hackmdUrls[partKey]);
           renderMarkdown(text, true);
         } catch (liveErr) {
-          console.warn(`[Learning-official] HackMD sync failed (${liveErr.message}). Falling back to local backup: ${fallbackUrl}`);
+          console.warn(`[Learning-official] HackMD live sync failed (${liveErr.message}). Falling back to local backup: ${fallbackUrl}`);
           
           // 2. Try Fallback from GitHub repository root
           try {
