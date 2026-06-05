@@ -872,6 +872,49 @@
       overflow-x: auto;
       -webkit-overflow-scrolling: touch;
     }
+
+    /* Like Button Styling */
+    .like-btn-sidebar {
+      margin-top: 10px;
+      border: 1px solid rgba(255, 123, 114, 0.15) !important;
+      background: rgba(255, 123, 114, 0.03) !important;
+      transition: all 0.25s ease !important;
+    }
+    .like-btn-sidebar:hover {
+      background: rgba(255, 123, 114, 0.08) !important;
+      border-color: var(--danger-color) !important;
+      color: #ffffff !important;
+    }
+    .like-btn-sidebar.liked {
+      background: rgba(255, 123, 114, 0.12) !important;
+      border-color: var(--danger-color) !important;
+      color: #ffffff !important;
+      font-weight: bold;
+    }
+    #sidebar-like-btn.liked i,
+    #dash-like-card.liked i {
+      animation: heartBeat 0.8s ease-in-out;
+      color: var(--danger-color);
+    }
+    #dash-like-card {
+      cursor: pointer; 
+      transition: border-color 0.25s, background 0.25s;
+    }
+    #dash-like-card:hover {
+      border-color: var(--danger-color) !important;
+      background: rgba(255, 123, 114, 0.05) !important;
+    }
+    #dash-like-card.liked {
+      border-color: var(--danger-color) !important;
+      background: rgba(255, 123, 114, 0.08) !important;
+    }
+    @keyframes heartBeat {
+      0% { transform: scale(1); }
+      14% { transform: scale(1.3); }
+      28% { transform: scale(1); }
+      42% { transform: scale(1.3); }
+      70% { transform: scale(1); }
+    }
   </style>
 </head>
 <body>
@@ -910,6 +953,9 @@
     </button>
     <button class="tree-node" id="btn-about" onclick="ui.switch('about')">
       <i class="fa-solid fa-address-card"></i> 實體帳戶主機資訊
+    </button>
+    <button class="tree-node like-btn-sidebar" id="sidebar-like-btn" onclick="core.likePage()">
+      <i class="fa-regular fa-heart" id="like-icon" style="color: var(--danger-color);"></i> 點讚支持 (<span id="like-count">0</span>)
     </button>
 
     <!-- Sub-menu: Dynamic Header Table of Contents -->
@@ -1002,6 +1048,14 @@
             <img src="https://api.visitorbadge.io/api/VisitorHit?user=learning-official&repo=learning-official.github.io&countColor=%2358a6ff" alt="Visitor Count" style="height: 28px; border: none; background: transparent; padding: 0; margin: 0; box-shadow: none; border-radius: 0;" />
           </div>
           <div class="metric-desc">自部署以來的總瀏覽人次</div>
+        </div>
+        <div class="metric-card" id="dash-like-card" onclick="core.likePage()">
+          <h4>網頁點讚支持</h4>
+          <div class="metric-value" style="color: var(--danger-color); display: flex; align-items: center; gap: 10px; height: 38px; margin-bottom: 8px; margin-top: 4px;">
+            <i class="fa-regular fa-heart" id="dash-like-icon"></i>
+            <span id="dash-like-count">0</span>
+          </div>
+          <div class="metric-desc" id="dash-like-desc">點擊此處為作者點讚打氣！</div>
         </div>
       </div>
 
@@ -1229,6 +1283,98 @@
 
     // Core Processing Engine
     const core = {
+      async initLikes() {
+        const sidebarLikeCount = document.getElementById('like-count');
+        const dashLikeCount = document.getElementById('dash-like-count');
+        const sidebarLikeBtn = document.getElementById('sidebar-like-btn');
+        const sidebarLikeIcon = document.getElementById('like-icon');
+        const dashLikeCard = document.getElementById('dash-like-card');
+        const dashLikeIcon = document.getElementById('dash-like-icon');
+        const dashLikeDesc = document.getElementById('dash-like-desc');
+
+        // Check localStorage for liked status
+        const isLiked = localStorage.getItem('page_liked') === 'true';
+        if (isLiked) {
+          if (sidebarLikeBtn) sidebarLikeBtn.classList.add('liked');
+          if (dashLikeCard) dashLikeCard.classList.add('liked');
+          if (sidebarLikeIcon) {
+            sidebarLikeIcon.className = 'fa-solid fa-heart';
+          }
+          if (dashLikeIcon) {
+            dashLikeIcon.className = 'fa-solid fa-heart';
+          }
+          if (dashLikeDesc) {
+            dashLikeDesc.innerText = '您已點讚，感謝支持！';
+          }
+        }
+
+        try {
+          const res = await fetch('https://api.counterapi.dev/v1/learning-official/likes');
+          if (res.ok) {
+            const data = await res.json();
+            const count = data.count || 0;
+            if (sidebarLikeCount) sidebarLikeCount.innerText = count;
+            if (dashLikeCount) dashLikeCount.innerText = count;
+          }
+        } catch (err) {
+          console.warn('[Learning-official] Failed to fetch likes:', err);
+        }
+      },
+
+      async likePage() {
+        const isLiked = localStorage.getItem('page_liked') === 'true';
+        if (isLiked) {
+          showToast('您已經點過讚囉，非常感謝您的支持！❤️', 'info');
+          return;
+        }
+
+        // Optimistic UI update
+        localStorage.setItem('page_liked', 'true');
+        
+        const sidebarLikeBtn = document.getElementById('sidebar-like-btn');
+        const sidebarLikeIcon = document.getElementById('like-icon');
+        const dashLikeCard = document.getElementById('dash-like-card');
+        const dashLikeIcon = document.getElementById('dash-like-icon');
+        const sidebarLikeCount = document.getElementById('like-count');
+        const dashLikeCount = document.getElementById('dash-like-count');
+        const dashLikeDesc = document.getElementById('dash-like-desc');
+
+        if (sidebarLikeBtn) sidebarLikeBtn.classList.add('liked');
+        if (dashLikeCard) dashLikeCard.classList.add('liked');
+        if (sidebarLikeIcon) sidebarLikeIcon.className = 'fa-solid fa-heart';
+        if (dashLikeIcon) dashLikeIcon.className = 'fa-solid fa-heart';
+        if (dashLikeDesc) dashLikeDesc.innerText = '您已點讚，感謝支持！';
+
+        // Animate icons
+        if (sidebarLikeIcon) {
+          sidebarLikeIcon.style.animation = 'none';
+          setTimeout(() => { sidebarLikeIcon.style.animation = 'heartBeat 0.8s ease-in-out'; }, 10);
+        }
+        if (dashLikeIcon) {
+          dashLikeIcon.style.animation = 'none';
+          setTimeout(() => { dashLikeIcon.style.animation = 'heartBeat 0.8s ease-in-out'; }, 10);
+        }
+
+        let currentCount = parseInt(sidebarLikeCount ? sidebarLikeCount.innerText : '0', 10);
+        currentCount++;
+        if (sidebarLikeCount) sidebarLikeCount.innerText = currentCount;
+        if (dashLikeCount) dashLikeCount.innerText = currentCount;
+
+        showToast('感謝您的點讚支持！🎉', 'success');
+
+        try {
+          const res = await fetch('https://api.counterapi.dev/v1/learning-official/likes/up');
+          if (res.ok) {
+            const data = await res.json();
+            const serverCount = data.count || currentCount;
+            if (sidebarLikeCount) sidebarLikeCount.innerText = serverCount;
+            if (dashLikeCount) dashLikeCount.innerText = serverCount;
+          }
+        } catch (err) {
+          console.error('[Learning-official] Failed to increment likes:', err);
+        }
+      },
+
       async loadMarkdown(partKey, filename) {
         const targetDiv = document.getElementById(`${partKey}-content`);
 
@@ -1646,6 +1792,9 @@
       // NOTE: filenames must match the actual files in the repo root exactly
       core.loadMarkdown('part1', 'part1.md');
       core.loadMarkdown('part2', 'part2.md');
+      
+      // Initialize Likes counter
+      core.initLikes();
     });
   </script>
 </body>
