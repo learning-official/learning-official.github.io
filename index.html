@@ -1151,12 +1151,6 @@
       }
     };
 
-    // Global HackMD Raw Markdown Urls
-    const hackmdUrls = {
-      part1: 'https://hackmd.io/@learning-official/Java_learning/download',
-      part2: 'https://hackmd.io/@learning-official/Java_learning_2/download'
-    };
-
     // Core Processing Engine
     const core = {
       async loadMarkdown(partKey, filename) {
@@ -1166,13 +1160,14 @@
           document.getElementById('localWarning').style.display = 'block';
         }
 
-        // Build absolute fallback URL
+        // Build absolute URL based on current page location
         const base = window.location.href.endsWith('/')
           ? window.location.href
           : window.location.href.substring(0, window.location.href.lastIndexOf('/') + 1);
-        const fallbackUrl = base + filename;
+        const fullUrl = base + filename;
+        console.log(`[Learning-official] Fetching local note: ${fullUrl}`);
 
-        const renderMarkdown = (text, isLive = false) => {
+        const renderMarkdown = (text) => {
           mdCache[partKey].text = text;
           mdCache[partKey].ready = true;
           let cleanText = text.replace(/^---[\s\S]*?---/, '');
@@ -1211,89 +1206,43 @@
           Prism.highlightAllUnder(targetDiv);
           const activeBtn = document.querySelector('.tree-node.active');
           if (activeBtn && activeBtn.id === `btn-${partKey}`) generateTOC(partKey);
-          
-          if (isLive) {
-            showToast(`${filename} 載入成功 (即時同步 HackMD)`, 'success');
-          } else {
-            showToast(`${filename} 載入成功 (使用本地備份)`, 'info');
-          }
+          showToast(`${filename} 載入成功`, 'success');
         };
 
         const showError = (statusInfo) => {
           targetDiv.innerHTML = `
             <div style="padding: 24px; background: rgba(255,123,114,0.1); border: 1px solid rgba(255,123,114,0.2); border-radius: 8px;">
               <h4 style="color: var(--danger-color); margin-bottom: 8px;"><i class="fa-solid fa-terminal"></i> 檔案加載終止</h4>
-              <p>無法讀取章節內容（${statusInfo}）</p>
-              <p style="margin-top: 12px; font-size: 13px;">🔍 請嘗試直接存取 HackMD 以確認原始筆記狀態：<br>
-                <a href="${hackmdUrls[partKey]}" target="_blank" style="color: var(--accent-color); word-break: break-all;">${hackmdUrls[partKey]}</a>
+              <p>無法讀取 <code>${filename}</code> 本地檔案（${statusInfo}）</p>
+              <p style="margin-top: 12px; font-size: 13px;">🔍 請點擊此連結確認檔案是否存在於伺服器：<br>
+                <a href="${fullUrl}" target="_blank" style="color: var(--accent-color); word-break: break-all;">${fullUrl}</a>
               </p>
-              <p style="color: var(--text-muted); font-size: 12px; margin-top: 8px;">若確認原始筆記正常，這通常代表暫時性的 CORS 代理伺服器忙碌，請重整網頁重試。</p>
+              <p style="color: var(--text-muted); font-size: 12px; margin-top: 8px;">若連結顯示 404，請確認 <code>${filename}</code> 已正確上傳至 GitHub Repository 根目錄，並等待 GitHub Pages 重新部署（約 1-3 分鐘）。</p>
             </div>
           `;
           showToast(`載入 ${filename} 失敗：${statusInfo}`, 'error');
         };
 
-        // Robust Multi-Proxy Live Fetch function
-        const fetchLiveContent = async (targetUrl) => {
-          const proxies = [
-            (url) => `https://corsproxy.io/?${encodeURIComponent(url)}`,
-            (url) => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
-            (url) => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`
-          ];
-
-          let lastError = null;
-          for (let i = 0; i < proxies.length; i++) {
-            const proxyUrl = proxies[i](targetUrl);
-            console.log(`[Learning-official] Trying HackMD Sync via proxy ${i + 1}: ${proxyUrl}`);
-            try {
-              const res = await fetch(proxyUrl, { cache: 'no-store' });
-              if (!res.ok) throw new Error(`HTTP ${res.status}`);
-              const text = await res.text();
-              const trimmed = text.trim();
-              
-              // Validate that it's actually Markdown content and not an HTML error/captcha page
-              if (trimmed.startsWith('<!DOCTYPE html>') || trimmed.startsWith('<html') || trimmed.startsWith('<!doctype')) {
-                throw new Error('Received HTML page instead of raw Markdown');
-              }
-              if (trimmed.length < 200) {
-                throw new Error('Response content too short');
-              }
-              return text; // Success!
-            } catch (err) {
-              console.warn(`[Learning-official] Proxy ${i + 1} failed: ${err.message}`);
-              lastError = err;
-            }
-          }
-          throw lastError || new Error('All CORS proxies failed');
-        };
-
-        // 1. Try Live Sync from HackMD via CORS Proxy Rotation
+        // Try direct fetch
         try {
-          const text = await fetchLiveContent(hackmdUrls[partKey]);
-          renderMarkdown(text, true);
-        } catch (liveErr) {
-          console.warn(`[Learning-official] HackMD live sync failed (${liveErr.message}). Falling back to local backup: ${fallbackUrl}`);
-          
-          // 2. Try Fallback from GitHub repository root
-          try {
-            const res = await fetch(fallbackUrl, { cache: 'no-store' });
-            if (!res.ok) throw new Error(`HTTP ${res.status}`);
-            const text = await res.text();
-            renderMarkdown(text, false);
-          } catch (fallbackErr) {
-            console.warn(`[Learning-official] Fallback fetch failed. Trying XHR...`);
-            const xhr = new XMLHttpRequest();
-            xhr.open('GET', fallbackUrl, true);
-            xhr.onload = () => {
-              if (xhr.status >= 200 && xhr.status < 300) {
-                renderMarkdown(xhr.responseText, false);
-              } else {
-                showError(`HTTP ${xhr.status}`);
-              }
-            };
-            xhr.onerror = () => showError('網路連線異常');
-            xhr.send();
-          }
+          const res = await fetch(fullUrl, { cache: 'no-store' });
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
+          const text = await res.text();
+          renderMarkdown(text);
+        } catch (err) {
+          console.warn(`[Learning-official] fetch failed (${err.message}), trying XHR fallback...`);
+          // XHR fallback for edge-case browser/CORS scenarios
+          const xhr = new XMLHttpRequest();
+          xhr.open('GET', fullUrl, true);
+          xhr.onload = () => {
+            if (xhr.status >= 200 && xhr.status < 300) {
+              renderMarkdown(xhr.responseText);
+            } else {
+              showError(`HTTP ${xhr.status}`);
+            }
+          };
+          xhr.onerror = () => showError('網路連線異常');
+          xhr.send();
         }
       },
 
