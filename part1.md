@@ -1,9 +1,3 @@
----
-title: Java學習歷程（Part-1）
-tags: [Java]
-
----
-
 預計學習細項 : 
 - [ ] Spring Boot
     - [ ] Tomcat與Servlet
@@ -42,7 +36,7 @@ tags: [Java]
 - [HashSet - Day104](https://hackmd.io/@learning-official/Java_learning_2#Day104)
 - [Lambda（Method Reference） - Day105~107](https://hackmd.io/@learning-official/Java_learning_2#Day105)
 - [Optional淺入淺出 - Day108~110](https://hackmd.io/@learning-official/Java_learning_2#Day108)
-- [Spring 「使用者資料管控專案Part2」 - Day111~???](https://hackmd.io/@learning-official/Java_learning_2#Day111)
+- [Spring 「使用者資料管控專案Part2」 - Day111~156](https://hackmd.io/@learning-official/Java_learning_2#Day111)
 
 ## 學習雜談
 - Day20 : 
@@ -1270,32 +1264,28 @@ tags: [Java]
         }
     }
     ```
-    
-- HashMap存資料的原理 ⭐⭐⭐⭐⭐⭐⭐⭐⭐
-    - 首先，Map本身是以 **key作為index** 加上 **以array儲存value** 建立起來的。
+- HashMap存資料的原理 ⭐⭐⭐⭐⭐⭐
+    - 首先，Map本身是以key作為index加上 **以array儲存value** 建立起來的。
     - 因為是用Array，因此在搜尋時，**時間複雜度為O(1)**。
-    ---
     - 假設我們要求使用者建立帳號，會建立User物件，其中有username以及password，我們以 **username作為key**，User物件作為value，對username做hashing，而實際hashing跟存取方式請看下方 ->
-        
-        #### HashFunction : 👉key轉化為index
-        - 其存在的意義就是讓單純的key被hash成一個 **難以被反推** 的數字(**Hash code/key**)，並以它做為Array的index。
-        #### Bucket : 👉裝User的地方
-        - 由於Hash code通常較大，若將所有hash code作為index存取，整個陣列會超級龐大。
-        - 因此會利用mod，`"hash(key)" mod "length"`，縮減成0~length-1的大小。
-        - 而每個index又稱Bucket，因為可能有多個key經hashing跟mod後，index還是一樣，此時即為Collision。
-
-        #### Collision : 👉一堆User住同樣的Bucket
-        - 當多個hash code經模運算後得出相同的index就稱為Collision。
-        - 若發生衝突，在搜尋時就變成多個key對上同一User，此時有兩種解決方案 : **Open addressing、Chaining**。
-        #### Open Addressing : 👉處理多User住同Bucket的問題
-        - 簡單來說，就是發生衝突時就往下找直到找到空位(其他bucket) 放進去，這個動作叫做**Linear probing(線性探測)**。
-        - 但這衍伸一個問題 - 當過多hash code被分配到同一Bucket，由於線性探測作用，會造成附近的Bucket都塞滿，此時稱為**Clustering(很擁擠)**。
-        - 此時可以用Quadratic或者Double probing來產生較亂的probing順序以減少Clustering發生。
-        #### Load Factor : 👉負載因子
-        - 用以說明 `目前資料量 / 該array的長度`，Load Factor越接近1，Clustering機率越高，此時就得resize array(擴容) & rehash data，因此我們得盡可能將Load Factor控制在75%以內，**以保持O(1)**。
-        #### Chaining - Closed Addressing : 👉傳統上處理多User住同Bucket的辦法
-        - 傳統上，發生Collision時，會利用LinkedList來存與Bucket衝突的所有User，並在User類別中存入該node的nextIndex。
-        - 因為是用LinkedList，所以如果Hash Function設計不好導致Collision，而進入到LinkedList這個地步，**時間複雜度就回到O(n)**。
+    #### HashFunction : 👉key轉化為index
+    - 其存在的意義就是讓單純的key被hash成一個 **難以被反推** 的數字(**Hash code/key**)，並以它做為Array的index。
+    #### Bucket : 👉裝User的地方
+    - 由於Hash code通常較大，若將所有hash code作為index存取，整個陣列會超級龐大。
+    - 因此會利用mod，`"hash(key)" mod "length"`，縮減成0~length-1的大小。
+    - 而每個index又稱Bucket，因為可能有多個key經hashing跟mod後，index還是一樣，此時即為Collision。
+    #### Collision : 👉一堆User住同樣的Bucket
+    - 當多個hash code經模運算後得出相同的index就稱為Collision。
+    - 若發生衝突，在搜尋時就變成多個key對上同一User，此時有兩種解決方案 : **Open addressing、Chaining**。
+    #### Open Addressing : 👉處理多User住同Bucket的問題
+    - 簡單來說，就是發生衝突時就往下找直到找到空位(其他bucket) 放進去，這個動作叫做**Linear probing(線性探測)**。
+    - 但這衍伸一個問題 - 當過多hash code被分配到同一Bucket，由於線性探測作用，會造成附近的Bucket都塞滿，此時稱為**Clustering(很擁擠)**。
+    - 此時可以用Quadratic或者Double probing來產生較亂的probing順序以減少Clustering發生。
+    #### Load Factor : 👉負載因子
+    - 用以說明 `目前資料量 / 該array的長度`，Load Factor越接近1，Clustering機率越高，此時就得resize array(擴容) & rehash data，因此我們得盡可能將Load Factor控制在75%以內，**以保持O(1)**。
+    #### Chaining - Closed Addressing : 👉傳統上處理多User住同Bucket的辦法
+    - 傳統上，發生Collision時，會利用LinkedList來存與Bucket衝突的所有User，並在User類別中存入該node的nextIndex。
+    - 因為是用LinkedList，所以如果Hash Function設計不好導致Collision，而進入到LinkedList這個地步，**時間複雜度就回到O(n)**。
 
 ## Day26
 #### 學習重點 : Generics泛型 - 1
