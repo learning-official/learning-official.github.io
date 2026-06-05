@@ -1164,7 +1164,11 @@
         const renderMarkdown = (text) => {
           mdCache[partKey].text = text;
           mdCache[partKey].ready = true;
-          const cleanText = text.replace(/^---[\s\S]*?---/, '');
+          let cleanText = text.replace(/^---[\s\S]*?---/, '');
+          
+          // Normalize HackMD syntax: convert "```java=" or "```java=num" to "```java"
+          cleanText = cleanText.replace(/```(\w+)=.*/g, '```$1');
+
           targetDiv.innerHTML = marked.parse(cleanText);
           const headings = targetDiv.querySelectorAll('h2, h3');
           mdCache[partKey].headings = Array.from(headings).map((h, i) => {
