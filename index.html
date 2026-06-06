@@ -974,6 +974,14 @@
       42% { transform: scale(1.3); }
       70% { transform: scale(1); }
     }
+    .search-result-row {
+      transition: all 0.25s ease;
+    }
+    .search-result-row:hover {
+      border-color: var(--accent-color) !important;
+      background: rgba(88, 166, 255, 0.05) !important;
+      transform: translateX(4px);
+    }
   </style>
 </head>
 <body>
@@ -1412,6 +1420,35 @@
         if (tabName === 'dashboard') {
           core.updateDashboardMetrics();
         }
+      },
+      jumpToSection(tabName, headingId) {
+        // Switch to the tab first
+        ui.switch(tabName);
+        
+        if (!headingId) return;
+
+        // Scroll to the heading element after tab is loaded
+        setTimeout(() => {
+          const element = document.getElementById(headingId);
+          if (element) {
+            const mainContent = document.getElementById('main-content');
+            const elementTop = element.getBoundingClientRect().top - mainContent.getBoundingClientRect().top + mainContent.scrollTop;
+            mainContent.scrollTo({
+              top: elementTop - 95,
+              behavior: 'smooth'
+            });
+            
+            // Highlight effect
+            element.style.transition = 'color 0.3s, text-shadow 0.3s';
+            element.style.color = 'var(--warning-color)';
+            element.style.textShadow = '0 0 10px rgba(227, 179, 65, 0.4)';
+            
+            setTimeout(() => {
+              element.style.color = '';
+              element.style.textShadow = '';
+            }, 2000);
+          }
+        }, 300);
       }
     };
 
@@ -1745,17 +1782,21 @@
             if (!text) return;
 
             const lines = text.split('\n');
-            let currentDay = '未知天數目錄';
+            let currentDay = '關於個人首頁';
             let inSearchCodeBlock = false;
+            let headingIndex = -1;
+            let currentHeadingId = '';
 
             lines.forEach((line, index) => {
               const trimmed = line.trim();
               if (trimmed.startsWith('```')) {
                 inSearchCodeBlock = !inSearchCodeBlock;
               }
-              // Track current day header context
-              if (!inSearchCodeBlock && /^\s*##\s+.*Day\s*\d+/i.test(line)) {
-                currentDay = line.replace(/^##\s*/, '').trim();
+              // Track current heading index and context
+              if (!inSearchCodeBlock && /^\s*#{2,3}\s+/.test(line)) {
+                headingIndex++;
+                currentDay = line.replace(/^\s*#+\s*/, '').trim();
+                currentHeadingId = key + '-heading-' + headingIndex;
               }
 
               if (line.toLowerCase().includes(query)) {
@@ -1766,12 +1807,15 @@
                 const escapedDay = escapeHTML(currentDay);
                 
                 resultsHtml += `
-                  <div class="terminal-row" style="padding: 16px 20px;">
+                  <div class="terminal-row search-result-row" style="padding: 16px 20px; cursor: pointer;" onclick="ui.jumpToSection('${key}', '${currentHeadingId}')">
                     <div>
                       <span style="color: var(--accent-color); font-weight: 600; margin-right: 15px;">[${key.toUpperCase()} // ${escapedDay}]</span>
                       <span style="color: var(--text-main); font-family: var(--font-mono);">${escapedLine || '此列含有格式標記 or 空格'}</span>
                     </div>
-                    <span style="color: var(--text-muted); font-size: 12px;">第 ${index + 1} 行</span>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                      <span style="color: var(--text-muted); font-size: 12px;">第 ${index + 1} 行</span>
+                      <span style="color: var(--accent-color); font-size: 11px;"><i class="fa-solid fa-arrow-turn-down" style="transform: rotate(90deg);"></i> 跳轉</span>
+                    </div>
                   </div>
                 `;
               }
