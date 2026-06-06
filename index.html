@@ -270,7 +270,7 @@
     /* Document Two-Column Layout */
     .doc-layout {
       display: grid;
-      grid-template-columns: 1fr 280px;
+      grid-template-columns: 280px 1fr;
       gap: 28px;
       align-items: start;
     }
@@ -1051,6 +1051,12 @@
     <section id="tab-part1" class="editor-section">
       <h2><i class="fa-solid fa-file-code" style="color: var(--accent-color);"></i> Java 學習歷程（Part-1）</h2>
       <div class="doc-layout">
+        <aside class="doc-toc-sidebar">
+          <div class="submenu-title"><i class="fa-solid fa-list-ol"></i> 章節目錄</div>
+          <div class="toc-container">
+            <div id="part1-tocList" class="toc-list"></div>
+          </div>
+        </aside>
         <div class="idx-panel doc-content">
           <div class="markdown-body" id="part1-content">
             <!-- Spinner -->
@@ -1060,12 +1066,6 @@
             </div>
           </div>
         </div>
-        <aside class="doc-toc-sidebar">
-          <div class="submenu-title"><i class="fa-solid fa-list-ol"></i> 章節目錄</div>
-          <div class="toc-container">
-            <div id="part1-tocList" class="toc-list"></div>
-          </div>
-        </aside>
       </div>
     </section>
 
@@ -1073,6 +1073,12 @@
     <section id="tab-part2" class="editor-section">
       <h2><i class="fa-solid fa-file-code" style="color: var(--accent-color);"></i> Java 學習歷程（Part-2）</h2>
       <div class="doc-layout">
+        <aside class="doc-toc-sidebar">
+          <div class="submenu-title"><i class="fa-solid fa-list-ol"></i> 章節目錄</div>
+          <div class="toc-container">
+            <div id="part2-tocList" class="toc-list"></div>
+          </div>
+        </aside>
         <div class="idx-panel doc-content">
           <div class="markdown-body" id="part2-content">
             <!-- Spinner -->
@@ -1082,12 +1088,6 @@
             </div>
           </div>
         </div>
-        <aside class="doc-toc-sidebar">
-          <div class="submenu-title"><i class="fa-solid fa-list-ol"></i> 章節目錄</div>
-          <div class="toc-container">
-            <div id="part2-tocList" class="toc-list"></div>
-          </div>
-        </aside>
       </div>
     </section>
 
