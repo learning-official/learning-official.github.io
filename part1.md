@@ -1,7 +1,6 @@
 預計學習細項 : 
 - [ ] Spring Boot
     - [ ] Tomcat與Servlet
-    - [x] Spring Data JPA實作
 - [ ] Collection Framework
 - [ ] Gradle
 - [ ] JavaFX or Swing？
@@ -10,6 +9,8 @@
     - [ ] 高併發Stock超賣問題
     - [ ] Async執行緒優化
     - [ ] Join Fetch解N+1問題
+    - [ ] Spring Security
+    - [ ] Stored procedure
     
 
 **由於筆記限制10萬字元，因此後續部分移到part-2**
