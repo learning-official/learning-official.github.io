@@ -1437,6 +1437,11 @@
             const element = Array.from(headings).find(h => {
               const cleanText = h.innerText.replace(/^[⭐#\s]+/, '').trim().toLowerCase();
               const cleanDay = dayText.replace(/^[⭐#\s]+/, '').trim().toLowerCase();
+              const match1 = cleanText.match(/day\s*(\d+)/i);
+              const match2 = cleanDay.match(/day\s*(\d+)/i);
+              if (match1 && match2) {
+                return parseInt(match1[1], 10) === parseInt(match2[1], 10);
+              }
               return cleanText === cleanDay || cleanText.includes(cleanDay) || cleanDay.includes(cleanText);
             });
 
