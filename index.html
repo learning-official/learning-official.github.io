@@ -270,8 +270,8 @@
     /* Document Two-Column Layout */
     .doc-layout {
       display: grid;
-      grid-template-columns: 280px 1fr;
-      gap: 28px;
+      grid-template-columns: 240px 1fr;
+      gap: 20px;
       align-items: start;
     }
     
@@ -285,7 +285,7 @@
       background: var(--bg-panel);
       border: 1px solid var(--border-subtle);
       border-radius: 12px;
-      padding: 24px;
+      padding: 16px 20px;
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
       max-height: calc(100vh - 180px);
@@ -344,7 +344,7 @@
         /* Main Content Area */
     main {
       flex: 1;
-      padding: 40px 50px;
+      padding: 40px 24px;
       overflow-y: auto;
       background: transparent;
       z-index: 2;
@@ -1793,7 +1793,7 @@
                 inSearchCodeBlock = !inSearchCodeBlock;
               }
               // Track current heading index and context
-              if (!inSearchCodeBlock && /^\s*#{2,3}\s+/.test(line)) {
+              if (!inSearchCodeBlock && /^ {0,3}#{2,3}\s+/.test(line)) {
                 headingIndex++;
                 currentDay = line.replace(/^\s*#+\s*/, '').trim();
                 currentHeadingId = key + '-heading-' + headingIndex;
