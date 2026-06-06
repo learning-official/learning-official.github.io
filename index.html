@@ -54,6 +54,7 @@
       background-color: var(--bg-editor);
       color: var(--text-main);
       display: flex;
+      flex-direction: column;
       height: 100vh;
       overflow: hidden;
       font-size: 15px;
@@ -85,112 +86,234 @@
       background: var(--border-active);
     }
 
-    /* Sidebar Design */
-    aside {
-      width: 310px;
+    /* Top Navigation Bar */
+    .top-nav {
+      height: 72px;
       background: var(--bg-sidebar);
-      border-right: 1px solid var(--border-subtle);
+      border-bottom: 1px solid var(--border-subtle);
       backdrop-filter: blur(24px);
       -webkit-backdrop-filter: blur(24px);
       display: flex;
-      flex-direction: column;
-      padding: 32px 20px;
-      z-index: 10;
-      transition: transform 0.3s ease;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 40px;
+      z-index: 1000;
+      position: relative;
+      flex-shrink: 0;
     }
 
-    .workspace-header {
-      font-size: 13px;
+    .top-nav .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 17px;
       font-weight: 700;
-      color: var(--accent-color);
-      margin-bottom: 28px;
-      padding-left: 12px;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
+      color: #ffffff;
+      background: linear-gradient(135deg, #ffffff 40%, var(--accent-color) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+    }
+
+    .top-nav .brand i {
+      font-size: 19px;
+      background: linear-gradient(135deg, var(--accent-color) 0%, var(--success-color) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .top-nav .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .top-nav .nav-item {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      padding: 10px 18px;
+      border-radius: 20px;
+      cursor: pointer;
       display: flex;
       align-items: center;
       gap: 10px;
+      font-size: 14px;
+      font-family: inherit;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    .workspace-header span {
-      display: inline-block;
-      width: 8px;
-      height: 8px;
-      background-color: var(--success-color);
-      border-radius: 50%;
-      box-shadow: 0 0 8px var(--success-color);
-      animation: pulse 2s infinite;
+    .top-nav .nav-item i {
+      font-size: 14px;
     }
 
-    @keyframes pulse {
-      0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(86, 211, 100, 0.7); }
-      70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(86, 211, 100, 0); }
-      100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(86, 211, 100, 0); }
+    .top-nav .nav-item:hover {
+      color: var(--text-main);
+      background: rgba(255, 255, 255, 0.05);
     }
 
-    /* Navigation Nodes */
-    .tree-node {
+    .top-nav .nav-item.active {
+      background: rgba(88, 166, 255, 0.12);
+      color: var(--accent-color);
+      font-weight: 600;
+      box-shadow: inset 0 0 0 1px rgba(88, 166, 255, 0.25);
+    }
+
+    .top-nav .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    /* Antigravity style CTA button */
+    .cta-like-btn {
+      background: #ffffff;
+      color: #0E1117;
+      border: none;
+      padding: 10px 22px;
+      border-radius: 24px;
+      font-size: 13.5px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1);
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .cta-like-btn i {
+      color: var(--danger-color);
+      font-size: 14px;
+      transition: transform 0.2s;
+    }
+
+    .cta-like-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(255, 255, 255, 0.18), 0 0 12px rgba(88, 166, 255, 0.2);
+    }
+
+    .cta-like-btn.liked {
+      background: rgba(255, 123, 114, 0.12);
+      color: #ffffff;
+      box-shadow: none;
+      border: 1px solid rgba(255, 123, 114, 0.3);
+    }
+
+    .cta-like-btn.liked i {
+      font-weight: 900;
+    }
+
+    .mobile-menu-btn {
+      display: none;
+      background: transparent;
+      border: none;
+      color: var(--text-main);
+      font-size: 20px;
+      cursor: pointer;
+      padding: 6px;
+    }
+
+    /* Mobile Dropdown Nav links styling */
+    .mobile-nav-dropdown {
+      display: none;
+      background: var(--bg-sidebar);
+      border-bottom: 1px solid var(--border-subtle);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      flex-direction: column;
+      padding: 12px 20px;
+      gap: 6px;
+      z-index: 999;
+      position: absolute;
+      top: 72px;
+      left: 0;
+      right: 0;
+      animation: slideDown 0.25s ease-out;
+    }
+
+    @keyframes slideDown {
+      from { transform: translateY(-10px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    .mobile-nav-item {
       background: transparent;
       border: none;
       color: var(--text-muted);
       padding: 12px 16px;
-      margin-bottom: 6px;
       border-radius: 8px;
       cursor: pointer;
-      text-align: left;
       display: flex;
       align-items: center;
       gap: 12px;
-      width: 100%;
-      transition: all 0.2s ease;
-      font-size: 14px;
+      font-size: 14.5px;
       font-family: inherit;
+      width: 100%;
+      text-align: left;
+      transition: all 0.2s;
     }
 
-    .tree-node i {
-      width: 18px;
-      text-align: center;
-      font-size: 15px;
-      color: var(--text-muted);
-      transition: color 0.2s;
-    }
-
-    .tree-node:hover {
-      background: rgba(255, 255, 255, 0.05);
+    .mobile-nav-item:hover {
+      background: rgba(255, 255, 255, 0.04);
       color: var(--text-main);
     }
 
-    .tree-node:hover i {
-      color: var(--accent-color);
-    }
-
-    .tree-node.active {
+    .mobile-nav-item.active {
       background: rgba(88, 166, 255, 0.1);
-      color: #ffffff;
-      border-left: 4px solid var(--accent-color);
-      padding-left: 12px;
+      color: var(--accent-color);
       font-weight: 600;
     }
 
-    .tree-node.active i {
-      color: var(--accent-color);
+    /* Document Two-Column Layout */
+    .doc-layout {
+      display: grid;
+      grid-template-columns: 1fr 280px;
+      gap: 28px;
+      align-items: start;
     }
-
-    /* Sub-menu inside Sidebar */
-    .submenu-title {
-      font-size: 11px;
-      color: var(--text-muted);
-      padding: 16px 12px 8px 12px;
+    
+    .doc-content {
+      margin-bottom: 0;
+    }
+    
+    .doc-toc-sidebar {
+      position: sticky;
+      top: 0;
+      background: var(--bg-panel);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 24px;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      max-height: calc(100vh - 180px);
+      overflow-y: auto;
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+    }
+    
+    .doc-toc-sidebar .submenu-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--accent-color);
+      margin-bottom: 14px;
       text-transform: uppercase;
       letter-spacing: 1px;
-      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
 
     .toc-container {
-      max-height: 250px;
-      overflow-y: auto;
-      margin-bottom: 15px;
-      padding-left: 8px;
+      margin-bottom: 0;
+      padding-left: 0;
+    }
+
+    .toc-list {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
     }
 
     .toc-link {
@@ -215,55 +338,10 @@
     .toc-link.active {
       color: var(--accent-color);
       font-weight: 500;
+      background: rgba(88, 166, 255, 0.08);
     }
-
-    /* Sidebar Footer */
-    .sidebar-footer {
-      margin-top: auto;
-      padding-top: 20px;
-      border-top: 1px solid var(--border-subtle);
-    }
-
-    .user-tag {
-      font-size: 12px;
-      color: var(--text-muted);
-      margin-bottom: 12px;
-      padding-left: 8px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .user-tag span {
-      color: var(--success-color);
-      font-weight: 600;
-    }
-
-    /* Mobile Controls */
-    .mobile-header {
-      display: none;
-      height: 60px;
-      background: var(--bg-sidebar);
-      border-bottom: 1px solid var(--border-subtle);
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 20px;
-      z-index: 100;
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-    }
-
-    .menu-btn {
-      background: transparent;
-      border: none;
-      color: var(--text-main);
-      font-size: 1.4rem;
-      cursor: pointer;
-    }
-
-    /* Main Content Area */
+    
+        /* Main Content Area */
     main {
       flex: 1;
       padding: 40px 50px;
@@ -807,49 +885,28 @@
 
     /* Responsive adjustments */
     @media (max-width: 992px) {
-      body {
-        flex-direction: column;
+      .top-nav {
+        padding: 0 20px;
       }
-      
-      aside {
-        position: absolute;
-        top: 60px;
-        bottom: 0;
-        left: 0;
-        width: 280px;
-        transform: translateX(-100%);
+      .top-nav .nav-links {
+        display: none;
       }
-      
-      aside.open {
-        transform: translateX(0);
+      .mobile-menu-btn {
+        display: block;
       }
-
+      .doc-layout {
+        grid-template-columns: 1fr;
+        gap: 0;
+      }
+      .doc-toc-sidebar {
+        display: none;
+      }
       main {
-        margin-top: 60px;
-        padding: 16px;
-      }
-
-      .idx-panel {
-        padding: 20px;
-        margin-bottom: 16px;
-      }
-
-      h2 {
-        font-size: 18px;
-        margin-bottom: 16px;
-      }
-
-      .mobile-header {
-        display: flex;
-      }
-
-      .detail-grid {
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        gap: 16px;
+        padding: 24px 20px;
       }
     }
-
-    @media (max-width: 576px) {
+    
+        @media (max-width: 576px) {
       .profile-card {
         flex-direction: column;
         text-align: center;
@@ -924,64 +981,59 @@
   <!-- Background Canvas Grid Lines & Particles -->
   <canvas id="bg-canvas"></canvas>
 
-  <!-- Mobile Top Header -->
-  <div class="mobile-header">
-    <div class="workspace-header" style="margin: 0; padding: 0;">
-      <span></span> 我要學會Java
+  <!-- Top Navigation Bar (Antigravity Style) -->
+  <header class="top-nav">
+    <div class="brand" onclick="ui.switch('about')">
+      <i class="fa-solid fa-mug-hot"></i>
+      <span>我要學會Java</span>
     </div>
-    <button class="menu-btn" id="menuToggleBtn">
-      <i class="fa-solid fa-bars"></i>
+    <nav class="nav-links">
+      <button class="nav-item active" id="btn-about" onclick="ui.switch('about')">
+        <i class="fa-solid fa-house-user"></i> 個人學習首頁
+      </button>
+      <button class="nav-item" id="btn-part1" onclick="ui.switch('part1')">
+        <i class="fa-solid fa-file-code"></i> Part 1 筆記
+      </button>
+      <button class="nav-item" id="btn-part2" onclick="ui.switch('part2')">
+        <i class="fa-solid fa-file-code"></i> Part 2 筆記
+      </button>
+      <button class="nav-item" id="btn-dashboard" onclick="ui.switch('dashboard')">
+        <i class="fa-solid fa-chart-line"></i> 進度儀表板
+      </button>
+      <button class="nav-item" id="btn-search" onclick="ui.switch('search')">
+        <i class="fa-solid fa-terminal"></i> 全文探測
+      </button>
+    </nav>
+    <div class="nav-actions">
+      <button class="cta-like-btn" id="sidebar-like-btn" onclick="core.likePage()">
+        <i class="fa-regular fa-heart" id="like-icon"></i> 點讚支持 (<span id="like-count">0</span>)
+      </button>
+      <button class="mobile-menu-btn" id="menuToggleBtn">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- Mobile Dropdown Nav links -->
+  <div class="mobile-nav-dropdown" id="mobileNavDropdown">
+    <button class="mobile-nav-item active" id="m-btn-about" onclick="ui.switch('about')">
+      <i class="fa-solid fa-house-user"></i> 個人學習首頁
+    </button>
+    <button class="mobile-nav-item" id="m-btn-part1" onclick="ui.switch('part1')">
+      <i class="fa-solid fa-file-code"></i> Part 1 筆記
+    </button>
+    <button class="mobile-nav-item" id="m-btn-part2" onclick="ui.switch('part2')">
+      <i class="fa-solid fa-file-code"></i> Part 2 筆記
+    </button>
+    <button class="mobile-nav-item" id="m-btn-dashboard" onclick="ui.switch('dashboard')">
+      <i class="fa-solid fa-chart-line"></i> 進度儀表板
+    </button>
+    <button class="mobile-nav-item" id="m-btn-search" onclick="ui.switch('search')">
+      <i class="fa-solid fa-terminal"></i> 全文探測
     </button>
   </div>
-
-  <!-- Left Sidebar (Workspace Tree / Tabs) -->
-  <aside id="sidebar">
-    <div class="workspace-header">
-      <span></span> 我要學會Java // WORKSPACE
-    </div>
-    
-    <!-- Tab list -->
-    <button class="tree-node active" id="btn-about" onclick="ui.switch('about')">
-      <i class="fa-solid fa-house-user"></i> 個人學習首頁 // Home
-    </button>
-    <button class="tree-node" id="btn-part1" onclick="ui.switch('part1')">
-      <i class="fa-solid fa-file-code"></i> Java 學習歷程 Part 1
-    </button>
-    <button class="tree-node" id="btn-part2" onclick="ui.switch('part2')">
-      <i class="fa-solid fa-file-code"></i> Java 學習歷程 Part 2
-    </button>
-    <button class="tree-node" id="btn-dashboard" onclick="ui.switch('dashboard')">
-      <i class="fa-solid fa-chart-line"></i> 學習進度監控儀表板
-    </button>
-    <button class="tree-node" id="btn-search" onclick="ui.switch('search')">
-      <i class="fa-solid fa-terminal"></i> 全文關鍵字探測
-    </button>
-    <button class="tree-node like-btn-sidebar" id="sidebar-like-btn" onclick="core.likePage()">
-      <i class="fa-regular fa-heart" id="like-icon" style="color: var(--danger-color);"></i> 點讚支持 (<span id="like-count">0</span>)
-    </button>
-
-    <!-- Sub-menu: Dynamic Header Table of Contents -->
-    <div class="submenu-title" id="tocTitle" style="display: none;">章節目錄 (TOC)</div>
-    <div class="toc-container" id="tocContainer" style="display: none;">
-      <div id="tocList">
-        <!-- Will be populated dynamically -->
-      </div>
-    </div>
-
-    <!-- Sidebar footer -->
-    <div class="sidebar-footer">
-      <div class="user-tag">
-        <i class="fa-solid fa-user-gear"></i>
-        當前登入者: <span>Guest Learner</span>
-      </div>
-      <div class="user-tag" style="margin-bottom: 0;">
-        <i class="fa-solid fa-circle-nodes"></i>
-        主機連線狀態: <span style="color: var(--success-color);">ONLINE</span>
-      </div>
-    </div>
-  </aside>
-
-  <!-- Main Workstation Area -->
+  
+    <!-- Main Workstation Area -->
   <main id="main-content">
 
     <!-- CORS File Protocol Warning Box -->
@@ -998,28 +1050,44 @@
     <!-- TAB 1: Part 1 Document -->
     <section id="tab-part1" class="editor-section">
       <h2><i class="fa-solid fa-file-code" style="color: var(--accent-color);"></i> Java 學習歷程（Part-1）</h2>
-      <div class="idx-panel">
-        <div class="markdown-body" id="part1-content">
-          <!-- Spinner -->
-          <div class="spinner-container">
-            <i class="fa-solid fa-spinner spinner"></i>
-            <p>正在載入 Java 學習歷程 Part-1 核心日誌...</p>
+      <div class="doc-layout">
+        <div class="idx-panel doc-content">
+          <div class="markdown-body" id="part1-content">
+            <!-- Spinner -->
+            <div class="spinner-container">
+              <i class="fa-solid fa-spinner spinner"></i>
+              <p>正在載入 Java 學習歷程 Part-1 核心日誌...</p>
+            </div>
           </div>
         </div>
+        <aside class="doc-toc-sidebar">
+          <div class="submenu-title"><i class="fa-solid fa-list-ol"></i> 章節目錄</div>
+          <div class="toc-container">
+            <div id="part1-tocList" class="toc-list"></div>
+          </div>
+        </aside>
       </div>
     </section>
 
     <!-- TAB 2: Part 2 Document -->
     <section id="tab-part2" class="editor-section">
       <h2><i class="fa-solid fa-file-code" style="color: var(--accent-color);"></i> Java 學習歷程（Part-2）</h2>
-      <div class="idx-panel">
-        <div class="markdown-body" id="part2-content">
-          <!-- Spinner -->
-          <div class="spinner-container">
-            <i class="fa-solid fa-spinner spinner"></i>
-            <p>正在載入 Java 學習歷程 Part-2 進階日誌...</p>
+      <div class="doc-layout">
+        <div class="idx-panel doc-content">
+          <div class="markdown-body" id="part2-content">
+            <!-- Spinner -->
+            <div class="spinner-container">
+              <i class="fa-solid fa-spinner spinner"></i>
+              <p>正在載入 Java 學習歷程 Part-2 進階日誌...</p>
+            </div>
           </div>
         </div>
+        <aside class="doc-toc-sidebar">
+          <div class="submenu-title"><i class="fa-solid fa-list-ol"></i> 章節目錄</div>
+          <div class="toc-container">
+            <div id="part2-tocList" class="toc-list"></div>
+          </div>
+        </aside>
       </div>
     </section>
 
@@ -1132,7 +1200,7 @@
             
             <h3 style="border-bottom: 1px dashed var(--border-subtle); padding-bottom: 8px; margin-top: 20px;">想說的話與學習理念</h3>
             <blockquote style="margin-top: 15px;">
-              「我要學會Java！不論後面有多少困難，這一次，一定要堅持到底。最累人的不是學習，是寫筆記，不過也正是如此，我才可以將這些技術概念真正刻在腦海中。加油！」
+              「我要學會Java，擺脫三分鐘熱度！」
             </blockquote>
           </div>
 
@@ -1318,32 +1386,31 @@
       switch(tabName) {
         // Switch Active Tabs
         document.querySelectorAll('.editor-section').forEach(s => s.classList.remove('active'));
-        document.querySelectorAll('.tree-node').forEach(n => n.classList.remove('active'));
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        document.querySelectorAll('.mobile-nav-item').forEach(n => n.classList.remove('active'));
 
-        document.getElementById(`tab-${tabName}`).classList.add('active');
-        const btnNode = document.getElementById(`btn-${tabName}`);
+        const section = document.getElementById('tab-' + tabName);
+        if (section) section.classList.add('active');
+        
+        const btnNode = document.getElementById('btn-' + tabName);
         if (btnNode) btnNode.classList.add('active');
+        
+        const mBtnNode = document.getElementById('m-btn-' + tabName);
+        if (mBtnNode) mBtnNode.classList.add('active');
 
-        // Toggle TOC Sidebar submenu display
-        const tocTitle = document.getElementById('tocTitle');
-        const tocContainer = document.getElementById('tocContainer');
+        // Toggle mobile dropdown menu closed
+        if (typeof toggleMobileMenu === 'function') {
+          toggleMobileMenu(false);
+        }
+
+        // Generate TOC for part1 / part2
         if (tabName === 'part1' || tabName === 'part2') {
-          tocTitle.style.display = 'block';
-          tocContainer.style.display = 'block';
           generateTOC(tabName);
-        } else {
-          tocTitle.style.display = 'none';
-          tocContainer.style.display = 'none';
         }
 
         // Trigger analysis if dashboard is clicked
         if (tabName === 'dashboard') {
           core.updateDashboardMetrics();
-        }
-
-        // Close mobile sidebar if open
-        if (typeof toggleSidebar === 'function') {
-          toggleSidebar(false);
         }
       }
     };
@@ -1728,7 +1795,8 @@
 
     // Populate Sidebar TOC dynamically
     function generateTOC(partKey) {
-      const tocList = document.getElementById('tocList');
+      const tocList = document.getElementById(partKey + '-tocList');
+      if (!tocList) return;
       tocList.innerHTML = '';
       
       const headings = mdCache[partKey].headings;
@@ -1757,7 +1825,7 @@
       setupScrollSpy();
     }
 
-    // ScrollSpy to highlight currently visible headings in sidebar
+    // ScrollSpy to highlight currently visible headings in TOC
     function setupScrollSpy() {
       const links = document.querySelectorAll('.toc-link');
       const mainContent = document.getElementById('main-content');
@@ -1767,8 +1835,9 @@
         
         // Find currently visible heading
         document.querySelectorAll('.editor-section.active h2, .editor-section.active h3').forEach(heading => {
-          const headingTop = heading.offsetTop;
-          if (mainContent.scrollTop >= headingTop - 60) {
+          // Calculate heading position relative to scrolling container
+          const headingTop = heading.getBoundingClientRect().top - mainContent.getBoundingClientRect().top + mainContent.scrollTop;
+          if (mainContent.scrollTop >= headingTop - 120) {
             currentActive = heading.id;
           }
         });
@@ -1782,99 +1851,80 @@
       };
     }
 
-    // Mobile Sidebar UI Toggle with backdrop overlay
+    // Mobile Top Navigation Menu Dropdown Toggle
     const menuToggleBtn = document.getElementById('menuToggleBtn');
-    const sidebar = document.getElementById('sidebar');
-    
-    // Create overlay dynamically if it doesn't exist
-    let overlay = document.getElementById('sidebar-overlay');
-    if (!overlay) {
-      overlay = document.createElement('div');
-      overlay.id = 'sidebar-overlay';
-      overlay.style.cssText = 'display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 9; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); transition: opacity 0.3s ease; opacity: 0;';
-      document.body.appendChild(overlay);
-    }
+    const mobileNavDropdown = document.getElementById('mobileNavDropdown');
 
-    function toggleSidebar(open) {
-      const shouldOpen = open !== undefined ? open : !sidebar.classList.contains('open');
+    function toggleMobileMenu(open) {
+      const shouldOpen = open !== undefined ? open : (mobileNavDropdown.style.display !== 'flex');
       const icon = menuToggleBtn.querySelector('i');
       
       if (shouldOpen) {
-        sidebar.classList.add('open');
+        mobileNavDropdown.style.display = 'flex';
         icon.className = 'fa-solid fa-xmark';
-        overlay.style.display = 'block';
-        setTimeout(() => { overlay.style.opacity = '1'; }, 10);
       } else {
-        sidebar.classList.remove('open');
+        mobileNavDropdown.style.display = 'none';
         icon.className = 'fa-solid fa-bars';
-        overlay.style.opacity = '0';
-        overlay.addEventListener('transitionend', function handler() {
-          if (!sidebar.classList.contains('open')) {
-            overlay.style.display = 'none';
-          }
-          overlay.removeEventListener('transitionend', handler);
-        });
       }
     }
     
-    menuToggleBtn.addEventListener('click', () => toggleSidebar());
-    overlay.addEventListener('click', () => toggleSidebar(false));
+    if (menuToggleBtn) {
+      menuToggleBtn.addEventListener('click', () => toggleMobileMenu());
+    }
 
-    // Particle Background Effect on Canvas
+    // Gravitational Particle Vortex Animation (Antigravity Style)
     function initCanvasAnimation() {
       const canvas = document.getElementById('bg-canvas');
       const ctx = canvas.getContext('2d');
       
       let width = (canvas.width = window.innerWidth);
       let height = (canvas.height = window.innerHeight);
+      let centerX = width / 2;
+      let centerY = height / 2;
       
       window.addEventListener('resize', () => {
         width = canvas.width = window.innerWidth;
         height = canvas.height = window.innerHeight;
+        centerX = width / 2;
+        centerY = height / 2;
       });
 
       const particles = [];
-      const particleCount = 40;
+      const particleCount = 120;
+      const colors = ['#58a6ff', '#ff7b72', '#ab7eff', '#e3b341', '#56d364'];
 
       for (let i = 0; i < particleCount; i++) {
+        const r = Math.random() * (Math.max(width, height) / 1.5) + 30;
         particles.push({
-          x: Math.random() * width,
-          y: Math.random() * height,
-          vx: (Math.random() - 0.5) * 0.4,
-          vy: (Math.random() - 0.5) * 0.4,
-          size: Math.random() * 2 + 1
+          r: r,
+          angle: Math.random() * Math.PI * 2,
+          speed: (Math.random() * 0.001 + 0.0003) * (Math.random() < 0.5 ? 1 : -1),
+          size: Math.random() * 1.8 + 0.6,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          pulsePhase: Math.random() * Math.PI * 2,
+          pulseSpeed: Math.random() * 0.02 + 0.005
         });
       }
 
       function animate() {
-        ctx.clearRect(0, 0, width, height);
-        ctx.fillStyle = 'rgba(88, 166, 255, 0.25)';
-        ctx.strokeStyle = 'rgba(88, 166, 255, 0.04)';
+        // Subtle trail effect
+        ctx.fillStyle = 'rgba(14, 17, 23, 0.08)';
+        ctx.fillRect(0, 0, width, height);
 
         for (let i = 0; i < particleCount; i++) {
           const p = particles[i];
-          p.x += p.vx;
-          p.y += p.vy;
+          p.angle += p.speed;
+          p.pulsePhase += p.pulseSpeed;
 
-          if (p.x < 0 || p.x > width) p.vx *= -1;
-          if (p.y < 0 || p.y > height) p.vy *= -1;
+          // Subtle breathing effect on orbit radius
+          const currentR = p.r + Math.sin(p.pulsePhase) * 15;
+          const x = centerX + currentR * Math.cos(p.angle);
+          const y = centerY + currentR * Math.sin(p.angle);
 
           ctx.beginPath();
-          ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+          ctx.arc(x, y, p.size, 0, Math.PI * 2);
+          ctx.fillStyle = p.color;
           ctx.fill();
-
-          // Connect points close to each other
-          for (let j = i + 1; j < particleCount; j++) {
-            const p2 = particles[j];
-            const dist = Math.hypot(p.x - p2.x, p.y - p2.y);
-            if (dist < 120) {
-              ctx.lineWidth = 1 - dist / 120;
-              ctx.beginPath();
-              ctx.moveTo(p.x, p.y);
-              ctx.lineTo(p2.x, p2.y);
-              ctx.stroke();
-            }
-          }
         }
         requestAnimationFrame(animate);
       }
