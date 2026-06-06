@@ -1,9 +1,3 @@
----
-title: Java學習歷程（Part-2）
-tags: [Java]
-
----
-
 ## 目錄
 - [Spring 「使用者資料管控專案Part1」 - Day 66~80](##Day66)
 - [Multi-Thread - Day 81~90](##Day81)
@@ -2342,3 +2336,6 @@ CREATE TABLE categories(
                 .collect(Collectors.toList());
         System.out.println(filterList);
         ```
+
+
+
