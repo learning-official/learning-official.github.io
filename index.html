@@ -270,7 +270,7 @@
     /* Document Two-Column Layout */
     .doc-layout {
       display: grid;
-      grid-template-columns: 240px 1fr;
+      grid-template-columns: 240px minmax(0, 1fr);
       gap: 20px;
       align-items: start;
       margin-left: -24px; /* Pull flush to the left edge of <main> */
@@ -348,6 +348,7 @@
       flex: 1;
       padding: 40px 24px;
       overflow-y: auto;
+      overflow-x: hidden;
       background: transparent;
       z-index: 2;
       position: relative;
@@ -391,6 +392,10 @@
       display: none;
       max-width: 1000px;
       margin: 0 auto;
+    }
+
+    #tab-part1, #tab-part2 {
+      max-width: 95%;
     }
 
     .editor-section.active {
