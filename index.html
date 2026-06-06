@@ -273,6 +273,7 @@
       grid-template-columns: 240px 1fr;
       gap: 20px;
       align-items: start;
+      margin-left: -24px; /* Pull flush to the left edge of <main> */
     }
     
     .doc-content {
@@ -282,15 +283,16 @@
     .doc-toc-sidebar {
       position: sticky;
       top: 0;
-      background: var(--bg-panel);
+      background: var(--bg-sidebar);
       border: 1px solid var(--border-subtle);
-      border-radius: 12px;
-      padding: 16px 20px;
+      border-left: none; /* No border on the left since it sits flush */
+      border-radius: 0 12px 12px 0; /* Only round the right corners */
+      padding: 20px 24px;
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
-      max-height: calc(100vh - 180px);
+      max-height: calc(100vh - 72px); /* Fill the vertical viewport */
       overflow-y: auto;
-      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+      box-shadow: 4px 8px 32px 0 rgba(0, 0, 0, 0.3);
     }
     
     .doc-toc-sidebar .submenu-title {
@@ -1421,34 +1423,45 @@
           core.updateDashboardMetrics();
         }
       },
-      jumpToSection(tabName, headingId) {
+      jumpToDay(tabName, dayText) {
         // Switch to the tab first
         ui.switch(tabName);
         
-        if (!headingId) return;
+        if (!dayText) return;
 
-        // Scroll to the heading element after tab is loaded
+        // Find and scroll to the heading element by text matching after tab switches
         setTimeout(() => {
-          const element = document.getElementById(headingId);
-          if (element) {
-            const mainContent = document.getElementById('main-content');
-            const elementTop = element.getBoundingClientRect().top - mainContent.getBoundingClientRect().top + mainContent.scrollTop;
-            mainContent.scrollTo({
-              top: elementTop - 95,
-              behavior: 'smooth'
+          const targetDiv = document.getElementById(tabName + '-content');
+          if (targetDiv) {
+            const headings = targetDiv.querySelectorAll('h2, h3');
+            const element = Array.from(headings).find(h => {
+              const cleanText = h.innerText.replace(/^[⭐#\s]+/, '').trim().toLowerCase();
+              const cleanDay = dayText.replace(/^[⭐#\s]+/, '').trim().toLowerCase();
+              return cleanText === cleanDay || cleanText.includes(cleanDay) || cleanDay.includes(cleanText);
             });
-            
-            // Highlight effect
-            element.style.transition = 'color 0.3s, text-shadow 0.3s';
-            element.style.color = 'var(--warning-color)';
-            element.style.textShadow = '0 0 10px rgba(227, 179, 65, 0.4)';
-            
-            setTimeout(() => {
-              element.style.color = '';
-              element.style.textShadow = '';
-            }, 2000);
+
+            if (element) {
+              const mainContent = document.getElementById('main-content');
+              const elementTop = element.getBoundingClientRect().top - mainContent.getBoundingClientRect().top + mainContent.scrollTop;
+              mainContent.scrollTo({
+                top: elementTop - 30,
+                behavior: 'smooth'
+              });
+              
+              // Highlight effect
+              element.style.transition = 'color 0.3s, text-shadow 0.3s';
+              element.style.color = 'var(--warning-color)';
+              element.style.textShadow = '0 0 15px rgba(227, 179, 65, 0.6)';
+              
+              setTimeout(() => {
+                element.style.color = '';
+                element.style.textShadow = '';
+              }, 2500);
+            } else {
+              console.warn('Could not find heading matching day: ' + dayText);
+            }
           }
-        }, 300);
+        }, 400);
       }
     };
 
@@ -1805,9 +1818,10 @@
                 const cleanLine = line.replace(/[#*`=_\-\[\]]/g, '').trim();
                 const escapedLine = escapeHTML(cleanLine);
                 const escapedDay = escapeHTML(currentDay);
+                const jsEscapedDay = escapedDay.replace(/'/g, "\\'");
                 
                 resultsHtml += `
-                  <div class="terminal-row search-result-row" style="padding: 16px 20px; cursor: pointer;" onclick="ui.jumpToSection('${key}', '${currentHeadingId}')">
+                  <div class="terminal-row search-result-row" style="padding: 16px 20px; cursor: pointer;" onclick="ui.jumpToDay('${key}', '${jsEscapedDay}')">
                     <div>
                       <span style="color: var(--accent-color); font-weight: 600; margin-right: 15px;">[${key.toUpperCase()} // ${escapedDay}]</span>
                       <span style="color: var(--text-main); font-family: var(--font-mono);">${escapedLine || '此列含有格式標記 or 空格'}</span>
