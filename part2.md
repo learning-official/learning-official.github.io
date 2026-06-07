@@ -2378,7 +2378,7 @@ CREATE TABLE categories(
     ```java=
     Map<String, String> userMap = users.stream()
         .collect(Collectors.toMap(
-            UserTest::getName, // Key
+            User::getName, // Key
             u -> {
                 return u.getCity() != null ? u.getCity() : "無家可歸";
             }, // Value
