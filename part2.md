@@ -2373,7 +2373,7 @@ CREATE TABLE categories(
     - 2️⃣ 由於key是unique的，因此不能使用getName作為Key，應該使用唯一鍵。
     - 如果今天Key真的遇到重複時，那該怎麼辦呢？
     ![image](https://hackmd.io/_uploads/SyFbG6GWMg.png)
-    - 這時就需要加入mergerFunction，這個也是toMap的一種形式，用於決定 **要保留衝突鍵的舊鍵還是新鍵**。
+    - 這時就需要加入mergeFunction，這個也是toMap的一種形式，用於決定 **要保留衝突鍵的舊鍵還是新鍵**。
     - 此時程式如下 : 
     ```java=
     Map<String, String> userMap = users.stream()
@@ -2385,3 +2385,6 @@ CREATE TABLE categories(
             (existing, replacement) -> existing // 保留舊鍵
     ));
     ```
+    
+        
+
