@@ -2338,8 +2338,8 @@ CREATE TABLE categories(
         ```
 
 ## Day158
-#### 學習重點 : Collectors的Map與Group分組
-- Map的應用
+#### 學習重點 : Collectors的Map
+- Map的應用 ⭐⭐⭐⭐⭐
     - 當我們想利用物件成員做配對，如 `"名字" : 年齡` or `"名字" : "居住地"`，可以直接寫 : 
     ```java=
     User user = new User("小八", "東京");
@@ -2348,12 +2348,25 @@ CREATE TABLE categories(
     ```
     - 但如果今天是一坨拉庫的User呢？ 總不可能一個一個put吧！
     - 這時候Collectors.toMap就派上用場了 : 
-    ```java=
-    Map<String, String> userMap = users.stream()
-        .collect(Collectors.toMap(
-            User::getName, // Key
-            User::getCity // Value
-    ));
-    ```
-    - 
+    - 仔細看，toMap的運作方式 : 兩個參數都是 `Function`，代表我們可以實作！
+    ![image](https://hackmd.io/_uploads/SyOEA2zWGx.png)
+        ```java=
+        Map<String, String> userMap = users.stream()
+            .collect(Collectors.toMap(
+                User::getName, // Key
+                User::getCity // Value
+        ));
+        ```
+        - 上述是一般實作，也就是簡單取出成員！但也可以做變化，如下 :
+        ```java=
+        Map<String, String> userMap = users.stream()
+            .collect(Collectors.toMap(
+                UserTest::getName, // Key
+                u -> {
+                    return u.getCity() != null ? u.getCity() : "無家可歸";
+                } // Value
+        ));
+        ```
+        - 當使用者是流浪漢時，就幫他加註「無家可歸」😵‍💫
+    
 
