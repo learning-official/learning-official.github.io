@@ -2304,7 +2304,7 @@ CREATE TABLE categories(
     ```java=
     var list = new ArrayList<String>("Alice", "Bob", "Carol");
     ```
-    - 透過範例可以知道原本是以List<String>宣告，現在變成了var代替，由於我們知道函式回傳的是List<T>，因此這邊用var來接收很剛好！
+    - 透過範例可以知道原本是以 `List<String>` 宣告，現在變成了var代替，由於我們知道函式回傳的是 `List<T>`，因此這邊用var來接收很剛好！
     - 但是！如果今天是是這樣 
     ```java= 
     var unknown = Yeah.getInstance();
@@ -2337,5 +2337,51 @@ CREATE TABLE categories(
         System.out.println(filterList);
         ```
 
-
-
+## Day158
+#### 學習重點 : Collectors的Map
+- Map的應用 ⭐⭐⭐⭐⭐
+    - 當我們想利用物件成員做配對，如 `"名字" : 年齡` or `"名字" : "居住地"`，可以直接寫 : 
+    ```java=
+    User user = new User("小八", "東京");
+    Map<String, String> map = new HashMap<>();
+    map.put(userTest.getName(), userTest.getCity());
+    ```
+    - 但如果今天是一坨拉庫的User呢？ 總不可能一個一個put吧！
+    - 這時候Collectors.toMap就派上用場了 : 
+    - 仔細看，toMap的運作方式 : 兩個參數都是 `Function`，代表我們可以實作！
+    ![image](https://hackmd.io/_uploads/SyOEA2zWGx.png)
+        ```java=
+        Map<String, String> userMap = users.stream()
+            .collect(Collectors.toMap(
+                User::getName, // Key
+                User::getCity // Value
+        ));
+        ```
+        - 上述是一般實作，也就是簡單取出成員！但也可以做變化，如下 :
+        ```java=
+        Map<String, String> userMap = users.stream()
+            .collect(Collectors.toMap(
+                User::getUUID, // Key
+                u -> {
+                    return u.getCity() != null ? u.getCity() : "無家可歸";
+                } // Value
+        ));
+        ```
+        - 當使用者是流浪漢時，就幫他加註「無家可歸」😵‍💫
+- 使用toMap要注意的事情 : ⭐⭐⭐⭐⭐⭐ 
+    - 1️⃣ 不允許NPE的出現，因此如果偵測到null，務必做邏輯處理(像Optional那樣)
+    - 2️⃣ 由於key是unique的，因此不能使用getName作為Key，應該使用唯一鍵。
+    - 如果今天Key真的遇到重複時，那該怎麼辦呢？
+    ![image](https://hackmd.io/_uploads/SyFbG6GWMg.png)
+    - 這時就需要加入mergerFunction，這個也是toMap的一種形式，用於決定 **要保留衝突鍵的舊鍵還是新鍵**。
+    - 此時程式如下 : 
+    ```java=
+    Map<String, String> userMap = users.stream()
+        .collect(Collectors.toMap(
+            User::getUUID, // Key
+            u -> {
+                return u.getCity() != null ? u.getCity() : "無家可歸";
+            }, // Value
+            (existing, replacement) -> existing // 保留舊鍵
+    ));
+    ```
