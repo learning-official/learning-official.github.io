@@ -2361,12 +2361,13 @@ CREATE TABLE categories(
         ```java=
         Map<String, String> userMap = users.stream()
             .collect(Collectors.toMap(
-                UserTest::getName, // Key
+                User::getUUID, // Key
                 u -> {
                     return u.getCity() != null ? u.getCity() : "無家可歸";
                 } // Value
         ));
         ```
         - 當使用者是流浪漢時，就幫他加註「無家可歸」😵‍💫
-    
-
+    - 使用toMap要注意的事情 : 
+        - 1️⃣ 不允許NPE的出現，因此如果偵測到null，務必做邏輯處理(像Optional那樣)
+        - 2️⃣ 由於key是unique的，因此不能使用getName作為Key，應該使用唯一鍵。
