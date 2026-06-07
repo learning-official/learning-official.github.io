@@ -2304,7 +2304,7 @@ CREATE TABLE categories(
     ```java=
     var list = new ArrayList<String>("Alice", "Bob", "Carol");
     ```
-    - 透過範例可以知道原本是以List<String>宣告，現在變成了var代替，由於我們知道函式回傳的是List<T>，因此這邊用var來接收很剛好！
+    - 透過範例可以知道原本是以 `List<String>` 宣告，現在變成了var代替，由於我們知道函式回傳的是 `List<T>`，因此這邊用var來接收很剛好！
     - 但是！如果今天是是這樣 
     ```java= 
     var unknown = Yeah.getInstance();
@@ -2337,5 +2337,23 @@ CREATE TABLE categories(
         System.out.println(filterList);
         ```
 
-
+## Day158
+#### 學習重點 : Collectors的Map與Group分組
+- Map的應用
+    - 當我們想利用物件成員做配對，如 `"名字" : 年齡` or `"名字" : "居住地"`，可以直接寫 : 
+    ```java=
+    User user = new User("小八", "東京");
+    Map<String, String> map = new HashMap<>();
+    map.put(userTest.getName(), userTest.getCity());
+    ```
+    - 但如果今天是一坨拉庫的User呢？ 總不可能一個一個put吧！
+    - 這時候Collectors.toMap就派上用場了 : 
+    ```java=
+    Map<String, String> userMap = users.stream()
+        .collect(Collectors.toMap(
+            User::getName, // Key
+            User::getCity // Value
+    ));
+    ```
+    - 
 
