@@ -2385,7 +2385,7 @@ CREATE TABLE categories(
             (existing, replacement) -> existing // 保留舊鍵
     ));
     ```
-    
+
 ## Day159
 #### 學習重點 : Collectors的group
 - Collectors.groupingBy ⭐⭐⭐⭐⭐⭐⭐⭐
@@ -2415,5 +2415,8 @@ CREATE TABLE categories(
     - 由於上述都是以泛型來看，很燒腦ww，我稍微理了一下思緒 : 
         1. 呼叫上游函式時，根據City分類好箱子
         2. 以大箱子City的下去細分，再根據每個箱子去做第二層分類
-        3. 最後做總包裝     
+        3. 最後做總包裝
+        
+    
+        
 
