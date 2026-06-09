@@ -2438,12 +2438,12 @@ CREATE TABLE categories(
     - 用於做「**布林分組**」，亦即只有true或false，也算一種grouping (ouo? 因此跟grouping一樣可以加入Collectors的工具，像是多級grouping或者counting。
     - 以下是範例 : 
     ```java=
-    Map<Boolean, Map<String, List<UserTest>>> partition = users.stream()
+    Map<Boolean, Map<String, List<User>>> partition = users.stream()
         .collect(
             Collectors.partitioningBy(
                 u -> u.getAge() >= 20,
                 Collectors.groupingBy(
-                    UserTest::getCity
+                    User::getCity
             )
         )
     );
