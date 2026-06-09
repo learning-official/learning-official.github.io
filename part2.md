@@ -2466,7 +2466,6 @@ CREATE TABLE categories(
         )
     );
     ```
-        
-    
+
         
 
