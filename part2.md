@@ -2418,7 +2418,23 @@ CREATE TABLE categories(
         3. 最後做總包裝
 
 ## Day160
-#### 學習重點 : Collectors的count與partition
+#### 學習重點 : Collectors的group、count與partition
+- group的mapping
+    - mapping在group當中就是將分類後的資料做加工變形！
+    - 一般來說，當我們grouping完後，回傳的是User的物件地址，但若我想要以呈現使用者名字，就可以使用mapping來「變形」。
+    ```java=
+    Map<String, Set<String>> groupMap = users.stream()
+        .collect(
+        Collectors.groupingBy(
+            User::getCity,
+            Collectors.mapping(
+                User::getName, 
+                Collectors.toSet()
+            )
+        )
+    );
+    ```
+    - 這邊Set亦即當某City中有重複的名稱，只許出現一次，也順便複習了之前學的Set！
 - counting ⭐⭐⭐⭐⭐
     - 在Collectors當中，有個很好用的工具 : 計數器，原本我不太知道為甚麼要有它（我覺得可以直接用List.size()就好了owo）。
     - 但後來試想了一下，grouping時都是「以Key + toList在做分類」，若有數百萬筆資料，且我只想知道每組筆數時，還要先toList在getSize的話會 **效能爆炸**🤯
@@ -2431,7 +2447,9 @@ CREATE TABLE categories(
             Collectors.groupingBy(
                 User::getDepartment,
                 Collectors.counting()
-            )));
+            )
+        )
+    );
     ```
     - 根據城市與部門分組，計每個城市中的不同部門人數。
 - partition ⭐⭐⭐⭐
