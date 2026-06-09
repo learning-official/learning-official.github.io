@@ -2416,6 +2416,38 @@ CREATE TABLE categories(
         1. 呼叫上游函式時，根據City分類好箱子
         2. 以大箱子City的下去細分，再根據每個箱子去做第二層分類
         3. 最後做總包裝
+
+## Day160
+#### 學習重點 : Collectors的count與partition
+- counting ⭐⭐⭐⭐⭐
+    - 在Collectors當中，有個很好用的工具 : 計數器，原本我不太知道為甚麼要有它（我覺得可以直接用List.size()就好了owo）。
+    - 但後來試想了一下，grouping時都是「以Key + toList在做分類」，若有數百萬筆資料，且我只想知道每組筆數時，還要先toList在getSize的話會 **效能爆炸**🤯
+    - 因此今天如果只是要計數時，**不需要再建空間**，直接讓counting把關即可！
+    - 如下方範例 : 
+    ```java=
+    Map<String, Map<String, Long>> countByDept = users.stream
+        .collect(Collectors.groupingBy(
+            User::getCity,
+            Collectors.groupingBy(
+                User::getDepartment,
+                Collectors.counting()
+            )));
+    ```
+    - 根據城市與部門分組，計每個城市中的不同部門人數。
+- partition ⭐⭐⭐⭐
+    - 用於做「**布林分組**」，亦即只有true或false，也算一種grouping (ouo? 因此跟grouping一樣可以加入Collectors的工具，像是多級grouping或者counting。
+    - 以下是範例 : 
+    ```java=
+    Map<Boolean, Map<String, List<UserTest>>> partition = users.stream()
+        .collect(
+            Collectors.partitioningBy(
+                u -> u.getAge() >= 20,
+                Collectors.groupingBy(
+                    UserTest::getCity
+            )
+        )
+    );
+    ```
         
     
         
