@@ -2385,6 +2385,38 @@ CREATE TABLE categories(
             (existing, replacement) -> existing // 保留舊鍵
     ));
     ```
+
+## Day159
+#### 學習重點 : Collectors的group
+- Collectors.groupingBy ⭐⭐⭐⭐⭐⭐⭐⭐
+    - 這個用法用在Map鍵值對，根據 **成員屬性** 進行分組，常見範例如下 : 
+    ```java=
+    // 基本的分類
+    Map<String, List<User>> groupByCity = users.stream
+        .collect(Collectors.groupingBy(
+                User::getCity
+            )    
+    )
+    // 多級分組
+    Map<String, Map<String, List<User>>> groupByCityAndDpt = users.stream
+        .collect(Collectors.groupingBy(
+            User::getCity,
+            Collectors.groupingBy(
+                User::getDepartment    
+            )
+    ))
+    ```
+    - 由多級分組可以知道 👉 groupingBy的第二個參數可以接收一個Collectors，而收集的「根據」就是上一層分類好的 `Map<User::getCity, List<User>>`，因此帶著前一層的資料進到下游分類區時，會長這樣 👉 `<User::getCity, Map<User::getDepartment, List<User>>>`。
+    - 這邊調出srouceCode來看 : 
+    ![image](https://hackmd.io/_uploads/rJt81XN-Me.png)
+    ![image](https://hackmd.io/_uploads/SJHOJm4-Gx.png)
+    - downstream回傳 `<T, A, D>`，從第一張圖來看就是 `<T, ?, Map>`，因此作為下游分類好的Map被丟回了上游時變成了D(value)，而key則是第一層所根據的User::getCity。
+- 流程 : ⭐⭐⭐⭐⭐⭐
+    - 由於上述都是以泛型來看，很燒腦ww，我稍微理了一下思緒 : 
+        1. 呼叫上游函式時，根據City分類好箱子
+        2. 以大箱子City的下去細分，再根據每個箱子去做第二層分類
+        3. 最後做總包裝
+        
     
         
 
