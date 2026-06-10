@@ -2467,5 +2467,44 @@ CREATE TABLE categories(
     );
     ```
 
+## Day161
+#### 學習重點 : Collectors的reducing
+- reducing是甚麼？ ⭐⭐⭐
+    - reducing的中文意思是「歸納...減少」，因此可以理解成「集合所有元素成一體」，亦即我們可以利用stream的元素來做集合動作，先來看看sourceCode！
+- 原始碼解析與實作 ⭐⭐⭐⭐⭐⭐⭐⭐
+    - 以下是單參數版本 : 
+    ![螢幕擷取畫面 2026-06-10 222215](https://hackmd.io/_uploads/HJrdqxvbfe.png)
+    - `BinaryOperation` 又繼承FunctionalInterface之 `BiFunction`，如下 : 
+    ![螢幕擷取畫面 2026-06-10 222351](https://hackmd.io/_uploads/HJ2U5xv-fl.png)
+    - 很明白的表示我們需要「實作」兩個參數的函式，因此才叫做"Bi"嘛~
+    - 因此我透過user.age相加來實際測試看看 : 
+        ```java=
+        Optional<Integer> ss = users.stream()
+                .map(User::getAge)
+                .collect(
+                Collectors.reducing(
+                    (a, b) -> a + b
+                )
+            );
+        System.out.println(ss.get());
+        ```
+        - 使用Optional是因為有可能沒有元素導致回傳null。
+        - 由於原始碼中的邏輯應用到我的測試是以users內元素的User作為T值，但我們要拿的是Integer，因此要先用map取出正確型態的元素。
+    - 以下是三參數版本 : 
+    ![螢幕擷取畫面 2026-06-10 221228](https://hackmd.io/_uploads/By-r9gvWMg.png)
+        - Identity作為「初始值」，亦即當集合內沒有元素的話，會回傳初始值。
+        - mapper也就是我可以先利用函式取值，並回傳Identity型態的值，這代表我可以代替上述用stream.map的過程。
+        ```java=
+        Integer ss = users.stream()
+            .collect(
+            Collectors.reducing(
+                0,
+                User::getAge,
+                (a, b) -> a + b
+            )
+        );
+        System.out.println(ss);
+        ```
+        - 由於有Identity的初始化，因此不須使用Optional！
         
 
