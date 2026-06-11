@@ -2527,4 +2527,5 @@ CREATE TABLE categories(
     - 當我建立箱子時，「若箱子為空 **是否** 要移除這個箱子」？這個問題可以確認是否要用stream.filter。
     - 若我在進Collectors前就先過濾（stream.filter.collect），代表我後續在分組時，很有可能會導致箱子缺少。
     - 舉個例子 : 按照班級分組，過濾掉男生，若某個班級都是男生，等於那個班級的箱子直接消失！這時候就必須使用collectors.filtering，先建箱子再過濾！這樣那個箱子會是空列表！
+        
 
