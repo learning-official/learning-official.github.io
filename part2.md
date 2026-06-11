@@ -2507,6 +2507,24 @@ CREATE TABLE categories(
         ```
         - 由於有Identity的初始化，因此不須使用Optional！
 
-
-        
+## Day162
+#### 學習重點 : Collectors的filtering
+- filtering ⭐⭐⭐⭐⭐⭐
+    - 今天有點不蘇胡，先做個比較簡單的filter功能就好ㄌ。
+    ![image](https://hackmd.io/_uploads/BJyIsBdZzl.png)
+    - 透過原始碼可以知道 --> 接受一個Predicate，亦即一個我們預期的判斷式，符合預期則true。
+    - 若為true則被downstream接受進行後續步驟。
+    - 簡易範例 : 
+        ```java=
+        Long agefilter = users.stream().collect(
+                Collectors.filtering(
+                    u -> u.getAge() >= 20, 
+                    Collectors.counting()
+            )
+        );
+        ```
+    #### 為何不用stream的filter就好？
+    - 當我建立箱子時，若箱子為空是否要移除這個箱子？這個問題可以確認是否要用stream.filter。
+    - 若我在進Collectors前就先過濾（stream.filter.collect），代表我後續在分組時，很有可能會導致箱子缺少。
+    - 舉個例子 : 按照班級分組，過濾掉男生，若某個班級都是男生，等於那個班級的箱子直接消失！這時候就必須使用collectors.filtering，先建箱子再過濾！這樣那個箱子會是空列表！
 
