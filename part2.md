@@ -2541,7 +2541,7 @@ CREATE TABLE categories(
 
     public class Test{
 
-        public static void main(String[] main){
+        public static void main(String[] args){
             
             // 直接implement後呼叫
             Consumer<String> testConsumer = System.out::println;
