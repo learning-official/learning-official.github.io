@@ -2528,4 +2528,34 @@ CREATE TABLE categories(
     - 若我在進Collectors前就先過濾（stream.filter.collect），代表我後續在分組時，很有可能會導致箱子缺少。
     - 舉個例子 : 按照班級分組，過濾掉男生，若某個班級都是男生，等於那個班級的箱子直接消失！這時候就必須使用collectors.filtering，先建箱子再過濾！這樣那個箱子會是空列表！
         
+## Day163
+#### 學習重點 : java.util的function介面
+- function介面群 ⭐⭐
+    - 今天稍微來看點特別的東西 : function介面，JDK定義一些比較常用的介面給開發者使用，讓開發者不需要再自行寫介面！
+    - 常見的有Consumer、Function、Predicate、Supplier。
+    - 今天先寫個Consumer就好owo。
+- Consumer ⭐⭐⭐⭐
+    - 接收一個物件，並執行，實際寫寫看！
+    ```java=
+    import java.util.function.*;
 
+    public class Test{
+
+        public static void main(String[] main){
+            
+            // 直接implement後呼叫
+            Consumer<String> testConsumer = System.out::println;
+            testConsumer.accept("Hello World");
+            
+            // 藉由method接收後來做！
+            String msg = "WoW";
+            testConsumerVoid(System.out::println, msg);
+
+        }
+        
+        // 實際method搭配Generics的method語法
+        public static <T> void testConsumerVoid(Consumer<T> c, T msg){
+            c.accept(msg);
+        }
+    }
+    ```
