@@ -2562,7 +2562,7 @@ CREATE TABLE categories(
 
 ## Day164
 #### 學習重點 : java.util的function介面群之Function
-- Function ⭐⭐⭐⭐⭐
+- Function架構與實作 ⭐⭐⭐⭐⭐
     - 從名字可以知道，是一個函數！因此跟數學式一樣，接收一個x，回傳一個y，`y = f(x)`，在程式當中，兩者型態不一定要相同。
     - 從介面定義來看 : 
     ![image](https://hackmd.io/_uploads/rkX3PYqbze.png)
@@ -2570,3 +2570,5 @@ CREATE TABLE categories(
     - 這讓我聯想到了之前一直在用的 **Optional.map功能** : `取出user進行業務處理後return一個Response`，這就是實踐Function介面的一個實例。
     - 我也列出了透過兩種不同實踐的方式以及Optional的研究 :
     ![image](https://hackmd.io/_uploads/HyT60Kqbfg.png)
+- compose與andthen用法
+     - compose基本上就是數學式中的 `y = f(g(x))`！因此在泛型當中會是 `先<V, T> 再 <T, R>`，因此T作為中繼，舉個例子 : 找到 
