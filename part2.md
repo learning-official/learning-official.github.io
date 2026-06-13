@@ -2570,5 +2570,9 @@ CREATE TABLE categories(
     - 這讓我聯想到了之前一直在用的 **Optional.map功能** : `取出user進行業務處理後return一個Response`，這就是實踐Function介面的一個實例。
     - 我也列出了透過兩種不同實踐的方式以及Optional的研究 :
     ![image](https://hackmd.io/_uploads/HyT60Kqbfg.png)
-- compose與andthen用法
-     - compose基本上就是數學式中的 `y = f(g(x))`！因此在泛型當中會是 `先<V, T> 再 <T, R>`，因此T作為中繼，舉個例子 : 找到 
+- compose與andthen用法 ⭐⭐⭐⭐⭐
+     - 兩者基本上就是數學式中的 `y = f(g(x))`！因此在泛型當中會是 `先<V, T> 再 <T, R>`，因此T是中繼。
+     - 舉個例子 : `User接getAge，再接判斷age > 20` 判斷回傳boolean，這樣子就會是 `<User, Integer>、<Integer, Boolean>`，以下是我的演練 : 
+     ![image](https://hackmd.io/_uploads/SJOx83c-Mx.png)
+     - 我這邊用if name是小八來做測試w。
+     - 基本讓andthen就是先處理外再處理內，compose是先處理內再處理外，因此按照我的測試，x會先被處理，y其次。
