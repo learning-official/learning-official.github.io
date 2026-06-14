@@ -2578,4 +2578,10 @@ CREATE TABLE categories(
      - 基本讓andthen就是先處理外再處理內，compose是先處理內再處理外，因此按照我的測試，x會先被處理，y其次。
 
 ## Day165
-#### 學習重點 : 
+#### 學習重點 : java.util的function介面群之Predicate
+- Predicate ⭐⭐⭐⭐⭐
+    - 基本上Predicate就是在做預測，因此會回傳boolean值。
+    - 跟Function一樣，也有一些default method，像是not、negate、or、and。
+    - 比較特別的是它有一個static的method : `isEqual(Object obj)`，簡單來說它可以擋掉NPE問題，不須自己再處理。
+    ![螢幕擷取畫面 2026-06-14 095126](https://hackmd.io/_uploads/SJ6OX-3bzx.png)
+    上面實作了一下Predicate的default用法。
