@@ -2585,7 +2585,7 @@ CREATE TABLE categories(
     - 比較特別的是它有一個static的method : `isEqual(Object obj)`，簡單來說它可以擋掉NPE問題，不須自己再處理。
     ![螢幕擷取畫面 2026-06-14 095126](https://hackmd.io/_uploads/SJ6OX-3bzx.png)
     上面實作了一下Predicate的default用法。
-
+    
 ## Day166
 #### 學習重點 : java.util的function介面群之Supplier
 - Supplier ⭐⭐⭐⭐⭐⭐
