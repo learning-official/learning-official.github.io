@@ -2585,3 +2585,15 @@ CREATE TABLE categories(
     - 比較特別的是它有一個static的method : `isEqual(Object obj)`，簡單來說它可以擋掉NPE問題，不須自己再處理。
     ![螢幕擷取畫面 2026-06-14 095126](https://hackmd.io/_uploads/SJ6OX-3bzx.png)
     上面實作了一下Predicate的default用法。
+
+## Day166
+#### 學習重點 : java.util的function介面群之Supplier
+- Supplier ⭐⭐⭐⭐⭐⭐
+    - Supplier是四個介面群我最問號的w，它看起來就很多餘，先來看看原始碼。
+    ![image](https://hackmd.io/_uploads/rk-4_caZze.png)
+    - 但經過我仔細研究後發現了一個重大秘密 : 它可以「**延遲加載動作**」！
+    - 回想之前在用Optional時，都會在最後寫 `orElseThrow()` 或 `orElseGet()`，參數都是 `() -> ...`，其實這就是在實作Supplier。
+    #### 但為甚麼不直接寫 `orElse()` 就好呢？
+    - **Eager Evaluation** vs. **Lazy Evaluation**
+    - 原因在 : 當我寫下 `orElse(動作)` 時，Optional會「**先執行該動作並取得值**」，再看Optional元素是否為null決定是否回傳該值。這種先執行取值的概念叫做 **Eager Evaluation**。
+    - 儘管它在小型求值很簡便，如 `username.orElse("未知使用者")`，但如果遇到 `user.orElse(new User("訪客", "0001", ....))` 這種需建構的動作時(耗效能)，則可以改用orElseGet來 **Lazy Evaluation**，也就是延遲加載 : 元素為null才執行，因此參數會先以Supplier「接住」該動作，待元素為null再觸發該動作！
