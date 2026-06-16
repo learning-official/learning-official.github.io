@@ -1,0 +1,23 @@
+backend:
+  name: git-gateway
+  branch: main
+
+media_folder: ""
+public_folder: ""
+
+collections:
+  - name: "notes"
+    label: "學習日誌"
+    files:
+      - file: "part1.md"
+        label: "Java 學習歷程 Part-1"
+        name: "part1"
+        format: "raw"
+        fields:
+          - { label: "內容", name: "body", widget: "markdown" }
+      - file: "part2.md"
+        label: "Java 學習歷程 Part-2"
+        name: "part2"
+        format: "raw"
+        fields:
+          - { label: "內容", name: "body", widget: "markdown" }
