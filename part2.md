@@ -2597,3 +2597,13 @@ CREATE TABLE categories(
     - **Eager Evaluation** vs. **Lazy Evaluation**
     - 原因在 : 當我寫下 `orElse(動作)` 時，Optional會「**先執行該動作並取得值**」，再看Optional元素是否為null決定是否回傳該值。這種先執行取值的概念叫做 **Eager Evaluation**。
     - 儘管它在小型求值很簡便，如 `username.orElse("未知使用者")`，但如果遇到 `user.orElse(new User("訪客", "0001", ....))` 這種需建構的動作時(耗效能)，則可以改用orElseGet來 **Lazy Evaluation**，也就是延遲加載 : 元素為null才執行，因此參數會先以Supplier「接住」該動作，待元素為null再觸發該動作！
+
+## Day167
+#### 學習重點 : iterator簡介
+- 甚麼是iterator？ ⭐⭐⭐⭐⭐⭐⭐⭐
+    - iterator(迭代器)，用於遍歷collection的元素，是 **一個Interface**，開發者會藉由collection實作的Iterator來建立Iterator物件，使用Iterator時 **無需知道集合的結構型態**，只須關注「**元素本身**」及「**下一元素**」。
+    - 注意！Iterator遍歷collection時，不是利用offset去找下一index，而是藉由collection實作封裝的Iterator去搜尋下一個node，這也是為甚麼迭代器 **可以** 用在Tree、LinkedList等 **非連續記憶體** 身上。
+    - 因此在Java集合框架中，每個集合都有自己實作Iterator的邏輯(有自己的演算邏輯 --> 如 : 該如何找到下一node)。
+- Why Iterator？ ⭐⭐⭐⭐
+    - 如前一點的第三小點，每個集合都有自己實作Iterator的演算邏輯，因此當我們在遍歷集合時，也可以透過itr.remove()來刪除元素，**不像** 原本用for loop遍歷想嘗試時，會出現 `ConcurrentModificationException` 這個Exception。
+    - 原因 : 仔細看集合實作Iterator的邏輯，會發現邏輯都會 **確保遍歷時的集合一致性**，使元素被刪時，可以確保下一指向位置正確。
