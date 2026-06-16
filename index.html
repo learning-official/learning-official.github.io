@@ -9,6 +9,9 @@
   <meta name="referrer" content="no-referrer">
   <title>Learning-offical</title>
   
+  <!-- Netlify Identity Widget (required for CMS invite/reset token handling) -->
+  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+
   <!-- FontAwesome Icons -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
   
@@ -2214,6 +2217,18 @@
       // Initialize Likes counter
       core.initLikes();
     });
+  </script>
+  <script>
+    // Netlify Identity: after login redirect to /admin/
+    if (window.netlifyIdentity) {
+      window.netlifyIdentity.on("init", user => {
+        if (!user) {
+          window.netlifyIdentity.on("login", () => {
+            document.location.href = "/admin/";
+          });
+        }
+      });
+    }
   </script>
 </body>
 </html>
