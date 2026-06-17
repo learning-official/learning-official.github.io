@@ -2607,3 +2607,17 @@ CREATE TABLE categories(
 - Why Iterator？ ⭐⭐⭐⭐
     - 如前一點的第三小點，每個集合都有自己實作Iterator的演算邏輯，因此當我們在遍歷集合時，也可以透過itr.remove()來刪除元素，**不像** 原本用for loop遍歷想嘗試時，會出現 `ConcurrentModificationException` 這個Exception。
     - 原因 : 仔細看集合實作Iterator的邏輯，會發現邏輯都會 **確保遍歷時的集合一致性**，使元素被刪時，可以確保下一指向位置正確。
+
+## Day168
+#### 學習重點 : iterator實際用法及語法糖
+- 實際用法
+    - 簡單來說，我們會宣告Iterator物件並指派集合的實例給它，如下 : 
+    ```java=
+    List<Integer> list = new ArrayList<>();
+    //...元素新增ing...
+    Iterator<Integer> it = list.iterator();
+    while (it.hashNext()){
+        if (it.next() > 5) it.remove();
+    }
+    ```
+    - 上述是一個簡單的迭代器實際範例，
