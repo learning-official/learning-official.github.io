@@ -2610,7 +2610,7 @@ CREATE TABLE categories(
 
 ## Day168
 #### 學習重點 : iterator實際用法及語法糖
-- 實際用法
+- 實際用法 ⭐⭐⭐⭐⭐
     - 簡單來說，我們會宣告Iterator物件並指派集合的實例給它，如下 : 
     ```java=
     List<Integer> list = new ArrayList<>();
@@ -2629,6 +2629,6 @@ CREATE TABLE categories(
     ListIterator<Integer> it = list.listIterator();
     while (it.hashPrevious()) //...
     ```
-- for-each語法糖
+- for-each語法糖 ⭐⭐⭐⭐⭐
     - 當我們在寫 `for (var s : list)` 時，其實底層原理就是使用了iterator的概念，底層會建立一個localIterator物件去跑每個元素。
-    - 但由於我們無法操控底層的localIterator物件，因此也無法做到it.remove這種事，因此for-each的語法糖只適合用於 「**唯讀**」，若要remove
+    - 但由於我們無法操控底層的localIterator物件，因此也無法做到it.remove這種事，因此for-each的語法糖只適合用於 「**唯讀**」，若要remove，就必須自行建立iterator去跑loop。
