@@ -123,7 +123,7 @@
 - Bcrypt架構 ⭐⭐⭐⭐⭐⭐
     - 分層分為 -> alg、cost factor、salt、hashed
     - 與Jwt的驗證一樣都有分層！但實際結構還是有些許不同，主要是Jwt跟BCrypt實際用處也不太一樣。
-    ![image](https://hackmd.io/_uploads/S16_1Z6tZx.png)
+    ![螢幕擷取畫面 2026-03-10 101819](https://hackmd.io/_uploads/HydgPGWMfg.png)
     - **alg** : 演算法的種類。
     - **cost factor** : 重複加密幾次 -> 越多次越安全，但加密時間越長。
     - **salt** : 每次**隨機產生**，增加多樣性，驗證機制 - 從密文拿出salt區塊，加上使用者提供的密碼進行雜湊，若與hash區域相同則通過。
@@ -277,7 +277,7 @@
     }
     ```
     - **實際成果如下**，接下來就是處理temp_password登入後刪除臨時密碼的功能啦~不過今天先這樣就好！
-    ![螢幕擷取畫面 2026-03-13 161831](https://hackmd.io/_uploads/SkWOFH-qWx.png)
+    ![螢幕擷取畫面 2026-03-13 161831](https://hackmd.io/_uploads/B1qzwzWfMe.png)
     
 ## Day73
 #### 學習重點 : 忘記密碼功能實作（臨時密碼登入）
@@ -2632,3 +2632,15 @@ CREATE TABLE categories(
 - for-each語法糖 ⭐⭐⭐⭐⭐
     - 當我們在寫 `for (var s : list)` 時，其實底層原理就是使用了iterator的概念，底層會建立一個localIterator物件去跑每個元素。
     - 但由於我們無法操控底層的localIterator物件，因此也無法做到it.remove這種事，因此for-each的語法糖只適合用於 「**唯讀**」，若要remove，就必須自行建立iterator去跑loop。
+
+## Day169
+#### 學習重點 : iterator及Map.Entry
+- Map.Entry是甚麼？ ⭐⭐⭐⭐⭐⭐
+    - 當我們在建立「HashMap」時，其實是利用一個 **table陣列存Node**，`Node<K,V>` 作為存取鍵值對的物件存進table。
+    - 而Entry是一個interface，Node就是實作了Entry的真實物件！因此在HashMap中，實際K、V即存於Node並存於 `Node<K,V>[]` 的陣列當中。
+    - 由於Map有多個實作class，因此Map.Entry也有多個實作方式，HashMap選擇用 **Node** 存K、V，TreeMap選擇用 **TreeMap.Entry** 實作 **Map.Entry**。
+- Iterator怎麼跟Entry扯上關係？ ⭐⭐⭐⭐⭐⭐
+    - 以HashMap為研究對象，在其中，有個類別叫做 `EntrySet`，裡面有個method叫做iterator()，呼叫時，回傳EntryIterator，而這個EntryIterator即**實作了Iterator**，因此透過呼叫iterator()，即可以取得指向table的iterator。
+    - 實務上，我們藉由entrySet()取得EntrySet物件（`Set<Map.Entry<K,V>> entrySet`成員）。
+    - 實際code展示 : 
+    ![image](https://hackmd.io/_uploads/SJ34QBZMGl.png)
