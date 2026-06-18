@@ -1098,17 +1098,13 @@
     - 這邊稍微跳槽到資料結構的部分來看看LinkedList，淺淺的碰一下就好🤣，畢竟主軸在學Java
     #### LinkedList的指向，參考 [GeeksforGeeks : Types of Linked List](https://www.geeksforgeeks.org/dsa/types-of-linked-list/)
     - 單指向(Singly LinkedList, SLL)
-    ![image](https://hackmd.io/_uploads/HJYML_CSbl.png)
-             
+    ![SLL](https://hackmd.io/_uploads/B13rOMbGfg.png)
         - 所謂單指向就是指每個node(節點)存有下個Data的address pointer
     - 雙指向(Doubly LinkedList, DLL)
-    ![image](https://hackmd.io/_uploads/Hy2PwO0H-g.png)
-            
+    ![DLL](https://hackmd.io/_uploads/B1bruGWGfx.png)
         - 雙指向亦即每個node都存有previous以及next的Data address pointer
-
         #### 與單指向(SLL)比較 : 查找數據
         - 儘管記憶體必須 **比SLL多出一些空間來存prev**，但查找數據時，**可比SLL少一半時間**(因為可根據index位置來決定要從Tail開始還是從Head)
-        
         #### 與單指向(SLL)比較 : 刪除數據
         - 若在單指向中要刪除node G，我們必須知道G前面是誰，因此要從頭開始跑，跑到F之後再把F的next pointer接到H身上，這樣超級麻煩。
         - 但在雙指向中，node G本身有存prev跟next位置，可以直接利用
@@ -1117,9 +1113,8 @@
         G.next.prev = G.prev
         // 這樣替換即可刪除G數據
         ```
-        
     - 迴圈指向(Circularly LinkedList, CLL)
-    ![image](https://hackmd.io/_uploads/BySG3_0BZx.png)
+    ![CLL](https://hackmd.io/_uploads/BJzN_fWGMg.png)
         - 迴圈指向中tail的next指向 **並不是null** 而是head的位置，因此可以達到循環。
         - 像是聽歌時，歌單是一個List，當我開啟循環播放後，最後一首歌所指向的就是第一首歌。
             ```java=
@@ -1909,8 +1904,7 @@
     - 首先是靜態檔的位置 : 按照我在Day33 ~~從IT邦幫忙偷來w~~ 的結構圖中可以看到靜態檔被放在resources目錄當中，但我們還得新增一個 **static子目錄**，並把檔案塞進static當中，才能夠被讀取到！
     - 在啟動網頁後，我們需要在 `localhost:8080/` 後面加上靜態檔位置，感謝Spring Boot的幫忙，因此我們 **只需要打上static後的檔案位置** 即可！
     - 結果圖(~~其實我只是想放小八~~) : 
-    ![image](https://hackmd.io/_uploads/B1byc8lwWe.png)
-
+    ![DAY35_xiaoba](https://hackmd.io/_uploads/HJVJYGbGfe.png)
 - 路由是甚麼？ ⭐⭐⭐⭐
     - 簡單來說，像是A網址到B網址的決定、跳轉，以及要怎麼回應B網址的內容都是靠路由的運作。
     - 在Spring Boot當中，我們可以 **引入路徑參數**，並寫一個 **路由函式** 來 **回應** 該網址的內容。
@@ -1963,8 +1957,7 @@
     }
     ```
     - 輸入 `http://localhost:8080/echo?n1=1&n2=2` ->
-    ![image](https://hackmd.io/_uploads/B1vMS5gwZl.png)
-
+    ![DAY36_route_parameter](https://hackmd.io/_uploads/BkiWFzWMzg.png)
 - 不同格式回傳 ⭐⭐⭐⭐⭐⭐
     - Spring Boot可以接受許多形式的回傳型態，如Array、Map、List等，甚至是自己定義的類別(要有getter)，它都會以 **Json資料格式** 放至前端，以下是實際操作 : 
     ```java=
@@ -2120,7 +2113,7 @@
     }
     ```
     - 當Main檔案執行時，在 `localhost:8080/power` 就會看到以下畫面 : 
-    ![image](https://hackmd.io/_uploads/HJpQTFmvbg.png)
+    ![image](https://hackmd.io/_uploads/rJ9rKGbfMe.png)
     #### 使用Autowired要注意的事情 ⭐⭐⭐⭐
     - 我們必須確保某類別使用Autowired時，該類別**本身也得是一個Bean**.. 為甚麼呢？ 
     - 原因在於 : 當該類別也是Bean時，**Spring才能管理這個類別**，在建構該類別時，才能順便檢查類別有沒有需要做甚麼(像是Autowired等)，也就是說，我們必須讓Spring管理插頭以及 **插座**，這樣才能保證這個插座會接哪些插頭。
@@ -2372,7 +2365,7 @@
     - RESTful API會以各種Http method表示要對資料庫做甚麼事，而所謂的CRUD就會對應到**POST、GET、PUT、DELETE**。
     #### Url的路徑階層表示
     - 當我們選用Http method時，就代表要對資料庫做某某事，而路徑已`/`作為分隔，就可以讓後端知道前端要針對`哪個資料中 的 哪個資料中的...`，其中 `的` 就代表 `/`，底下有個明確的圖來表示[（感謝古古的筆記圖w）](https://kucw.io/blog/springboot/21/)。
-    ![image](https://hackmd.io/_uploads/HyHpKEsvWx.png)
+    ![image](https://hackmd.io/_uploads/r18yqf-MGx.png)
     #### Response Body用JSON格式
     - 在RESTful API的製作中，會以JSON作為主要格式，因此在RESTful API中會使用 `@RestController`。
     #### RESTful API選用時機
@@ -2482,7 +2475,7 @@
             return "Sum is " + (n1 + n2); 
         }
         ```
-         ![image](https://hackmd.io/_uploads/Byo5vmJdbx.png)
+        ![image](https://hackmd.io/_uploads/HJo-9MWffg.png)
     - **401** : `Unauthorized`，跟字面上的意思差不多，就是**未通過驗證**，像是帳號密碼打錯啦，token錯誤之類的～
     - **403** : `Forbidden`，權限不足的概念！像是我不是Youtube Premium會員就不能背景播放（嗚嗚嗚嗚嗚嗚嗚嗚），通常會把401跟403綁在一起看，因為兩個很像！
     - **404** : `Not Found`，這個應該算是最為人知的一個狀態碼了w，基本上就是前端網址輸入錯誤啦～
@@ -2726,7 +2719,7 @@
     - MVC本身就是一種架構概念而已，並不會影響程式本身，只是將程式分類，以便日後較好維護。
     - 而在Spring Boot中，會利用Controller-Service-Dao來實踐MVC的概念。
     - 擷取自 [古古的後端筆記-Day28](https://kucw.io/blog/springboot/28/)，我覺得這張圖寫得很清楚！
-    ![image](https://hackmd.io/_uploads/rybdNiOdbl.png)
+    ![image](https://hackmd.io/_uploads/S11O9fWfzg.png)
     #### MVC 與 Controller-Service-Dao 的實際對應
     - View在Spring Boot實踐中並不需要處理，因為它是屬於**前端框架**的部分。
     - Controller 就是對應到 Controller層，像是RequetMapping、RequestParam、PathVariable等與前端溝通的都屬於Controller層。
@@ -2848,7 +2841,7 @@
     ```
     #### ❓疑問區 : 為何是MapSqlParameterSource(map)
     - 仔細看update方法內部的流程 : 
-    ![image](https://hackmd.io/_uploads/rysyWZnuZl.png)
+    ![image](https://hackmd.io/_uploads/B15ccfWzMe.png)
     - 🔑前提 : 
         - 從圖中會發現共有四種update method（**method overloading**）
         - 且當我們傳map進去後，其實也會被Spring放進MapSqlParameterSource中，可以說它是做為跟 **SQL參數對應的工具包**。
