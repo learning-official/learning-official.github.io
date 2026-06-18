@@ -2635,6 +2635,12 @@ CREATE TABLE categories(
 
 ## Day169
 #### 學習重點 : iterator及Map.Entry
-- Map.Entry是甚麼？　
-    - 簡單來說，當我們在建立Map時，其實是利用一個table陣列存Node，`Node<K,V>` 作為存取鍵值對的物件存進table。
-    - 而Entry是一個interface，Node就是實作了Entry的真實物件！因此在Map實例化後
+- Map.Entry是甚麼？ ⭐⭐⭐⭐⭐⭐
+    - 當我們在建立「HashMap」時，其實是利用一個 **table陣列存Node**，`Node<K,V>` 作為存取鍵值對的物件存進table。
+    - 而Entry是一個interface，Node就是實作了Entry的真實物件！因此在HashMap中，實際K、V即存於Node並存於 `Node<K,V>[]` 的陣列當中。
+    - 由於Map有多個實作class，因此Map.Entry也有多個實作方式，HashMap選擇用 **Node** 存K、V，TreeMap選擇用 **TreeMap.Entry** 實作 **Map.Entry**。
+- Iterator怎麼跟Entry扯上關係？ ⭐⭐⭐⭐⭐⭐
+    - 以HashMap為研究對象，在其中，有個類別叫做 `EntrySet`，裡面有個method叫做iterator()，呼叫時，回傳EntryIterator，而這個EntryIterator即**實作了Iterator**，因此透過呼叫iterator()，即可以取得指向table的iterator。
+    - 實務上，我們藉由entrySet()取得EntrySet物件（`Set<Map.Entry<K,V>> entrySet`成員）。
+    - 實際code展示 : 
+    ![image](https://hackmd.io/_uploads/SJ34QBZMGl.png)
