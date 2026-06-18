@@ -2643,4 +2643,4 @@ CREATE TABLE categories(
     - 以HashMap為研究對象，在其中，有個類別叫做 `EntrySet`，裡面有個method叫做iterator()，呼叫時，回傳EntryIterator，而這個EntryIterator即**實作了Iterator**，因此透過呼叫iterator()，即可以取得指向table的iterator。
     - 實務上，我們藉由entrySet()取得EntrySet物件（`Set<Map.Entry<K,V>> entrySet`成員）。
     - 實際code展示 : 
-    ![image](https://hackmd.io/_uploads/SJ34QBZMGl.png)
+    ![螢幕擷取畫面 2026-06-18 180628](https://hackmd.io/_uploads/rkMKmKZfzl.png)
