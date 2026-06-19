@@ -2646,7 +2646,7 @@ CREATE TABLE categories(
     ![螢幕擷取畫面 2026-06-18 180628](https://hackmd.io/_uploads/rkMKmKZfzl.png)
 
 ## Day170
-#### 學習重點 : 實作Iterable
+#### 學習重點 : Iterable與Collection的關係
 - 繼承Iterable ⭐⭐⭐⭐
     - 在Day168時，我有提到for-each語法糖底層是使用了iterator的概念。
     - 但更具體一些，其實for-each在編譯時會分成傳統陣列、Iterable obj派。
