@@ -2644,3 +2644,20 @@ CREATE TABLE categories(
     - 實務上，我們藉由entrySet()取得EntrySet物件（`Set<Map.Entry<K,V>> entrySet`成員）。
     - 實際code展示 : 
     ![螢幕擷取畫面 2026-06-18 180628](https://hackmd.io/_uploads/rkMKmKZfzl.png)
+
+## Day170
+#### 學習重點 : 實作Iterable
+- 繼承Iterable ⭐⭐⭐⭐
+    - 在Day168時，我有提到for-each語法糖底層是使用了iterator的概念。
+    - 但更具體一些，其實for-each在編譯時會分成傳統陣列、Iterable obj派。
+        - 若為傳統陣列 --> 則使用一般for loop的語法。
+        - 若obj繼承了Iterable --> 則使用Iterator指針去遍歷。
+- 那麼到底甚麼是Iterable呢？ ⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐
+    - Iterable，如名字所寫，**可迭代**，仔細翻看Collection的介面，其實Collection介面上層就是Iterable介面！
+    - 之所以可迭代，是因為Iterable裡面規定了iterator()的method，因此當我們實作了iterable，也就代表必須實作iterator。
+    #### 為甚麼不把Iterable跟Iterator合併？
+    - 由於我們可以在同一集合類別內建立多個iterator（重複遍歷），若合併了兩者，代表我必須僅能實作一次iterator。
+    - 若兩者分離，則能夠先實作iterator，再透過iterator()的抽象method中 `return new ...`，這樣子才能達到解耦、單一職責原則、多路走訪的動作。
+    - 用敘述的方式很難解釋ww，還是直接看原始碼好了。
+    ![image](https://hackmd.io/_uploads/Hk2bODGGGx.png)
+    - 當我每次呼叫iterator()，都會new一個新的Iterator，因此有不同的cursor，使得可多路走訪！
