@@ -2453,7 +2453,7 @@ CREATE TABLE categories(
     ```
     - 根據城市與部門分組，計每個城市中的不同部門人數。
 - partition ⭐⭐⭐⭐
-    - 用於做「**布林分組**」，亦即只有true或false，也算一種grouping (ouo? 因此跟grouping一樣可以加入Collectors的工具，像是多級grouping或者counting。
+    - 用於做「**布林分組**」，亦即只有true或false，也算一種grouping ouo? 因此跟grouping一樣可以加入Collectors的工具，像是多級grouping或者counting。
     - 以下是範例 : 
     ```java=
     Map<Boolean, Map<String, List<User>>> partition = users.stream()
