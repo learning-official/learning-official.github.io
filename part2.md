@@ -2671,4 +2671,5 @@ CREATE TABLE categories(
     ![image](https://hackmd.io/_uploads/Hyf9PZEGGg.png)
     - 再來則是覆寫iterator()方法，這邊直接使用anonymous inner class的寫法！
     - 實際成果 : 
-    ![image](https://hackmd.io/_uploads/rkHvFb4Mfx.png)
+    ![image](https://hackmd.io/_uploads/BJX_iZEMGx.png)
+    ![image](https://hackmd.io/_uploads/B1_uoWEGGx.png)
