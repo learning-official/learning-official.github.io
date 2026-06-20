@@ -2661,3 +2661,14 @@ CREATE TABLE categories(
     - 用敘述的方式很難解釋ww，還是直接看原始碼好了。
     ![image](https://hackmd.io/_uploads/Hk2bODGGGx.png)
     - 當我每次呼叫iterator()，都會new一個新的Iterator，因此有不同的cursor，使得可多路走訪！
+
+## Day171
+#### 學習重點 : Iterable實作
+- Range implements iterable ⭐⭐⭐⭐
+    - 參考 [Java Iterator](https://www.fooish.com/java/collections/iterator.html) 教學，我跟著實作了一次Iterable。
+    ![image](https://hackmd.io/_uploads/BJNv8-VGfe.png)
+    - 首先是建立Range被迭代的範圍(start、end)
+    ![image](https://hackmd.io/_uploads/Hyf9PZEGGg.png)
+    - 再來則是覆寫iterator()方法，這邊直接使用anonymous inner class的寫法！
+    - 實際成果 : 
+    ![image](https://hackmd.io/_uploads/rkHvFb4Mfx.png)
