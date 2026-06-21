@@ -1131,26 +1131,8 @@
         <i class="fa-solid fa-house-user"></i> 個人學習首頁
       </button>
       
-      <!-- Java系列 Dropdown -->
-      <div class="nav-dropdown">
-        <button class="nav-item" id="btn-java-series">
-          <i class="fa-solid fa-code"></i> Java系列 <i class="fa-solid fa-chevron-down dropdown-caret"></i>
-        </button>
-        <div class="dropdown-content">
-          <button onclick="ui.switch('part1')"><i class="fa-solid fa-file-code"></i> Part 1 筆記</button>
-          <button onclick="ui.switch('part2')"><i class="fa-solid fa-file-code"></i> Part 2 筆記</button>
-        </div>
-      </div>
-
-      <!-- 其餘系列 Dropdown -->
-      <div class="nav-dropdown">
-        <button class="nav-item" id="btn-other-series">
-          <i class="fa-solid fa-folder-open"></i> 其餘系列 <i class="fa-solid fa-chevron-down dropdown-caret"></i>
-        </button>
-        <div class="dropdown-content">
-          <div class="dropdown-placeholder">// 暫無筆記，敬請期待</div>
-        </div>
-      </div>
+      <!-- Dynamic Category Dropdowns -->
+      <div id="dynamic-nav-dropdowns" style="display: flex; gap: 8px;"></div>
 
       <button class="nav-item" id="btn-dashboard" onclick="ui.switch('dashboard')">
         <i class="fa-solid fa-chart-line"></i> 進度儀表板
@@ -1175,22 +1157,8 @@
       <i class="fa-solid fa-house-user"></i> 個人學習首頁
     </button>
     
-    <!-- Mobile Java系列 Group -->
-    <div class="mobile-nav-group">
-      <div class="mobile-nav-group-title"><i class="fa-solid fa-code"></i> Java系列</div>
-      <button class="mobile-nav-item" id="m-btn-part1" onclick="ui.switch('part1')">
-        <i class="fa-solid fa-file-code"></i> Part 1 筆記
-      </button>
-      <button class="mobile-nav-item" id="m-btn-part2" onclick="ui.switch('part2')">
-        <i class="fa-solid fa-file-code"></i> Part 2 筆記
-      </button>
-    </div>
-
-    <!-- Mobile 其餘系列 Group -->
-    <div class="mobile-nav-group">
-      <div class="mobile-nav-group-title"><i class="fa-solid fa-folder-open"></i> 其餘系列</div>
-      <div class="mobile-nav-placeholder">// 暫無筆記，敬請期待</div>
-    </div>
+    <!-- Dynamic Mobile Category Groups -->
+    <div id="dynamic-mobile-nav-groups" style="display: flex; flex-direction: column; gap: 6px; width: 100%;"></div>
 
     <button class="mobile-nav-item" id="m-btn-dashboard" onclick="ui.switch('dashboard')">
       <i class="fa-solid fa-chart-line"></i> 進度儀表板
@@ -1214,49 +1182,8 @@
       </ul>
     </div>
 
-    <!-- TAB 1: Part 1 Document -->
-    <section id="tab-part1" class="editor-section">
-      <h2><i class="fa-solid fa-file-code" style="color: var(--accent-color);"></i> Java 學習歷程（Part-1）</h2>
-      <div class="doc-layout">
-        <aside class="doc-toc-sidebar">
-          <div class="submenu-title"><i class="fa-solid fa-list-ol"></i> 章節目錄</div>
-          <div class="toc-container">
-            <div id="part1-tocList" class="toc-list"></div>
-          </div>
-        </aside>
-        <div class="idx-panel doc-content">
-          <div class="markdown-body" id="part1-content">
-            <!-- Spinner -->
-            <div class="spinner-container">
-              <i class="fa-solid fa-spinner spinner"></i>
-              <p>正在載入 Java 學習歷程 Part-1 核心日誌...</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- TAB 2: Part 2 Document -->
-    <section id="tab-part2" class="editor-section">
-      <h2><i class="fa-solid fa-file-code" style="color: var(--accent-color);"></i> Java 學習歷程（Part-2）</h2>
-      <div class="doc-layout">
-        <aside class="doc-toc-sidebar">
-          <div class="submenu-title"><i class="fa-solid fa-list-ol"></i> 章節目錄</div>
-          <div class="toc-container">
-            <div id="part2-tocList" class="toc-list"></div>
-          </div>
-        </aside>
-        <div class="idx-panel doc-content">
-          <div class="markdown-body" id="part2-content">
-            <!-- Spinner -->
-            <div class="spinner-container">
-              <i class="fa-solid fa-spinner spinner"></i>
-              <p>正在載入 Java 學習歷程 Part-2 進階日誌...</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
+    <!-- Dynamic Markdown Content Sections -->
+    <div id="dynamic-sections"></div>
 
     <!-- TAB 3: Dashboard -->
     <section id="tab-dashboard" class="editor-section">
@@ -1474,11 +1401,15 @@
       );
     };
 
-    // Global State for Markdown Data cache
-    let mdCache = {
-      part1: { text: '', ready: false, headings: [] },
-      part2: { text: '', ready: false, headings: [] }
-    };
+    // Fallback list of files to support local file:// preview, offline mode, or API rate-limit
+    const DEFAULT_MD_FILES = [
+      'Java_part1.md',
+      'Java_part2.md',
+      'Java_part3.md'
+    ];
+
+    // Global State for Markdown Data cache (dynamically populated)
+    let mdCache = {};
 
     // Custom renderer for Marked.js to handle checkboxes (compatible with all versions)
     const renderer = new marked.Renderer();
@@ -1566,10 +1497,12 @@
         const mBtnNode = document.getElementById('m-btn-' + tabName);
         if (mBtnNode) mBtnNode.classList.add('active');
 
-        // Dropdown Highlight Logic
-        const javaTrigger = document.getElementById('btn-java-series');
-        if (tabName === 'part1' || tabName === 'part2') {
-          if (javaTrigger) javaTrigger.classList.add('active');
+        // Dropdown Highlight Logic (supports dynamic language categories)
+        const match = tabName.match(/^([a-zA-Z0-9\u4e00-\u9fa5]+)_part\d+$/i);
+        if (match) {
+          const lang = match[1];
+          const trigger = document.getElementById('btn-' + lang.toLowerCase() + '-series');
+          if (trigger) trigger.classList.add('active');
           const subBtn = document.querySelector(`.dropdown-content button[onclick="ui.switch('${tabName}')"]`);
           if (subBtn) subBtn.classList.add('active');
         }
@@ -1579,8 +1512,8 @@
           toggleMobileMenu(false);
         }
 
-        // Generate TOC for part1 / part2
-        if (tabName === 'part1' || tabName === 'part2') {
+        // Generate TOC dynamically for dynamic note sections
+        if (mdCache[tabName]) {
           generateTOC(tabName);
         }
 
@@ -1635,6 +1568,45 @@
         }, 400);
       }
     };
+
+    // Helper function to scan repository files or use fallback
+    async function scanMarkdownFiles() {
+      if (window.location.protocol === 'file:') {
+        console.log('[Learning-official] Local file protocol detected, using static file list.');
+        return DEFAULT_MD_FILES;
+      }
+      try {
+        const response = await fetch('https://api.github.com/repos/learning-official/learning-official.github.io/contents/', {
+          headers: { 'Accept': 'application/vnd.github.v3+json' }
+        });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const files = await response.json();
+        const mdFiles = files
+          .filter(f => f.type === 'file' && /^[a-zA-Z0-9\u4e00-\u9fa5]+_part\d+\.md$/i.test(f.name))
+          .map(f => f.name);
+        if (mdFiles.length === 0) return DEFAULT_MD_FILES;
+        return mdFiles;
+      } catch (err) {
+        console.warn('[Learning-official] Failed to scan repo via GitHub API, using fallback list:', err);
+        return DEFAULT_MD_FILES;
+      }
+    }
+
+    // Helper to dynamically find which Java part contains a specific Day number
+    function findPartForDay(dayNum) {
+      const dayPattern = new RegExp(`##\\s+.*Day\\s*${dayNum}\\b`, 'i');
+      for (const key of Object.keys(mdCache)) {
+        if (key.toLowerCase().startsWith('java_') && mdCache[key].text) {
+          if (dayPattern.test(mdCache[key].text)) {
+            return key;
+          }
+        }
+      }
+      // Hardcoded fallback logic
+      if (dayNum <= 65) return 'Java_part1';
+      if (dayNum <= 156) return 'Java_part2';
+      return 'Java_part3';
+    }
 
     // Core Processing Engine
     const core = {
@@ -1749,7 +1721,8 @@
         const targetDiv = document.getElementById(`${partKey}-content`);
 
         if (window.location.protocol === 'file:') {
-          document.getElementById('localWarning').style.display = 'block';
+          const localWarning = document.getElementById('localWarning');
+          if (localWarning) localWarning.style.display = 'block';
         }
 
         // Build absolute URL based on current page location
@@ -1769,55 +1742,57 @@
 
           // Parse markdown and sanitize HTML output using DOMPurify to prevent XSS attacks
           const parsedHtml = marked.parse(cleanText);
-          targetDiv.innerHTML = typeof DOMPurify !== 'undefined' ? DOMPurify.sanitize(parsedHtml) : parsedHtml;
+          if (targetDiv) {
+            targetDiv.innerHTML = typeof DOMPurify !== 'undefined' ? DOMPurify.sanitize(parsedHtml) : parsedHtml;
+          }
 
           // Intercept links to external/internal navigation and handle them locally
-          const links = targetDiv.querySelectorAll('a');
-          links.forEach(a => {
-            const href = a.getAttribute('href') || '';
-            const dayMatch = href.match(/day[\s_-]*(\d+)/i);
+          if (targetDiv) {
+            const links = targetDiv.querySelectorAll('a');
+            links.forEach(a => {
+              const href = a.getAttribute('href') || '';
+              const dayMatch = href.match(/day[\s_-]*(\d+)/i);
 
-            if (dayMatch && (href.startsWith('#') || href.includes('hackmd.io') || href.includes('github.io') || href.includes('part1.md') || href.includes('part2.md'))) {
-              const dayNum = parseInt(dayMatch[1], 10);
-              const targetPart = dayNum <= 65 ? 'part1' : 'part2';
-              const dayText = `Day${dayNum}`;
-              a.href = '#';
-              a.removeAttribute('target');
-              a.onclick = (e) => {
-                e.preventDefault();
-                ui.jumpToDay(targetPart, dayText);
-              };
-            } else if (href.startsWith('#')) {
-              const cleanHash = href.replace(/^#+/, '').trim();
-              a.href = '#';
-              a.removeAttribute('target');
-              a.onclick = (e) => {
-                e.preventDefault();
-                ui.jumpToDay(partKey, cleanHash);
-              };
-            } else if (href.includes('Java_learning_2') || href.includes('part2.md') || href.includes('Java_learning-2')) {
-              a.href = '#';
-              a.removeAttribute('target');
-              a.onclick = (e) => {
-                e.preventDefault();
-                ui.switch('part2');
-              };
-            } else if (href.includes('Java_learning_1') || href.includes('part1.md') || href.includes('Java_learning-1')) {
-              a.href = '#';
-              a.removeAttribute('target');
-              a.onclick = (e) => {
-                e.preventDefault();
-                ui.switch('part1');
-              };
-            }
-          });
+              if (dayMatch) {
+                const dayNum = parseInt(dayMatch[1], 10);
+                a.href = '#';
+                a.removeAttribute('target');
+                a.onclick = (e) => {
+                  e.preventDefault();
+                  const targetPart = findPartForDay(dayNum);
+                  ui.jumpToDay(targetPart, `Day${dayNum}`);
+                };
+              } else if (href.startsWith('#')) {
+                const cleanHash = href.replace(/^#+/, '').trim();
+                a.href = '#';
+                a.removeAttribute('target');
+                a.onclick = (e) => {
+                  e.preventDefault();
+                  ui.jumpToDay(partKey, cleanHash);
+                };
+              } else if (href.includes('_part') || href.includes('part1.md') || href.includes('part2.md')) {
+                const partMatch = href.match(/([a-zA-Z0-9\u4e00-\u9fa5]+)_part(\d+)/i) || href.match(/part(\d+)/i);
+                if (partMatch) {
+                  const targetKey = partMatch[2] ? `${partMatch[1]}_part${partMatch[2]}` : `Java_part${partMatch[1]}`;
+                  a.href = '#';
+                  a.removeAttribute('target');
+                  a.onclick = (e) => {
+                    e.preventDefault();
+                    ui.switch(targetKey);
+                  };
+                }
+              }
+            });
+          }
 
-          const headings = targetDiv.querySelectorAll('h2, h3');
-          mdCache[partKey].headings = Array.from(headings).map((h, i) => {
-            if (!h.id) h.id = `${partKey}-heading-${i}`;
-            return { id: h.id, text: h.innerText.replace(/^[⭐#\s]+/, ''), tagName: h.tagName };
-          });
-          Prism.highlightAllUnder(targetDiv);
+          if (targetDiv) {
+            const headings = targetDiv.querySelectorAll('h2, h3');
+            mdCache[partKey].headings = Array.from(headings).map((h, i) => {
+              if (!h.id) h.id = `${partKey}-heading-${i}`;
+              return { id: h.id, text: h.innerText.replace(/^[⭐#\s]+/, ''), tagName: h.tagName };
+            });
+            Prism.highlightAllUnder(targetDiv);
+          }
           const activeBtn = document.querySelector('.tree-node.active');
           if (activeBtn && activeBtn.id === `btn-${partKey}`) generateTOC(partKey);
           core.updateDashboardMetrics();
@@ -1825,16 +1800,18 @@
         };
 
         const showError = (statusInfo) => {
-          targetDiv.innerHTML = `
-            <div style="padding: 24px; background: rgba(255,123,114,0.1); border: 1px solid rgba(255,123,114,0.2); border-radius: 8px;">
-              <h4 style="color: var(--danger-color); margin-bottom: 8px;"><i class="fa-solid fa-terminal"></i> 檔案加載終止</h4>
-              <p>無法讀取 <code>${filename}</code> 本地檔案（${statusInfo}）</p>
-              <p style="margin-top: 12px; font-size: 13px;">🔍 請點擊此連結確認檔案是否存在於伺服器：<br>
-                <a href="${fullUrl}" target="_blank" style="color: var(--accent-color); word-break: break-all;">${fullUrl}</a>
-              </p>
-              <p style="color: var(--text-muted); font-size: 12px; margin-top: 8px;">若連結顯示 404，請確認 <code>${filename}</code> 已正確上傳至 GitHub Repository 根目錄，並等待 GitHub Pages 重新部署（約 1-3 分鐘）。</p>
-            </div>
-          `;
+          if (targetDiv) {
+            targetDiv.innerHTML = `
+              <div style="padding: 24px; background: rgba(255,123,114,0.1); border: 1px solid rgba(255,123,114,0.2); border-radius: 8px;">
+                <h4 style="color: var(--danger-color); margin-bottom: 8px;"><i class="fa-solid fa-terminal"></i> 檔案加載終止</h4>
+                <p>無法讀取 <code>${filename}</code> 本地檔案（${statusInfo}）</p>
+                <p style="margin-top: 12px; font-size: 13px;">🔍 請點擊此連結確認檔案是否存在於伺服器：<br>
+                  <a href="${fullUrl}" target="_blank" style="color: var(--accent-color); word-break: break-all;">${fullUrl}</a>
+                </p>
+                <p style="color: var(--text-muted); font-size: 12px; margin-top: 8px;">若連結顯示 404，請確認 <code>${filename}</code> 已正確上傳至 GitHub Repository 根目錄，並等待 GitHub Pages 重新部署（約 1-3 分鐘）。</p>
+              </div>
+            `;
+          }
           showToast(`載入 ${filename} 失敗：${statusInfo}`, 'error');
         };
 
@@ -1867,18 +1844,21 @@
         const uniqueDays = new Set();
         let doneTasks = 0;
         let totalTasks = 0;
-        let totalBytes = 0;
         let checklistsHtml = '';
 
-        // Estimate size
-        const p1Len = mdCache.part1.text.length;
-        const p2Len = mdCache.part2.text.length;
-        totalBytes = (p1Len + p2Len) * 2; // rough approximation for UTF-8
-        
-        document.getElementById('dash-file-size').innerText = `${(totalBytes / 1024).toFixed(1)} KB`;
+        // Estimate size dynamically across all files in mdCache
+        let totalBytesCalculated = 0;
+        Object.keys(mdCache).forEach(key => {
+          const text = mdCache[key].text || '';
+          totalBytesCalculated += text.length * 2; // rough approximation for UTF-8
+        });
+        const fileSizeEl = document.getElementById('dash-file-size');
+        if (fileSizeEl) {
+          fileSizeEl.innerText = `${(totalBytesCalculated / 1024).toFixed(1)} KB`;
+        }
 
-        // Parse markdown text directly to calculate checklist and days
-        ['part1', 'part2'].forEach(key => {
+        // Parse markdown text directly to calculate checklist and days (Only for Java files)
+        Object.keys(mdCache).filter(key => key.toLowerCase().startsWith('java_')).forEach(key => {
           const text = mdCache[key].text;
           if (!text) return;
 
@@ -1933,30 +1913,36 @@
         totalDays = uniqueDays.size;
 
         // Set UI values
-        document.getElementById('dash-total-days').innerText = totalDays;
+        const dashTotalDaysEl = document.getElementById('dash-total-days');
+        if (dashTotalDaysEl) dashTotalDaysEl.innerText = totalDays;
         const homeTotalDays = document.getElementById('home-total-days');
         if (homeTotalDays) homeTotalDays.innerText = `${totalDays} 天`;
         
+        const dashTaskPercentEl = document.getElementById('dash-task-percent');
+        const dashTaskRatioEl = document.getElementById('dash-task-ratio');
+        const homeTaskPercent = document.getElementById('home-task-percent');
+
         if (totalTasks > 0) {
           const percent = Math.round((doneTasks / totalTasks) * 100);
-          document.getElementById('dash-task-percent').innerText = `${percent}%`;
-          document.getElementById('dash-task-percent').className = `metric-value ${percent === 100 ? 'success' : 'info'}`;
-          document.getElementById('dash-task-ratio').innerText = `${doneTasks} / ${totalTasks} 項目已完成`;
-          
-          const homeTaskPercent = document.getElementById('home-task-percent');
+          if (dashTaskPercentEl) {
+            dashTaskPercentEl.innerText = `${percent}%`;
+            dashTaskPercentEl.className = `metric-value ${percent === 100 ? 'success' : 'info'}`;
+          }
+          if (dashTaskRatioEl) dashTaskRatioEl.innerText = `${doneTasks} / ${totalTasks} 項目已完成`;
           if (homeTaskPercent) homeTaskPercent.innerText = `${percent}%`;
         } else {
-          document.getElementById('dash-task-percent').innerText = '0%';
-          document.getElementById('dash-task-ratio').innerText = '0 / 0 項目已完成';
-          
-          const homeTaskPercent = document.getElementById('home-task-percent');
+          if (dashTaskPercentEl) dashTaskPercentEl.innerText = '0%';
+          if (dashTaskRatioEl) dashTaskRatioEl.innerText = '0 / 0 項目已完成';
           if (homeTaskPercent) homeTaskPercent.innerText = '0%';
         }
 
-        if (checklistsHtml === '') {
-          checklistsHtml = '<p style="color: var(--text-muted); text-align: center; padding: 20px;">// 於 Markdown 筆記中未偵測到任何任務清單標記。</p>';
+        const wrapper = document.getElementById('dash-checklists-wrapper');
+        if (wrapper) {
+          if (checklistsHtml === '') {
+            checklistsHtml = '<p style="color: var(--text-muted); text-align: center; padding: 20px;">// 於 Markdown 筆記中未偵測到任何任務清單標記。</p>';
+          }
+          wrapper.innerHTML = checklistsHtml;
         }
-        document.getElementById('dash-checklists-wrapper').innerHTML = checklistsHtml;
       },
 
       executeSearch() {
@@ -1981,7 +1967,7 @@
           let resultsHtml = '';
           let matchCount = 0;
 
-          ['part1', 'part2'].forEach(key => {
+          Object.keys(mdCache).forEach(key => {
             const text = mdCache[key].text;
             if (!text) return;
 
@@ -2204,13 +2190,146 @@
     }
 
     // Initialize Application
-    window.addEventListener('DOMContentLoaded', () => {
+    window.addEventListener('DOMContentLoaded', async () => {
       initCanvasAnimation();
       
-      // Load both Markdown files in parallel on start
-      // NOTE: filenames must match the actual files in the repo root exactly
-      core.loadMarkdown('part1', 'part1.md');
-      core.loadMarkdown('part2', 'part2.md');
+      // 1. Scan for matching markdown files
+      const mdFiles = await scanMarkdownFiles();
+      console.log('[Learning-official] Detected markdown files:', mdFiles);
+
+      // 2. Parse files into structured categories
+      // categories format: { 'Java': [ { key: 'Java_part1', filename: 'Java_part1.md', label: 'Part 1 筆記', num: 1 }, ... ] }
+      const categories = {};
+      mdFiles.forEach(filename => {
+        const match = filename.match(/^([a-zA-Z0-9\u4e00-\u9fa5]+)_part(\d+)\.md$/i);
+        if (match) {
+          const lang = match[1];
+          const num = parseInt(match[2], 10);
+          const key = `${lang}_part${num}`;
+          
+          if (!categories[lang]) {
+            categories[lang] = [];
+          }
+          categories[lang].push({
+            key: key,
+            filename: filename,
+            label: `Part ${num} 筆記`,
+            num: num
+          });
+        }
+      });
+
+      // Sort parts numerically within each category
+      Object.keys(categories).forEach(lang => {
+        categories[lang].sort((a, b) => a.num - b.num);
+      });
+
+      // 3. Initialize cache for all detected notes
+      Object.keys(categories).forEach(lang => {
+        categories[lang].forEach(item => {
+          mdCache[item.key] = { text: '', ready: false, headings: [] };
+        });
+      });
+
+      // 4. Generate navigation menus & sections dynamically
+      const desktopContainer = document.getElementById('dynamic-nav-dropdowns');
+      const mobileContainer = document.getElementById('dynamic-mobile-nav-groups');
+      const sectionsContainer = document.getElementById('dynamic-sections');
+
+      if (desktopContainer) desktopContainer.innerHTML = '';
+      if (mobileContainer) mobileContainer.innerHTML = '';
+      if (sectionsContainer) sectionsContainer.innerHTML = '';
+
+      // Sort languages: Java first, then alphabetical
+      const sortedLangs = Object.keys(categories).sort((a, b) => {
+        if (a.toLowerCase() === 'java') return -1;
+        if (b.toLowerCase() === 'java') return 1;
+        return a.localeCompare(b);
+      });
+
+      sortedLangs.forEach(lang => {
+        const parts = categories[lang];
+        const isJava = lang.toLowerCase() === 'java';
+        const iconClass = isJava ? 'fa-code' : 'fa-folder-open';
+        const categoryLabel = `${lang}系列`;
+
+        // Desktop nav dropdown
+        const dropdown = document.createElement('div');
+        dropdown.className = 'nav-dropdown';
+        
+        let dropdownHtml = `
+          <button class="nav-item" id="btn-${lang.toLowerCase()}-series">
+            <i class="fa-solid ${iconClass}"></i> ${categoryLabel} <i class="fa-solid fa-chevron-down dropdown-caret"></i>
+          </button>
+          <div class="dropdown-content">
+        `;
+        parts.forEach(p => {
+          dropdownHtml += `
+            <button onclick="ui.switch('${p.key}')"><i class="fa-solid fa-file-code"></i> ${p.label}</button>
+          `;
+        });
+        dropdownHtml += `</div>`;
+        dropdown.innerHTML = dropdownHtml;
+        if (desktopContainer) desktopContainer.appendChild(dropdown);
+
+        // Mobile nav group
+        const mobileGroup = document.createElement('div');
+        mobileGroup.className = 'mobile-nav-group';
+        
+        let mobileHtml = `
+          <div class="mobile-nav-group-title"><i class="fa-solid ${iconClass}"></i> ${categoryLabel}</div>
+        `;
+        parts.forEach(p => {
+          mobileHtml += `
+            <button class="mobile-nav-item" id="m-btn-${p.key}" onclick="ui.switch('${p.key}')">
+              <i class="fa-solid fa-file-code"></i> ${p.label}
+            </button>
+          `;
+        });
+        mobileGroup.innerHTML = mobileHtml;
+        if (mobileContainer) mobileContainer.appendChild(mobileGroup);
+
+        // Render dynamic tab section elements
+        parts.forEach(p => {
+          const section = document.createElement('section');
+          section.id = `tab-${p.key}`;
+          section.className = 'editor-section';
+          if (isJava) {
+            section.style.maxWidth = '95%';
+          }
+          
+          section.innerHTML = `
+            <h2><i class="fa-solid fa-file-code" style="color: var(--accent-color);"></i> ${lang} 學習歷程（${p.label}）</h2>
+            <div class="doc-layout">
+              <aside class="doc-toc-sidebar">
+                <div class="submenu-title"><i class="fa-solid fa-list-ol"></i> 章節目錄</div>
+                <div class="toc-container">
+                  <div id="${p.key}-tocList" class="toc-list"></div>
+                </div>
+              </aside>
+              <div class="idx-panel doc-content">
+                <div class="markdown-body" id="${p.key}-content">
+                  <!-- Spinner -->
+                  <div class="spinner-container">
+                    <i class="fa-solid fa-spinner spinner"></i>
+                    <p>正在載入 ${lang} 學習歷程 ${p.label}...</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          `;
+          if (sectionsContainer) sectionsContainer.appendChild(section);
+        });
+      });
+
+      // 5. Load all Markdown files in parallel
+      const loadPromises = [];
+      Object.keys(categories).forEach(lang => {
+        categories[lang].forEach(p => {
+          loadPromises.push(core.loadMarkdown(p.key, p.filename));
+        });
+      });
+      await Promise.all(loadPromises);
       
       // Initialize Likes counter
       core.initLikes();
