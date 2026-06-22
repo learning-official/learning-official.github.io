@@ -22,8 +22,8 @@
         B("B", 1);
         
         // 成員
-        private String a;
-        private int b;
+        private final String a;
+        private final int b;
     
         // 參數建構
         EnumT(String a, int b){
