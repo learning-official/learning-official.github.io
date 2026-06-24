@@ -66,3 +66,14 @@
     #### 為甚麼不先equals看看table中有沒有相同記憶體位置？
     - 雜湊表底層也是一個陣列，若要一個個equals，則為線性搜尋 --> O(n)
     - 若使用hash index可以直接定位 --> O(1)
+
+## Day175
+#### 學習重點 : java.lang的Object之clone
+- 留言 ⭐
+    - 之後的這20天，我的更新進度會慢許多，由於很多活動都卡在這個時段，因此我預計會把觀念再切碎的更多，當然，還是會保持每天更新的節奏ouo。
+- clone ⭐⭐⭐⭐⭐
+    - 今天來討論Object中的clone！儘管clone大部分時間都不會被「真的」拿來用，但還是要了解一下！
+    - 首先要注意，clone的用途是 --> 代替建構子，copy出新物件，但級別屬於「**Shallow Copy**」，因此針對Wrapper member，只會copy reference。
+    - 在覆寫clone時，需要在class中加上 `implements Cloneable`，使這個覆寫合法（雖然Cloneable沒有定義clone，反而是在Object中定義的，但Java說要加ouo）。
+    - 且在clone覆寫中，必須throws Clone的例外。
+    ![image](https://hackmd.io/_uploads/HygJp8tfzg.png)
