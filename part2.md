@@ -8,6 +8,14 @@
 - [Lambda（Method Reference） - Day105~107](##Day105)
 - [Optional淺入淺出 - Day108~110](##Day108)
 - [Spring 「使用者資料管控-電商小專案Part2」 - Day111~156](##Day111)
+- [Collectors - Day157~162](##Day157)
+- [java.util的四大function - Day163~166](##Day163)
+- [Iterator與Iterable - Day167~171](##Day167)
+- ***Java學習歷程Part-3分界線***
+- [Java.lang - Day172 ~ Day???](https://hackmd.io/@learning-official/Java_learning_3#Day172)
+
+**由於筆記限制10萬字元，因此後續部分移到part-3**
+### [⭐點我看Java學習歷程Part-3⭐](https://hackmd.io/@learning-official/Java_learning_3)
 
 ## Day66
 #### 學習重點 : JWT token生成與驗證 - 2
