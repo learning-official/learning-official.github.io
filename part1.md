@@ -2,9 +2,13 @@
 - [ ] Spring Boot
     - [ ] Tomcat與Servlet
 - [ ] Collection Framework
+    - [ ] Queue/Stack
+    - [ ] Comparable
 - [ ] Gradle
-- [ ] JavaFX or Swing？
-- [ ] return `<Void>`？
+- [ ] return `<Void>`
+- [ ] 為何Java？JVM、JRE、JDK
+- [ ] native原生C++、invoke special/virtual(子類父類this歸屬)、Klass
+- [ ] Record語法
 - 小專案Part-3預計 :
     - [ ] 高併發Stock超賣問題
     - [ ] Async執行緒優化
@@ -38,7 +42,11 @@
 - [Lambda（Method Reference） - Day105~107](https://hackmd.io/@learning-official/Java_learning_2#Day105)
 - [Optional淺入淺出 - Day108~110](https://hackmd.io/@learning-official/Java_learning_2#Day108)
 - [Spring 「使用者資料管控專案Part2」 - Day111~156](https://hackmd.io/@learning-official/Java_learning_2#Day111)
-
+- [Collectors - Day157~162](https://hackmd.io/@learning-official/Java_learning_2##Day157)
+- [java.util的四大function - Day163~166](https://hackmd.io/@learning-official/Java_learning_2##Day163)
+- [Iterator與Iterable - Day167~171](https://hackmd.io/@learning-official/Java_learning_2##Day167)
+- ***Java學習歷程Part-3分界線***
+- [Java.lang - Day172 ~ Day???](https://hackmd.io/@learning-official/Java_learning_3#Day172)
 ## 學習雜談
 - Day20 : 
     > 老實說，我從來沒有想過可以這麼認真學一樣東西，雖然對大家來說可能很簡單，但對3分鐘熱度的我來說，真的是一大挑戰，不管最後是否有辦法精通Java，我都很滿意了！
@@ -50,6 +58,8 @@
     > 距離上次打心得竟然過去40天了OMG，我覺得我最近變得有點迷惘，倒不是說熱忱不見，而是不知道該怎麼學習了QAQ
 - Day144 : 
     > 最近在做小專案Part-2的時候，總有一種體悟 : 為甚麼怎麼做都做不完🤧，做好一部份，就有下一個概念要學，做個系統到底要學多少技術rrrrr。
+- Day176 : 
+    > 時間過好快ouo，總感覺我現在都是在亂學ww，之後幾天很忙，希望自己能維持每日學習rrrr。
     
 **阿對了！如果你是用手機版看的話，版面會亂掉ww，請見諒**
 ## Day1
@@ -87,60 +97,16 @@
     
 ## Day2
 #### 學習重點 : DataType
-- 資料型態轉換 ⭐⭐⭐
+- 資料型態轉換 ⭐⭐⭐ 
+    > 2026/06/25 更新 : 由於我想寫雜談，但字數達上限w，我這邊改用截圖代替程式碼區塊w
     - 資料型態 **數字range** 比較 : double > float > long > int > short > byte
-    ```java=
-    // 小範圍 -> 大範圍
-    byte a1 = 3;
-    short a2 = a1;
-    int a3 = a2;
-
-    long a4 = 12345; //雖然指派時12345是int，但會自動轉型成宣告(long)的型態
-    float a5 = a4; //這也行的通
-
-    // 大範圍 -> 小範圍
-    int b1 = 3;
-    byte b2 = b1; // 錯誤!
-
-    double b3 = 3.5;
-    float b4 = b3; //錯誤!
-
-    float b5 = 10.5; //預設10.5是double -> 因此會錯誤!
-    ```
+    ![image](https://hackmd.io/_uploads/BJ-7WhcfGl.png)
     - **強制轉換** : 有可能失真
-    ```java=
-    int c1 = 3;
-    byte c2 = (byte) c1;
-
-    int c3 = 128;
-    byte c4 = (byte) c3; //由於128超過byte (-127~127) 因此會失真
-    // 原理是將大範圍轉成二進位，去掉高位元，直到成為小範圍的二進位長度
-    
-    double c5 = 3.1415926536;
-    float c6 = (float) c5; //失真!
-    ```
-    
-    - **字串轉數字** : parse用法
-    ```java=
-    String s1 = "123";
-    int d1 = Integer.parseInt(s1);
-    
-    String s2 = "10000000000";
-    long d2 = Long.parseLong(s2);
-
-    String s3 = "3.14";
-    float d3 = Float.parseFloat(s3);
-    
-    String s4 = "3.1415926";
-    double d4 = Double.parseDouble(s4);
-    ```
+    ![image](https://hackmd.io/_uploads/rJPIb35GMx.png)
+    - **字串轉數字** : parse用法  
+    ![image](https://hackmd.io/_uploads/rygU_Z3cMGl.png)
     - **數字轉字串** : valueOf用法
-    ```java=
-    String s1 = String.valueOf(123);
-    String s2 = String.valueOf(555555L);
-    String s3 = String.valueOf(3.14F);
-    String s4 = String.valueOf(3.1415926);    
-    ```
+    ![image](https://hackmd.io/_uploads/SyOiZh9fze.png)
 
 ## Day3
 #### 學習重點 : Operator
@@ -2490,7 +2456,7 @@
     - 其實這兩個名詞一直在我腦海中不斷交錯在一起，因為我常常會搞混他們（看來是學不精的關係🤦‍♂️🤦‍♀️）
     - 我稍微統整了一下這兩個東西的差別 : 
     #### 模式不同
-    - MVC主要是以拆分前後端為架構，將重點交由不同部門處理（關注點分離），且Model與資料庫溝通，View負責處理前端畫面並呈現數據，Controller則**充當Model、View的橋樑**，處理使用者與View的互動。
+    - MVC主要拆分前後端為架構，將重點交由不同部門處理（關注點分離），且Model與資料庫溝通，View負責處理前端畫面並呈現數據，Controller則**充當Model、View的橋樑**，處理使用者與View的互動。
     - 而API本身是**一種介面協議**，而Controller只是一種實作API的方法，API不與View結合，只回傳純數據結構，如JSON、XML。
 - 資料庫操作 ⭐⭐⭐⭐⭐⭐⭐
     - 在Spring Boot當中，後端與資料庫的互動需要藉由一些工具來操作，常見的有 `Spring JDBC、Hibernate、Spring Data JPA` 等等，而其中可分為 : **SQL操作DB**、**ORM概念操作DB**，JDBC屬於前者，後面兩個屬於後者。
