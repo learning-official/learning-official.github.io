@@ -77,3 +77,15 @@
     - 在覆寫clone時，需要在class中加上 `implements Cloneable`，使這個覆寫合法（雖然Cloneable沒有定義clone，反而是在Object中定義的，但Java說要加ouo）。
     - 且在clone覆寫中，必須throws Clone的例外。
     ![image](https://hackmd.io/_uploads/HygJp8tfzg.png)
+
+## Day176
+#### 學習重點 : java.lang的Object之deep copy
+- 續看clone ⭐⭐⭐⭐⭐⭐
+    - 接續昨天的clone，今天來討論將clone實作成deep copy的形式。
+    - 一般使用super.clone()，意即去呼叫父類的clone，此時其實是以著子類的身分 : `this指向子類`，到父類去做事，但由於super的關係，使多型暫時失效，轉以父類執行clone。
+    - 但由於Object定義clone是以 `native` 定義，亦即使用原生語言(C++)，此時 C++ **找的是this所在的記憶體位置**，因此super多型遮罩在 C++ 不管用，這也是為甚麼明明寫super.clone，卻是去複製自己，而不是複製父類(**原因就在this的歸屬**)。
+    - 這邊有找到幾個詞彙，之後可以研究研究 : `Klass、invokevirtual/invokespecial、Field Hiding`
+- Deep copy的實作 ⭐⭐⭐
+    - 其原理很簡單，使用super.clone()後，還需要針對本身的Wrapper成員再進行一次clone。
+    ![image](https://hackmd.io/_uploads/S1TKpjqffl.png)
+    - 這邊加了個ObjectCloneTest的Wrapper成員，因此要再針對它再進行一次clone。
