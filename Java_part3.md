@@ -89,3 +89,17 @@
     - 其原理很簡單，使用super.clone()後，還需要針對本身的Wrapper成員再進行一次clone。
     ![image](https://hackmd.io/_uploads/S1TKpjqffl.png)
     - 這邊加了個ObjectCloneTest的Wrapper成員，因此要再針對它再進行一次clone。
+
+## Day177
+#### 學習重點 : java.lang的Object之執行緒
+- wait/notify/notifyAll ⭐⭐⭐⭐⭐⭐⭐⭐⭐
+    - 簡單來說，這三者專門處理Object這個資源的控管！
+    - 以搶票系統來看 : 若一坨人要搶A區的票，A區作為一個Object紀錄剩餘票數，若發現票已售完，後續排隊用戶的進入購票環節時會因 `synchronized` 緣故，依序取用A區的資源，若發現沒有票則執行 `(A區)this.wait()`，意即進到A區資源的等待區，並交出自身的對A區的「**資源鎖**」給下一個執行緒。
+    - 等有使用者釋票後，就會發出 `A區(this).notify()` 去「喚醒」其中一個在等待區的執行緒。
+    - 而notifyAll就只是一次喚醒「所有」等待的執行緒而已。
+    - 不過這產生一個問題 : 如果排頭檢查票數發現是0，並到等待區等待，結果第二個人進來時，剛好有票了，第二個人就順勢購票了。
+        - 因此synchronized這種monitor lock又被稱為「**Non-fair Lock**」
+        - 此時改用ReentrantLock會更加FAIR！！
+- 為何wait/notify要在Object中？ ⭐⭐⭐
+    - 一般來說，在討論執行緒時，都會以Thread/Runnable等為主，但是為甚麼wait/notify這些東西會出現在Object中呢？
+    - 主要原因 : Object凌駕於所有class之上，且任何class都可以是「資源」，若以執行緒(使用者)去呼叫wait，會導致JVM `不知道這個執行緒是要進到哪個資源的等待區？`，這也是為何不會直接以Thread呼叫wait！
