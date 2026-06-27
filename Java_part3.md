@@ -103,3 +103,20 @@
 - 為何wait/notify要在Object中？ ⭐⭐⭐
     - 一般來說，在討論執行緒時，都會以Thread/Runnable等為主，但是為甚麼wait/notify這些東西會出現在Object中呢？
     - 主要原因 : Object凌駕於所有class之上，且任何class都可以是「資源」，若以執行緒(使用者)去呼叫wait，會導致JVM `不知道這個執行緒是要進到哪個資源的等待區？`，這也是為何不會直接以Thread呼叫wait！
+
+## Day178
+#### 學習重點 : java.lang的Record
+- 基本概念 ⭐⭐⭐⭐
+    - 基本上Record在Java中是一個很方便建立model等的關鍵字。
+    - 於Java 16引入，非常方便用於設計一些「不可變」的類別。
+    - 其簡化了我們寫參數建構子、Getter、覆寫Object功能的過程。
+    - 因為是不可變，因此當我們給定成員後，會自動變成final形式(class本身也是final)，且沒有Setter。
+    - 由於record類別是去繼承java.lang的Record抽象類別，因此寫record不能再繼承其他類別，也不能被其他類別繼承！
+- 實際範例 ⭐⭐⭐
+    - 十分簡單易懂ww
+    ![image](https://hackmd.io/_uploads/Sk-LHbaGfx.png)
+    - 當然，也可以實作 : 
+    ![image](https://hackmd.io/_uploads/rJkE8bTMMg.png)
+    - 這邊就用前幾天碰到的Cloneable來示範實作ouo。
+    - 但其實簡化成這樣，底層還是會還原成 : 
+    ![image](https://hackmd.io/_uploads/B1DRL-TMzl.png)
