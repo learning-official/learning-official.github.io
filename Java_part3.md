@@ -114,9 +114,9 @@
     - 由於record類別是去繼承java.lang的Record抽象類別，因此寫record不能再繼承其他類別，也不能被其他類別繼承！
 - 實際範例 ⭐⭐⭐
     - 十分簡單易懂ww
-    ![image](https://hackmd.io/_uploads/Sk-LHbaGfx.png)
+    ![image](https://hackmd.io/_uploads/rJZtYWafMe.png)
     - 當然，也可以實作 : 
-    ![image](https://hackmd.io/_uploads/rJkE8bTMMg.png)
+    ![image](https://hackmd.io/_uploads/SJqYKWpzfx.png)
     - 這邊就用前幾天碰到的Cloneable來示範實作ouo。
     - 但其實簡化成這樣，底層還是會還原成 : 
-    ![image](https://hackmd.io/_uploads/B1DRL-TMzl.png)
+    ![image](https://hackmd.io/_uploads/Sk45F-Tffx.png)
