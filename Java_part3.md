@@ -120,3 +120,22 @@
     - 這邊就用前幾天碰到的Cloneable來示範實作ouo。
     - 但其實簡化成這樣，底層還是會還原成 : 
     ![image](https://hackmd.io/_uploads/Sk45F-Tffx.png)
+
+## Day179
+#### 學習重點 : java.lang的Record複製
+- record的copy ⭐⭐⭐⭐
+    - 今天看個簡單的主題，Record的複製！
+    - 一般在class當中，我們可能會寫下一些成員，他們不是被參數指派，隨機產生、根據時間不同而有不同數值。像是下面這個 : 
+    ```java=
+    public class User {
+        private String name;
+        private long createTime;
+
+        public User(String name) {
+            this.name = name;
+            this.createTime = System.currentTimeMillis();
+        }    
+    }
+    ```
+    - 此時若我們建構一個新的user，但copy了另一個User的name，此時用equals判斷會不一樣。
+    - 但如果我們使用record，由於定義不可變及可預測性，我們只要透過`R newR = new R(oldR.name(), oldR.age()...)` 建構完畢後，newR與oldR做equals必是True。
