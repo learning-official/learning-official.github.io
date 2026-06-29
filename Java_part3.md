@@ -139,3 +139,19 @@
     ```
     - 此時若我們建構一個新的user，但copy了另一個User的name，此時用equals判斷會不一樣。
     - 但如果我們使用record，由於定義不可變及可預測性，我們只要透過`R newR = new R(oldR.name(), oldR.age()...)` 建構完畢後，newR與oldR做equals必是True。
+
+## Day180
+#### 學習重點 : java.lang的Record簡便用法
+- 函式內宣告 ⭐⭐⭐
+    - 就像匿名類別一樣，Record也可以被簡單實現在函式內部中被「單次」使用。
+    - 以下是範例 : 
+    ```java=
+    public void calculate(List<Merchandise> list) {
+        // ...建立List的過程
+        record TempTotal(Long id, double finalPrice) {}
+
+        List<TempTotal> result = list.stream()
+            .map(m -> new TempTotal(m.getId(), m.getPrice() * 0.8))
+            .toList();
+    }
+    ```
