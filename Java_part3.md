@@ -155,3 +155,13 @@
             .toList();
     }
     ```
+
+## Day181
+#### 學習重點 : Java是甚麼？
+- 前言 ⭐
+    - 我想，這段時間有太多事情，學習語法或者框架可能會造成學習成效不好，因此我打算來好好認識一下Java ( 學習這麼久，但從來沒有認真了解過Java的背景ww
+- JVM ⭐⭐⭐⭐⭐
+    - Java Virtual Machine，意即Java虛擬機器，其提供了完整的處理器、Stack、Register等。
+    - JVM接收了Java bytecode來執行。因此，只要能成功編譯成java bytecode(.class)的程式碼，**理論上都可在JVM上執行**。
+- WORA ⭐⭐
+    - Write Once, Run Anywhere，意即上述的JVM接收Java bytecode，使我們不需重新編譯Java程式碼，**只需編譯一次，即可在任何支援平台上執行。**
