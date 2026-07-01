@@ -165,3 +165,15 @@
     - JVM接收了Java bytecode來執行。因此，只要能成功編譯成java bytecode(.class)的程式碼，**理論上都可在JVM上執行**。
 - WORA ⭐⭐
     - Write Once, Run Anywhere，意即上述的JVM接收Java bytecode，使我們不需重新編譯Java程式碼，**只需編譯一次，即可在任何支援平台上執行。**
+
+## Day182
+#### 學習重點 : JDK與JRE
+- JDK ⭐⭐⭐⭐
+    - Java Development Kit，是一套很完整的Java開發套件，像我們常常使用的javac，就是JDK的套件。
+    - 其內部也包含JVM、編譯、執行、打包jar檔等完整組件
+    - 而對於一般使用者，無須下載JDK去執行Java程式 --> 因為只要取得bytecode即可！
+    - 但對於程式開發者來說，JDK需要手動安裝。
+    - 而一般都是以Java SE作為標準版來使用。
+- JRE ⭐⭐⭐⭐
+    - Java Runtime Environment，由JVM以及Java 核心API組成，當使用者想執行Java程式(bytecode)時，可以只使用JRE來執行，無需另外加入JDK。
+    - 因此可以說JRE就是被砍掉編譯功能的JDK！
