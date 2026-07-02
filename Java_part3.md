@@ -177,3 +177,14 @@
 - JRE ⭐⭐⭐⭐
     - Java Runtime Environment，由JVM以及Java 核心API組成，當使用者想執行Java程式(bytecode)時，可以只使用JRE來執行，無需另外加入JDK。
     - 因此可以說JRE就是被砍掉編譯功能的JDK！
+
+## Day183
+#### 學習重點 : JRE的成分
+- JRE解析 ⭐⭐⭐⭐
+    - 在JRE中，基本上存在幾個部分 : JVM核心元件、核心類別庫、部屬工具。
+    - 核心元件 : ClassLoader、Bytecode驗證、解讀器。
+    - 類別庫 : XML分析、.lang、.io、.security等...。
+    - 部屬工具 : javapackager...。
+- JRE常見的綜合庫類別 ⭐⭐
+    - 通訊 : JDBC、JNDI、JWS...。
+    - 視窗介面 : AWT、Swing...。
