@@ -188,3 +188,12 @@
 - JRE常見的綜合庫類別 ⭐⭐
     - 通訊 : JDBC、JNDI、JWS...
     - 視窗介面 : AWT、Swing...
+
+## Day184
+#### 學習重點 : JIT與Hotpot JVM
+- JIT、Hotpot JVM ⭐⭐⭐⭐⭐
+    - Just-in-time是指稱一種動態(即時)編譯器，其可將Java bytecode轉換成機器碼 --> 且可以抓取常用程式區塊，使其成為本地機器碼，提高程式執行效率。
+    - JIT是Hotpot JVM執行模式下的其中一種模式，另一種是Interpretation
+    - 註記 : Hotpot JVM是JVM中很受歡迎的虛擬機，除了JIT的貢獻之外，Hotpot也有引入GC的垃圾回收機制！
+    - 這張圖我覺得不錯 : 
+    ![image](https://hackmd.io/_uploads/HJTwT1SQMx.png)
