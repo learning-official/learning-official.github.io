@@ -208,3 +208,16 @@
     - C1編譯器主要負責的是需快速啟動、編譯的程式，由於其編譯的速度很快且延遲小，很適合需短期、快速運行的程式。
     - C2編譯器屬於高級編譯器，當熱點偵測到程式被重複執行多次後，會將其從C1轉交給C2編譯器管理，將其編譯、優化，儘管花的時間較長，但在需長期運行的程式當中，十分有利。
     - C2編譯的方式，就很適合後端的程式使用，因為其在伺服端上會很常被呼叫，這也是為何C2叫做Server JIT Compiler！
+
+## Day186
+#### 學習重點 : Runtime Data Area
+- 基本架構 ⭐⭐⭐⭐⭐
+    - 前面說的JIT是存在於Execute engine區塊中，屬於JVM的其中一塊。接下來，我要來探究Runtime Data Area的部分！
+    ![image](https://hackmd.io/_uploads/SkLcd1dQGl.png)
+    - 所謂的Thread私有區域代表當Thread生成時一起出現，Thread消失時跟著不見。而共享就如同static一樣，是跟著JVM的生命週期存活！
+- Program counter ⭐⭐⭐
+    - 每個Thread在建立時，都有一個自己的計數器，處理下一條要執行的指令為何？
+    - 由於這部分感覺有點接近計概了，就先淺淺帶過就好ww。
+- JVM Stack ⭐⭐⭐⭐⭐⭐
+    - JVM Stack在Thread被建立時，會同時建立一個Stack Frame專門記錄方法的執行過程，並儲存區域變數表、參數、return後的記憶體位置。
+    - 舉個例子 : 在A函式呼叫B函式時，會建立Stack Frame推入B函式執行時的區域變數、參數，最終函示執行完畢後，pop出B函式，並回到A函式被中斷的位置繼續執行A函式的Stack Frame！
