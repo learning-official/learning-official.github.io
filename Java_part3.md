@@ -221,3 +221,15 @@
 - JVM Stack ⭐⭐⭐⭐⭐⭐
     - JVM Stack在Thread被建立時，會同時建立一個Stack Frame專門記錄方法的執行過程，並儲存區域變數表、參數、return後的記憶體位置。
     - 舉個例子 : 在A函式呼叫B函式時，會建立Stack Frame推入B函式執行時的區域變數、參數，最終函示執行完畢後，pop出B函式，並回到A函式被中斷的位置繼續執行A函式的Stack Frame！
+
+## Day187
+#### Runtime Data Area
+- Native Method Area ⭐⭐⭐⭐
+    - 儘管兩者都屬於Thread執行時去服務方法的流程記憶體堆疊，但其管理的是以「native」關鍵字的「原生method」。
+- Thread 資源共享區域 ⭐⭐⭐⭐⭐⭐
+    - JVM在執行時，會建立一個Heap的區域，與JVM開啟結束共進退，管理物件、資料的生成。
+    - 由於Thread共享，因此就可能會有資源性問題出現，這也是為甚麼會有lock、synchronized出現！
+    - GC : 也出現在Heap區域，由於Heap存放物件、資料，因此進行資料管理是十分重要的，優化記憶體也是靠著GC的技術去達成！
+    #### Method Area
+    - 在Java1.8後就變成了Metaspace，存放Constant、Static不變的資料，因此不歸GC管，像是JIT編譯後的機器碼也是存於此。
+    - 其中的Runtime Constant Pool即是存取.class經ClassLoader載入的資料。
