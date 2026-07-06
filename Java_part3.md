@@ -223,7 +223,7 @@
     - 舉個例子 : 在A函式呼叫B函式時，會建立Stack Frame推入B函式執行時的區域變數、參數，最終函示執行完畢後，pop出B函式，並回到A函式被中斷的位置繼續執行A函式的Stack Frame！
 
 ## Day187
-#### Runtime Data Area
+#### 學習重點 : Runtime Data Area
 - Native Method Area ⭐⭐⭐⭐
     - 儘管兩者都屬於Thread執行時去服務方法的流程記憶體堆疊，但其管理的是以「native」關鍵字的「原生method」。
 - Thread 資源共享區域 ⭐⭐⭐⭐⭐⭐
