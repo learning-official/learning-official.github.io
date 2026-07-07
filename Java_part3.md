@@ -233,3 +233,13 @@
     #### Method Area
     - 在Java1.8後就變成了Metaspace，存放Constant、Static不變的資料，因此不歸GC管，像是JIT編譯後的機器碼也是存於此。
     - 其中的Runtime Constant Pool即是存取.class經ClassLoader載入的資料。
+
+## Day188
+#### 學習重點 : JNI是甚麼？
+- Native？ ⭐⭐⭐⭐⭐⭐
+    - 在認識Object class的時候，我發現像是hashCode等都會加上native關鍵字，亦即方法以介面呈現在Java中，實作則是以效率較快的C++去寫，故此方法被稱為原生語法。
+    - 一般原生語法會使用loadLibrary去載入預先編譯好的C++檔(.dll、.so)。
+    - 而native註冊又有「動態」、「靜態」之分。
+- JNI ⭐⭐⭐⭐
+    - 至於JNI則是作為 `C++` 與`Java` 的中間人，其將 `Java` 的資料型態、GC機制等轉換成 `C++` 的邏輯。
+    - 而JNI也能夠反向轉換 --> Callback，將C++轉換成Java！
