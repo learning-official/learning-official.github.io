@@ -243,3 +243,9 @@
 - JNI ⭐⭐⭐⭐
     - 至於JNI則是作為 `C++` 與`Java` 的中間人，其將 `Java` 的資料型態、GC機制等轉換成 `C++` 的邏輯。
     - 而JNI也能夠反向轉換 --> Callback，將C++轉換成Java！
+
+## Day189
+#### 學習重點 : Void在Java中的用處？
+- Void？ ⭐⭐⭐⭐
+    - Void object屬於Java.lang，當我們希望一件任務被執行後，不回傳任何物件，也就是null，此時我們會利用java.lang所定義的Void object，去表示一個null回傳的任務。
+    - 而在Void object定義中，我們的constructor會是private的，主要是不希望Void被實例化，而失去了其null的特性！
