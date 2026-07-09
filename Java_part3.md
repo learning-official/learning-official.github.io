@@ -249,3 +249,9 @@
 - Void？ ⭐⭐⭐⭐
     - Void object屬於Java.lang，當我們希望一件任務被執行後，不回傳任何物件，也就是null，此時我們會利用java.lang所定義的Void object，去表示一個null回傳的任務。
     - 而在Void object定義中，我們的constructor會是private的，主要是不希望Void被實例化，而失去了其null的特性！
+
+## Day190
+#### 學習重點 : Void跟null的關係？
+- Void代表null？ ⭐⭐⭐⭐
+    - 在一般情況中，null值被回傳是空的概念，若我們本來就不須回傳或者只單純執行任務的method設定Generics為Void，Object為Void，而不是單純的值為空。
+    - 以上設定才能讓泛型的邏輯成立！
