@@ -255,3 +255,20 @@
 - Void代表null？ ⭐⭐⭐⭐
     - 在一般情況中，null值被回傳是空的概念，若我們本來就不須回傳或者只單純執行任務的method設定Generics為Void，Object為Void，而不是單純的值為空。
     - 以上設定才能讓泛型的邏輯成立！
+
+## Day191
+#### 學習重點 : Callable搭配Void
+- 常見例子
+    - 在執行緒當中，我們有時候會搭配Void object來完成一些task。
+    ```java=
+    import java.util.concurrent.Callable;
+
+    public class VoidT implements Callable<Void> {
+        @Override
+        public Void call() throws Exception {
+            System.out.println("執行中...");
+            return null;
+        }
+    }
+    ```
+    - 我們知道Void object可以有null Reference，且不能被實例化，因此唯一能回傳的就是null，但其指向的形態還是Void物件。
