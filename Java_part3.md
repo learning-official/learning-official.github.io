@@ -272,3 +272,29 @@
     }
     ```
     - 我們知道Void object可以有null Reference，且不能被實例化，因此唯一能回傳的就是null，但其指向的形態還是Void物件。
+
+## Day192
+#### 學習重點 : Comparable
+- 甚麼是Comparable？ ⭐⭐⭐
+    - 在集合框架中，我們時常會對物件進行排序，但排序的規則為何？
+    - 這時我們就會實作Comparable介面來定義sort時，是按照什麼樣的邏輯下去做的！
+- Comparable實作 ⭐⭐⭐⭐
+    - 我們會覆寫一個叫做compareTo的method。
+    ```java=
+    public class Person implements Comparable<Person> {
+        private String name;
+        private int age;
+
+        public Person(String name, int age) {
+            this.name = name;
+            this.age = age;
+        }
+
+        @Override
+        public int compareTo(Person other) {
+            return this.age - other.age;  // 依年齡排序
+        }
+    }
+    ```
+    - 會發現其回傳的是int，也就是根據正數負數決定是否要交換兩者順序，按照**自然排序** --> 小的往前排，大的往後。
+    - 因此若this大於other則this往後，反之則往前。
