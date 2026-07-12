@@ -298,3 +298,21 @@
     ```
     - 會發現其回傳的是int，也就是根據正數負數決定是否要交換兩者順序，按照**自然排序** --> 小的往前排，大的往後。
     - 因此若this大於other則this往後，反之則往前。
+
+## Day193
+#### 學習重點 : Comparator
+- 甚麼是Comparator？ ⭐⭐⭐⭐
+    - 針對一個類別，像是Person，通常會實作compareTo，因此我們可以利用Collection的sort來比較。
+    - 但如果我們不想使用類別原生的自然排序呢？
+    - 這時我們可以按照我們自己的邏輯來實作比較器！而這個可以讓我們自己設計比較邏輯的工具就是Comparator。
+- Comparator怎麼被運用？ ⭐⭐⭐⭐⭐⭐⭐
+    - 在使用 `List<String> list` 存放字串時，String內建的compareTo方法是按照ASCII字典順序來排的。
+    - 但當我們今天想要將list依照 **字串長度** 來排序呢？
+    - 這時就可以使用Comparator介面！
+    ```java=
+    public static void main(String args[]){
+        List<String> list = new ArrayList<>();
+        list.sort((s1, s2) -> s1.length() - s2.length())
+    }
+    ```
+    - 上述的 `(s1, s2)...` 就是在實作Comparator介面！
