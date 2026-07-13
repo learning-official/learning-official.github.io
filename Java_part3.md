@@ -316,3 +316,12 @@
     }
     ```
     - 上述的 `(s1, s2)...` 就是在實作Comparator介面！
+
+## Day194
+#### 學習重點 : Comparator工具
+- comparing ⭐⭐⭐⭐
+    - 簡單來說，我們可以打包一個排序邏輯工具物件，以Comparator.comparing來生成一個排序物件，可以放進Collections的sort功能中！
+    ![image](https://hackmd.io/_uploads/BkKmJdG4zx.png)
+- naturalOrder ⭐⭐
+    - 當然，Comparator也有naturalOrder的排序方法
+    ![image](https://hackmd.io/_uploads/H1fE-dfEMg.png)
