@@ -325,3 +325,12 @@
 - naturalOrder ⭐⭐
     - 當然，Comparator也有naturalOrder的排序方法
     ![image](https://hackmd.io/_uploads/H1fE-dfEMg.png)
+
+## Day195
+#### 學習重點 : Collections的功能
+- Collections的sort ⭐⭐⭐⭐⭐
+    - 在集合框架中，可以使用Collections的sort，其中可以放入單純list（有實作過Comparable介面），或者list搭配comparator的比較器！
+    - 像是Person自己有設計過compareTo，但我還是可以塞比較器！
+    ![image](https://hackmd.io/_uploads/H1B46oQVfg.png)
+    ![image](https://hackmd.io/_uploads/B1Q_6iX4Ge.png)
+    - 我順便覆寫了toString讓輸出比較好看！
