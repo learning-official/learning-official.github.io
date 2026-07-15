@@ -334,3 +334,16 @@
     ![image](https://hackmd.io/_uploads/H1B46oQVfg.png)
     ![image](https://hackmd.io/_uploads/B1Q_6iX4Ge.png)
     - 我順便覆寫了toString讓輸出比較好看！
+
+## Day196
+#### 學習重點 : Deque
+- 甚麼是Deque？ ⭐⭐⭐⭐⭐
+    - 別於一般的queue，deque指的是雙向佇列，他擁有了FIFO及LIFO的特性，亦即push、pop都可以作用於front跟tail。
+    #### 實際例子？
+    - 一般常用的ctrl+z回溯功能，都是使用stack概念，push操作，pop出front形成回溯，但若一直操作而不回溯，stack就會overflow！
+    - 此時若採用deque的概念，一樣push操作，但當操作堆疊達到一定數量後，pop掉tail的操作，此時結合stack可以pop出front以及queue可以pop出tail的功能達到最佳回溯功能！
+- Java中實際使用deque ⭐⭐⭐⭐⭐⭐⭐
+    - Java官方明確表示 : `A more complete and consistent set of LIFO stack operations is provided by the Deque interface and its implementations, which should be used in preference to this class(Stack).`，這也是因為Stack繼承了Vector，使得其Stack嚴謹度降低，且Vector是Thread-safe，亦即在單一執行緒下執行vector會有無用的鎖在拉低效能！
+    - 而deque是一個介面，開發者可以選擇無鎖的ArrayDeque或者有鎖的LinkedBlockingDeque，這樣的兼容性使得deque優於stack！
+    - 而實際的實作如下 : 
+    ![image](https://hackmd.io/_uploads/By8qlxrEzx.png)
