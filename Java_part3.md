@@ -347,3 +347,16 @@
     - 而deque是一個介面，開發者可以選擇無鎖的ArrayDeque或者有鎖的LinkedBlockingDeque，這樣的兼容性使得deque優於stack！
     - 而實際的實作如下 : 
     ![image](https://hackmd.io/_uploads/By8qlxrEzx.png)
+
+## Day197
+#### 學習重點 : Deque的結構
+- 深入Deque ⭐⭐⭐⭐
+    - 昨天只有稍微帶到Deque的意義以及使用方法，今天則是來看看Deque在Java的繼承&實作架構！
+    ![image](https://hackmd.io/_uploads/ByWrC88NMe.png)
+    - 簡單來說，Deque建立在Queue之下，只是其內部在多定義了addFirst(針對front進行push)、removeLast(針對tail進行pop)，這種只有雙向Queue才會出現的功能！
+    - 而在實作當中，則是由ArrayDeque與LinkedList為主。
+    ![image](https://hackmd.io/_uploads/B1buGwUVfe.png)
+- Deque的特色 ⭐⭐⭐⭐
+    - 其不接受null元素，因此若在Deque當中放入null會拋出NPE。
+    - 再來，其Array長度是可伸縮的，因此沒有固定大小。
+    - 最後，Deque與Vector不同在於其不是thread-safe，因此不允許多執行緒的同時取用，也因此ArrayDeque這種實作只適用於單執行緒！
