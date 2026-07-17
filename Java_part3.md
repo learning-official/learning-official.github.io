@@ -360,3 +360,15 @@
     - ArrayDeque實作不接受null元素，因此若在ArrayDeque當中放入null會拋出NPE。但在LinkedList當中是可以的！但官方還是不建議在Deque中加入null。
     - 再來，其Array長度是可伸縮的，因此沒有固定大小。
     - 最後，Deque與Vector不同在於其不是thread-safe，因此不允許多執行緒的同時取用，也因此ArrayDeque這種實作只適用於單執行緒！
+
+## Day198
+#### 學習重點 : Deque作為Stack的應用
+- Stack應用 ⭐⭐⭐⭐⭐⭐⭐
+    - 在Java官方的建議中，通常會使用Deque作為代替Stack的選項，因此我找了個十分常見的範例 --> 瀏覽歷史紀錄，來做為Deque(Stack)的一種實作途徑。
+    - 首先是定義好三個功能 : 訪問、上一頁、下一頁，上一頁與下一頁是一條路，而訪問代表按照過去的路往前開闢另一條路，因此當使用訪問時，下一頁的stack會被清空。
+    - 以下是我的實作 : 
+    ![image](https://hackmd.io/_uploads/H1hyDcDVGl.png)
+    - 然後我寫了個簡單的測試 : 
+    ![image](https://hackmd.io/_uploads/Bk6mt9wEze.png)
+    - 透過上述實作可以達到以下成果 : 
+    ![image](https://hackmd.io/_uploads/r1YDK5P4Ml.png)
