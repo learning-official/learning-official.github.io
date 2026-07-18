@@ -393,3 +393,17 @@
     }
     ```
     - 上述展示了當拼接1000次，會產出 `1000個StringBuilder + 1000個String臨時物件`，因此當我們要修改字串時，應該使用Builder或Buffer會更好一些！
+
+## Day200
+#### 學習重點 : StringBuilder vs. StringBuffer
+- StringBuilder vs. StringBuffer ⭐⭐⭐
+    - 一般來說，Builder跟Buffer都是實作了charSequence作為存取方式，但前者為 `non thread-safe`，意即沒有加上synchronized鎖住執行緒，也因此StringBuilder適合用於單執行緒。
+    - 在JDK1.5之後，Java引入了StringBuilder，由於StringBuilder不像Buffer那樣有鎖，因此執行效率快了很多。
+- String使用 `+` 做拼接 ⭐⭐⭐⭐⭐
+    - 其實它是一種 **語法糖**，當我們針對兩個String進行拼接時，會以  `.append` 作為拼接方法（當然JDK1.5以前是 `StringBuffer.append`，之後是 `StringBuilder.append`！
+    - 因此如果我們要做多次拼接，直接使用StringBuilder物件.append修改底層記憶體，比起new一堆垃圾物件還來的好！
+- StringBuffer的toStringCache ⭐⭐⭐⭐⭐⭐⭐
+    - 在StringBuffer物件中，若多次呼叫 `.toString`，Buffer會在第一次呼叫後將其存入toStringCache成員當中(它是String物件)，以便多個執行緒要讀取Buffer時，不用一直toString（複製陣列、new一個String物件...。
+    - 這樣設計的原因也是因為 --> 通常執行緒「讀取頻率大於修改頻率」，因此設計Cache可以讓讀取更加快速，而又因較常讀取，因此Cache才有存在的意義！
+    - 當然，若某一執行緒修改了Buffer，則Cache被清空，待下一次toString時賦予新的String！
+    
