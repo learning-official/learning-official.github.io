@@ -374,7 +374,7 @@
     ![image](https://hackmd.io/_uploads/r1YDK5P4Ml.png)
 
 ## Day199
-#### 學習重點 : String三大家族
+#### 學習重點 : String家族
 - String ⭐⭐⭐⭐
     - 我們知道，String是immutable，因此翻開String類別，可以發現是以 `private final byte[] value;` 宣告的(Java8以前是char[])。
     - 而StringBuilder以及StringBuffer則是移除了 `final`，並加入了append、insert等修改字串的功能！
