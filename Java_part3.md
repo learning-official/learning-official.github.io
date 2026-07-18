@@ -372,3 +372,24 @@
     ![image](https://hackmd.io/_uploads/Bk6mt9wEze.png)
     - 透過上述實作可以達到以下成果 : 
     ![image](https://hackmd.io/_uploads/r1YDK5P4Ml.png)
+
+## Day199
+#### 學習重點 : String三大家族
+- String ⭐⭐⭐⭐
+    - 我們知道，String是immutable，因此翻開String類別，可以發現是以 `private final byte[] value;` 宣告的(Java8以前是char[])。
+    - 而StringBuilder以及StringBuffer則是移除了 `final`，並加入了append、insert等修改字串的功能！
+    #### 為何要修改字串？
+    - 當我們在做一般字串拼接時、`substring` 等動作時，其實String會直接new一個新的String出來，而原本的字串則被遺棄在Heap區等待GC回收！十分浪費記憶體！
+    - 如下方程式碼 : 
+    ```java=
+    for (int i = 0; i < 1000; i += 1) {
+        str = str + arr[i] + ',';
+    //  上方在String類別內部會改成下面這個
+    //  str = new StringBuilder()
+    //            .append(str)
+    //            .append(arr[i])
+    //            .append(",")
+    //            .toString();
+    }
+    ```
+    - 上述展示了當拼接1000次，會產出 `1000個StringBuilder + 1000個String臨時物件`，因此當我們要修改字串時，應該使用Builder或Buffer會更好一些！
