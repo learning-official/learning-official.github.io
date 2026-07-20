@@ -407,3 +407,17 @@
     - 這樣設計的原因也是因為 --> 通常執行緒「讀取頻率大於修改頻率」，因此設計Cache可以讓讀取更加快速，而又因較常讀取，因此Cache才有存在的意義！
     - 當然，若某一執行緒修改了Buffer，則Cache被清空，待下一次toString時賦予新的String！
     
+## Day201
+#### 學習重點 : Method chain - Builder pattern 
+- Builder是甚麼？ ⭐⭐⭐⭐⭐⭐⭐⭐
+    - Builder是一種設計模式，由於一般我們在建立物件時，若成員過多，會在建構式當中丟入太多參數，造成冗長的初始化。
+    - 建構式多載？ --> 儘管我們利用了建構式多載來設計各種初始化參數接收，但在參數順序上，還是得依序填入，缺少「選擇性」，且過於「制式化」。
+    - JavaBean？ --> 這也是一種設計方式，利用setter來設計一個物件，但這就使得物件的immutable性質消失了！
+    - Builder的出現！ --> 為了保持選擇性 + 不可變，我們在A類別內部加入一個 `static class Builder`，成員與A類別相同，並在其中設計每個成員配一個函式去賦值，同時A類別的建構式中接收Builder物件，最後設計build函式呼叫A類別的建構式。
+    - 而Builder的設計模式在初始化時，就是method chain的概念，最後使用build回傳物件！
+- 實際的長相 : ⭐⭐⭐⭐
+    - 我以Person作為模型加入了Builder的設計模式並用其建構出一個簡單的Person物件！
+    ![image](https://hackmd.io/_uploads/ryYv0isVMl.png)
+    - 而Builder內部如下 : 
+    ![image](https://hackmd.io/_uploads/SyFoAijNMl.png)
+    - 透過以上的實作也讓我釐清了在SpringBoot當中使用一直使用到的build跟body等功能是如何被建立的啦！
