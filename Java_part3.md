@@ -420,7 +420,7 @@
     ![image](https://hackmd.io/_uploads/ryYv0isVMl.png)
     - 而Builder內部如下 : 
     ![image](https://hackmd.io/_uploads/SyFoAijNMl.png)
-    - 透過以上的實作也讓我釐清了在SpringBoot當中使用一直使用到的build跟body等功能是如何被建立的啦！
+    - 透過以上的實作也讓我釐清了在SpringBoot當中一直使用到的build跟body等功能是如何被建立的啦！
 
 ## Day202
 #### 學習重點 : lombok的Builder
@@ -436,7 +436,7 @@
     ![image](https://hackmd.io/_uploads/Hye8dVt24Mx.png)
     ![image](https://hackmd.io/_uploads/SJcF4Kh4Mx.png)
     ![image](https://hackmd.io/_uploads/SkhKEY2NMl.png)
-    - 在沒有傳入age的情況下，最後在建構時，會使用int的預設`0`傳入。
+    - 在沒有傳入age的情況下，最後在建構時，會使用int的預設 `0` 傳入。
     - 為了設計預設值，Builder有一個功能是default，只需要在field上加入該註解即可。
     ![image](https://hackmd.io/_uploads/SJp1St2VMl.png)
     - 以上，即可解決預設的問題！
