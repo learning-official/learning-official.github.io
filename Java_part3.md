@@ -421,3 +421,22 @@
     - 而Builder內部如下 : 
     ![image](https://hackmd.io/_uploads/SyFoAijNMl.png)
     - 透過以上的實作也讓我釐清了在SpringBoot當中使用一直使用到的build跟body等功能是如何被建立的啦！
+
+## Day202
+#### 學習重點 : lombok的Builder
+- Builder註解 ⭐⭐⭐⭐
+    - lombok中也有設計一個註解叫做 `@Builder`，直接讓class免去寫Builder的架構，只需要在class上方加註即可！
+    - 如下 : 
+    ![image](https://hackmd.io/_uploads/SJoe-thEMg.png)
+    - 而使用起來與我自己實作的一模一樣！
+- @Builder.Default ⭐⭐⭐⭐
+    - 在設計成員時，我希望若某些成員在build時沒有傳入值，則使用給定的預設值。
+    - 由於我們是先設定Builder，最後在以.build一一對應到類別建構式當中。假設沒有在method chain設定a值，即便我們直接在類別當中指派5給a，最後還是會被建構式當中的 `this.a = builder.a` 覆蓋掉。
+    - 舉個例子 : 
+    ![image](https://hackmd.io/_uploads/Hye8dVt24Mx.png)
+    ![image](https://hackmd.io/_uploads/SJcF4Kh4Mx.png)
+    ![image](https://hackmd.io/_uploads/SkhKEY2NMl.png)
+    - 在沒有傳入age的情況下，最後在建構時，會使用int的預設`0`傳入。
+    - 為了設計預設值，Builder有一個功能是default，只需要在field上加入該註解即可。
+    ![image](https://hackmd.io/_uploads/SJp1St2VMl.png)
+    - 以上，即可解決預設的問題！
