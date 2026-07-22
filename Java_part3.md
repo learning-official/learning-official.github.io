@@ -440,3 +440,22 @@
     - 為了設計預設值，Builder有一個功能是default，只需要在field上加入該註解即可。
     ![image](https://hackmd.io/_uploads/SJp1St2VMl.png)
     - 以上，即可解決預設的問題！
+ 
+## Day203
+#### 學習重點 : Builder的問題
+- 關於null的問題 ⭐⭐⭐⭐⭐⭐⭐⭐⭐
+    - 昨天練習預設值時，若沒有在method chain放入age時，會預設0或者按照Builder.Default來初始。
+    - 但當我建立person物件時，傳入age是null，並不會觸發預設值，此時我們需要有相對應策略來應對null問題。
+    - 直接設計一個偵測null給預設值？ --> 我們可以這樣做 : 
+    ```java=
+    int age = 5;
+    if (person.getAge() != null){
+        age = person.getAge();
+    }
+    ```
+    - 取出person後再做一道防線，若null則給5，就跟昨天沒設定一樣的概念！
+    - **但是**，這就違反了物件導向設計的精神 --> 物件本身的 **invaraint(不變量)**，意即 `物件age若null要給5` 這件事應該封裝在Person當中，不應該交由外部再做處理！這也是DTO跟model之間的一個區別，當DTO到model之間應該要先做好null check，使得**model有完整的invaraint特性！**
+- 解決
+    - 我們可以在Person當中設計特殊getter，當要取出null的成員時，丟出預設值 :
+    ![image](https://hackmd.io/_uploads/SJ8P1B0NGl.png)
+    - 以上是其中一種改良方法(直接在model中設計邏輯)！
