@@ -454,7 +454,7 @@
     }
     ```
     - 取出person後再做一道防線，若null則給5，就跟昨天沒設定一樣的概念！
-    - **但是**，這就違反了物件導向設計的精神 --> 物件本身的 **invaraint(不變量)**，意即 `物件age若null要給5` 這件事應該封裝在Person當中，不應該交由外部再做處理！這也是DTO跟model之間的一個區別，當DTO到model之間應該要先做好null check，使得**model有完整的invaraint特性！**
+    - **但是**，這就違反了物件導向設計的精神 --> 物件本身的 **invaraint**(不變量)，意即 `物件age若null要給5` 這件事應該封裝在Person當中，不應該交由外部再做處理！這也是DTO跟model之間的一個區別，當DTO到model之間應該要先做好null check，使得 **model有完整的invaraint特性**！
 - 解決
     - 我們可以在Person當中設計特殊getter，當要取出null的成員時，丟出預設值 :
     ![image](https://hackmd.io/_uploads/SJ8P1B0NGl.png)
