@@ -482,3 +482,14 @@
     - 還記得在N天前，我曾經有嘗試理解MVC架構，但似乎缺乏實作導致觀念混在一起，但現在我有一些實作經驗，想藉著理解Java EE的網頁原理再次釐清！
     - 首先是關於Web的部分，其下的JSP與Servlet可以對應到View與Controller，而Model呢？則是對應到Java Bean。
     - Servlet作為Controller，亦即針對Request、Response做處理與轉發，而其中一種轉發就是 **轉發至JSP去處理前端的呈現方式**。
+
+## Day206
+#### 學習重點 : Session與Cookie
+- Session探究 ⭐⭐⭐⭐
+    - Session是一段時間內的「**狀態**」，一般的Http是不會存取狀態的，因此我們需要以Session來確保狀態的「**持續**」。
+    - 以客戶端來看，打開一個分頁可以說是Session的開始，刪除分頁Session就消失。
+- Session與Cookie？ ⭐⭐⭐⭐
+    - 在資料傳遞的過程當中，當我們發起Request至伺服端，伺服端並不會記得我們是誰，因此我們會透過Session來記起使用者。
+    - Session就像JWT token一樣，在傳統Web領域中，伺服端以Response Header方式於客戶端設定其domain的cookie，並存放Session id，同時Web container後端會空一塊記憶體存取session id及資訊。
+    - 因此Session依賴於cookie，使用者後續動作都是根據cookie中的Session id在辨別身分！
+    - 而Session在伺服端也是有時效性，通常會設置Session Timeout來讓資料不持續占用記憶體。
