@@ -459,10 +459,26 @@
     - 我們可以在Person當中設計特殊getter，當要取出null的成員時，丟出預設值 :
     ![image](https://hackmd.io/_uploads/SJ8P1B0NGl.png)
     - 以上是其中一種改良方法(直接在model中設計邏輯)！
- 
+      
 ## Day204
 #### 學習重點 : Builder的null check
 - final的意義 ⭐⭐⭐⭐
     - 在設計物件時，我們有時會讓成員加上final修飾詞，使得物件的狀態可以被相信(決不被竄改)。
     - 當遇到Builder的null問題時，其實我們除了修改getter這個方法之外，也可以在Builder當中預設age，使得最後傳到Person建構式時，即便沒有呼叫過age就build，age也還是有值！
     ![image](https://hackmd.io/_uploads/SyvCiPyrMe.png)
+
+## Day205
+#### 學習重點 : Jakarta EE
+- 何謂Jakarta EE？ ⭐⭐⭐⭐⭐⭐
+    - Jakarta EE是Java SE的擴充版本，屬於企業級版本，其與SE不同的點在於 --> 其制定了一套網頁API，從資料庫到網頁溝通都有一套標準，但其為 **介面規範**，因此有許多不同的實作工具。
+    - 而其中有兩個元素很重要 : Web、EJB。
+    - Web包含兩個核心 : JSP、Servlet，前者是內嵌Java程式的HTML，後者則是負責**HTTP請求**。
+    - 而EJB（Enterprise Java Bean）與Spring Bean其實是一個概念，但Spring將其設計的很方便使用，相較起來EJB就顯得複雜！
+- Web container
+    - 所謂的網頁容器就是指「**執行Java Web程式的平台**」，而常見的容器像是Tomcat、Jetty等。
+    - 當我們撰寫完Java網頁程式後，打包成 `.war` 檔，並放置到Container中解壓縮即可！
+    - 小知識 : Spring Boot是直接內嵌Tomcat並打包成可執行的 `.jar` 檔！
+- MVC架構 ⭐⭐⭐
+    - 還記得在N天前，我曾經有嘗試理解MVC架構，但似乎缺乏實作導致觀念混在一起，但現在我有一些實作經驗，想藉著理解Java EE的網頁原理再次釐清！
+    - 首先是關於Web的部分，其下的JSP與Servlet可以對應到View與Controller，而Model呢？則是對應到Java Bean。
+    - Servlet作為Controller，亦即針對Request、Response做處理與轉發，而其中一種轉發就是 **轉發至JSP去處理前端的呈現方式**。
