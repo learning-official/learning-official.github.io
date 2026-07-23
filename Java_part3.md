@@ -465,4 +465,4 @@
 - final的意義 ⭐⭐⭐⭐
     - 在設計物件時，我們有時會讓成員加上final修飾詞，使得物件的狀態可以被相信(決不被竄改)。
     - 當遇到Builder的null問題時，其實我們除了修改getter這個方法之外，也可以在Builder當中預設age，使得最後傳到Person建構式時，即便沒有呼叫過age就build，age也還是有值！
-    ![image](https://hackmd.io/_uploads/r1VTKwJSMl.png)
+    ![image](https://hackmd.io/_uploads/SyvCiPyrMe.png)
