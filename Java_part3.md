@@ -493,3 +493,21 @@
     - Session就像JWT token一樣，在傳統Web領域中，伺服端以Response Header方式於客戶端設定其domain的cookie，並存放Session id，同時Web container後端會空一塊記憶體存取session id及資訊。
     - 因此Session依賴於cookie，使用者後續動作都是根據cookie中的Session id在辨別身分！
     - 而Session在伺服端也是有時效性，通常會設置Session Timeout來讓資料不持續占用記憶體。
+
+## Day207
+#### 學習重點 : Tomcat環境建置
+- Tomcat建置 ⭐⭐⭐⭐⭐
+    - 為了防止未來的我癡呆，這邊紀錄一下基本安裝要素ww。
+    - 如同之前的Spring Boot，Tomcat也需要有其執行的環境，因此我們需要先去apache下載Tomcat的執行環境 --> [點我前往Apache Tomcat®](https://tomcat.apache.org/)
+    - 待解壓縮後，到IDEA去設置Configurations
+    ![image](https://hackmd.io/_uploads/S1aUS9QHfg.png)
+    - 新增設置後，需要加入Deployments，使得網頁專案被部屬上去
+    ![image](https://hackmd.io/_uploads/SkaWU57rMg.png)
+    - 同時，也要在Project Structure中的Module、Facets新增Web
+    ![image](https://hackmd.io/_uploads/rkKsIqQrfg.png)
+    - Module中引入Web就如同我在dependency引入套件一樣，而Facets則是代表Web專案的架構及打包的設定。
+- 測試 ⭐
+    - 在web資料夾下建置一個index.jsp並執行，看看是否有成功部屬！
+    ![image](https://hackmd.io/_uploads/B18rd5QSGl.png)
+    - 成功！
+    ![image](https://hackmd.io/_uploads/SkoPO5QHMe.png)
