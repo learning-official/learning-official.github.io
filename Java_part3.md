@@ -511,3 +511,17 @@
     ![image](https://hackmd.io/_uploads/B18rd5QSGl.png)
     - 成功！
     ![image](https://hackmd.io/_uploads/SkoPO5QHMe.png)
+
+## Day208
+#### 學習重點 : Tomcat Web專案打包與執行
+- Tomcat Web專案打包 ⭐⭐⭐⭐⭐
+    - 為了打包成.war檔，我們需要在Project Structure中設置artifact -> 選擇Type:archive --> 接著選擇我們要打包的原始專案(exploded)。
+    ![image](https://hackmd.io/_uploads/H1HKwkSBfx.png)
+    - 接著在Build中選擇archive的artifact。
+    ![image](https://hackmd.io/_uploads/SJaM_1BSGl.png)
+- Tomcat Server啟動
+    - 在tomcat的資料夾中，有個webapps的資料夾，內部裝的是Web專案，而我們的.war檔即是放在其中。而藉由 `tomcat/bin` 下的startup開啟Tomcat server後，會自動解壓縮.war檔案成為Web專案。
+    - 啟動！ : 開啟 **終端機** 後進入bin目錄，並輸入 `./startup.bat` 來啟動Tomcat server。
+    - 若遇到 `Neither the JAVA_HOME nor the JRE_HOME environment variable is defined At least one of these environment variable is needed to run this program`，這種訊息，則需要去環境變數新增JDK的路徑 --> ![image](https://hackmd.io/_uploads/rk5anJSrMl.png)
+- Web.xml ⭐⭐
+    - 在這個檔案中，有個很重要的部分 --> servlet-mapping : 以name連結classes跟url-pattern，意即當我輸入網址時會導向哪個java程式！
