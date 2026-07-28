@@ -525,3 +525,22 @@
     - 若遇到 `Neither the JAVA_HOME nor the JRE_HOME environment variable is defined At least one of these environment variable is needed to run this program`，這種訊息，則需要去環境變數新增JDK的路徑 --> ![image](https://hackmd.io/_uploads/rk5anJSrMl.png)
 - Web.xml ⭐⭐
     - 在這個檔案中，有個很重要的部分 --> servlet-mapping : 以name連結classes跟url-pattern，意即當我輸入網址時會導向哪個java程式！
+
+## Day209
+#### 學習重點 : JSP結合java語法
+- JSP內嵌Java語法 ⭐⭐⭐
+    - 在JSP檔中，我們可以利用 `<% %>` 內部放入Java語法來實現動態的語法邏輯，範例如下 : 
+    ```html=
+    </head>
+    <body>
+    <%
+        String name = "小八";
+        out.println("Hello!" + name);
+    %>
+    </body>
+    </html>
+    ```
+    - 可以看到我只寫了out，並沒有加入System，這是因為jsp有個隱含元素功能可以省略。 
+- JSP轉換至Servlet ⭐⭐⭐
+    - 在執行JSP的程式碼時，其實它會先被轉換成Servlet，以Servlet組織包裝過後再輸出HTML檔至前端，這也就是為何JSP是動態的網頁。
+    - 像是out在jsp經轉換後會變成PrintWriter的物件，並輸出HTML程式。
