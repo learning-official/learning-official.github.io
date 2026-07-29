@@ -544,3 +544,29 @@
 - JSP轉換至Servlet ⭐⭐⭐
     - 在執行JSP的程式碼時，其實它會先被轉換成Servlet，以Servlet組織包裝過後再輸出HTML檔至前端，這也就是為何JSP是動態的網頁。
     - 像是out在jsp經轉換後會變成PrintWriter的物件，並輸出HTML程式。
+
+## Day210
+#### 學習重點 : JSP - Implicit object
+- 何謂Implicit object？ ⭐⭐⭐⭐
+    - 在JSP當中，有一些元素時常被使用到，像是輸出out、請求request...。
+    - 而這些元素早已被Tomcat宣告初始化過，因此我們只需要使用名稱，而不需再自行宣告物件。
+    - 常見像是 `HttpServletRequest`、`HttpSession` 等等。
+- Implicit object簡單實作 ⭐⭐⭐⭐
+    - 我跟著教學簡單設計了一個form的框框可以填入數字，並submit後加一！
+    ```html=
+    <body>
+    <%
+        String num = request.getParameter("number");
+        Integer i = 0;
+        if (num != null){
+            i = Integer.valueOf(num);
+            i++;
+        }
+    %>
+    <form action="/Tomc_Web_exploded/index.jsp" method="post">
+        <input type="text" name="number" value="<%=i%>"/>
+        <input type="submit" value="Submit"/>
+    </form>
+    </body>
+    ```
+    ![image](https://hackmd.io/_uploads/rJ94PdwSMg.png)
