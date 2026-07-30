@@ -570,3 +570,21 @@
     </body>
     ```
     ![image](https://hackmd.io/_uploads/rJ94PdwSMg.png)
+
+## Day211
+#### 學習重點 : JSP - Directives
+- 指示元素是甚麼？ ⭐⭐⭐⭐⭐
+    - 回想一下，JSP是由HTML與Java組成的，當JSP被轉換至Servlet時，需要有一些設定，此時就須靠著指示元素來設定JSP的轉換機制。
+    - 而指示元素有三個 : `page、include、taglib`。
+- page ⭐⭐⭐
+    - 用於指示Tomcat應該如何處理這個JSP檔，因此會包含像是編碼、Java類別引入、contentType等等。
+    - 通常會將其放在 `<html>` 之外，作為設定功能，將其放在檔案頂部。
+- include ⭐⭐⭐
+    - include指示詞在JSP中有分為靜態引入、動態引入，現在要學的是靜態引入，而引入表示copy其他file的jsp檔，合併到目前的檔案。
+    - 由於靜態引入是在編譯時期完成的，因此變數、HTML等都會複製過去。
+- 實作 `page + include` ⭐⭐⭐⭐
+    - 透過基本指示詞語法 : `<%@ directives attribute="value" %>`，來完成。
+    ![image](https://hackmd.io/_uploads/Bk5_TT_Szg.png)
+    ![image](https://hackmd.io/_uploads/HJXFa6OSzg.png)
+    - 實際成果！
+    ![image](https://hackmd.io/_uploads/Hkccaa_Sfg.png)
