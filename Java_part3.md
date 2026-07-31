@@ -588,3 +588,26 @@
     ![image](https://hackmd.io/_uploads/HJXFa6OSzg.png)
     - 實際成果！
     ![image](https://hackmd.io/_uploads/Hkccaa_Sfg.png)
+
+## Day212
+#### 學習重點 : JSP - Action Elements
+- 甚麼是Action Elements？ ⭐⭐⭐⭐
+    - 昨天看的是指示元素 --> 指的是轉成Servlet的規格書。
+    - 然而Action Elements如同其名稱一樣，是在 **執行期間動作**的。
+    - 它的出現可以大幅減少Java內嵌在JSP當中，使得後續維護更方便。
+    - 其型式如右 --> `<jsp:{elements} {attribute key} = {attribute value} />`
+    - 而常見的elements有 --> include、useBean...。
+- include ⭐⭐⭐⭐
+    - 在action elements當中，include就是 **動態引入**，因此相較於Directives是合併jsp檔後編譯執行，它是分開編譯後再做執行。
+    - 這種動態引入有很多好處 --> 根據使用者點哪個按鈕決定要導向(引入)哪個jsp、重新編譯檔案時不會牽動到其他jsp...。
+    - 當然，如果是引入固定不動的JSP檔案，如:css、模板格式等，可以用Directives即可。
+- useBean ⭐⭐⭐⭐⭐
+    - 在action elements當中，可以搭配表單輸入 & Bean來設定model。
+    - 這邊的Bean泛指POJO(Plain Old Java Object)，且實作Serializalbe的類別。
+    - 而useBean有三個要素 : id、class、scope，意即mapping、Bean檔、Bean的生命週期與存活範圍。
+- 以下是簡單實作 : ⭐⭐⭐
+    - 利用useBean + Property搭配表單來設定UserBean。
+    ![image](https://hackmd.io/_uploads/HJVHXMcBfg.png)
+    ![image](https://hackmd.io/_uploads/HJdSQzqSzg.png)
+    - 以下是成果展示！
+    ![image](https://hackmd.io/_uploads/rkRw7f5Bfg.png)
