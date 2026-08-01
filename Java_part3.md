@@ -611,3 +611,24 @@
     ![image](https://hackmd.io/_uploads/HJdSQzqSzg.png)
     - 以下是成果展示！
     ![image](https://hackmd.io/_uploads/rkRw7f5Bfg.png)
+
+## Day213
+#### 學習重點 : JSTL標準標籤使用與客製化
+- 甚麼是JSTL？ ⭐⭐⭐
+    - JSP Standard Tag Library，而不像Directives與Action Elements那樣直接使用，JSTL需要被引入！
+    - 因此需要先去pom.xml加入jakarta.servlet的jstl dependency。
+- JSTL的意義與使用 ⭐⭐⭐⭐
+    - JSTL與Action Elements都是為了減少Java程式碼內嵌於JSP的情況。
+    - 而相較Action Elements專注在jsp檔的流轉; JSTL則是補足了流程控制、集合等Java的功能，但是是以「**標籤**」來寫。
+    #### 與taglib的合作
+    - 在Directives中還有一個元素前天沒有介紹到 --> taglib。
+    - 而它就是為了JSTL而生的東西 --> 設置函式庫前輟。
+    - 以下是範例 : 
+    ![image](https://hackmd.io/_uploads/r1rMbwoBGe.png)
+    - 透過設定前輟，可以讓JSP知道當我們使用 `c:...` 時，會自動找到tags下的core功能。
+    - 而core提供了包含if、forEach等語法。
+- tags自製結合JSTL實作 ⭐⭐
+    - 除了使用官方提供的JSTL之外，我們也可以自製tags，而其中的原理我就不深究了ww。
+    - 以下是整個結合後的成果 : 
+    ![image](https://hackmd.io/_uploads/ryAYfPsrzx.png)
+    ![image](https://hackmd.io/_uploads/BJbiGDsBGg.png)
