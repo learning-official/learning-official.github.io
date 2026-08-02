@@ -632,3 +632,23 @@
     - 以下是整個結合後的成果 : 
     ![image](https://hackmd.io/_uploads/ryAYfPsrzx.png)
     ![image](https://hackmd.io/_uploads/BJbiGDsBGg.png)
+
+## Day214
+#### 學習重點 : Servlet生命週期、結合JSP實作MVC架構
+- 自行設計Servlet（**Controller**） ⭐⭐⭐⭐
+    - 前幾天都是在jsp中寫java及內嵌標籤，今天則獨立出來自行設計Servlet。
+    - 而基本的Servlet架構如下 : 
+    ![image](https://hackmd.io/_uploads/SJ6eYt2HGg.png)
+    - 在HttpServlet當中，覆寫一般常用的兩個動作，接收request、response作為與前端溝通的橋梁。
+    - 而HttpServlet的父類別是GenericServlet，其中管理了Servlet的出生到死亡，而我們可以透過init、destroy函式來看看Servlet是何時誕生與關閉的！（這也是IoC範疇）
+    ![image](https://hackmd.io/_uploads/ry9T5FhBGg.png)
+- 結合 **Model** ⭐⭐⭐⭐⭐⭐⭐
+    - 我跟著教學實作了一下Service，以空氣汙染為題，自行設置一個AirService處理資料處理的部分，同時設定一個Report類別作為Entity存取資料。
+    - 接著我在加入AirServlet，並在doGet的部分設定request設置Attribute取得AirService處理Report後的空汙縣市資料集合。
+    ![image](https://hackmd.io/_uploads/BkLZ6FhSMl.png)
+- **View** 的接收 ⭐⭐
+    - 接著利用AirJsp搭配CSS模板(我請AI幫我生成的w)，並藉由core的forEach功能一一取出request的空汙集合，並呈現於Table上！
+    ![image](https://hackmd.io/_uploads/SkJ5nY3HGx.png)
+- 成果展示！ ⭐⭐
+    - 由於我沒有串接API，所以先自行設計幾筆Report，看起來有模有樣就好ww。
+    ![image](https://hackmd.io/_uploads/B1w03K3Sfe.png)
