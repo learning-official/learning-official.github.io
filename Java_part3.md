@@ -653,3 +653,12 @@
 - 成果展示！ ⭐⭐
     - 由於我沒有串接API，所以先自行設計幾筆Report，看起來有模有樣就好ww。
     ![image](https://hackmd.io/_uploads/B1w03K3Sfe.png)
+
+## Day215
+#### 學習重點 : Spring 使用者資料管控專案Part-3 TODO list
+- 前言 ⭐
+    - 這應該是今年我的小專案最後一partㄌ，我打算後面的時間拿來複習 + 資料庫的探索。另外我其實蠻想深入了解Minecraft插件的w，以前有玩過，但一直沒機會完整研究過，我想找時間來深入探究。
+    - 另外其實我最近有想要考考看Oracle的證照，所以可能會每個禮拜選個一天來看看Oracle的題目owo。
+- 小專案Part-3 TODO list ⭐⭐
+    - 0️⃣ Schedule排程（ScheduleExcutorService、Spring @schedule）
+    - 1️⃣ Spring security
