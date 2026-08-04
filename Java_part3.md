@@ -662,3 +662,13 @@
 - 小專案Part-3 TODO list ⭐⭐
     - 0️⃣ Schedule排程（ScheduleExcutorService、Spring @schedule）
     - 1️⃣ Spring security
+
+## Day216
+#### 學習重點 : 關於原生Java的Schedule - 1
+- Timer vs. ScheduledExecutorService ⭐⭐⭐⭐
+    - 在早期的Java中，Timer是主要的排程類別，但其有個硬傷 --> 單一執行緒。
+    - 因此後來的JUC（java.util.concurrent）引入後，出現了ScheduledExecutorService（我後續簡稱SES好了w），解決了單一執行緒的問題。
+    #### 兩者的詳細比較
+    - Timer由於只有 **單一執行緒**，因此處理排程任務會堆在一起。然而SES可以用 **ThreadPool** 作配置，因此可以分配多執行緒來處理多排程。
+    - Timer無法處理Uncaught Exception，一旦排程出問題，整個執行緒就bye bye。然而SES的ThreadPool可以捕捉異常，其他排程可繼續工作。
+    - Timer取消任務的機制十分笨重，且不支援任務的回傳。然而SES支援 **Callable**，且排程啟動後的回傳物件即為 **ScheduleFuture**，因此可以利用 `.cancel`、`.get` 來取消、取得任務結果。
