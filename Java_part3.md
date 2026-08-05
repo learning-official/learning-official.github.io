@@ -688,7 +688,7 @@
     - 打開SES的原始碼，可以看到它是繼承ExcutorService，因此可以知道當我新建一個排程時，任務一樣是被丟到ThreadPool去執行，這也是昨天我比較Timer的一大重點。
     - 而排程的特性有幾個 : **Period、Delay、Future**。
     - 不同Period的任務可能會 **分配至不同的Thread執行**。
-- 怎麼建立一個ScheduleExcutorService？
+- 怎麼建立一個ScheduleExcutorService？ ⭐⭐⭐
     - 首先我們給定 `corePoolSize` : 
     ![image](https://hackmd.io/_uploads/BkM-kpx8Ge.png)
     - 當然，也有其他參數建構式，但這邊就用最簡單的就好了w
