@@ -697,7 +697,7 @@
         - 這是因為 ➝ ScheduleFuture取得物件後，可以使用 `.cancel` 來 **取消任務的排程**（當然這建立在任務還沒被執行啦w，若已經開始了，則會嘗試使用interrupt去觸發try-catch）。
     - 而在 `<>` 也分為 `<?>`（for Runabble，無回傳） 及 `<V>`（for Callable）。
 - scheduleAtFixedRate vs. scheduleWithFixedDelay ⭐⭐⭐⭐
-    - 關於scheduleAtFixedRate，其是週期性執行排程任務，然而當任務delay則，後續排程也會跟著delay，但一般情況下，其本質上就是 **定期做某事** 的函式。
+    - 關於scheduleAtFixedRate，其是週期性執行排程任務，然而當任務delay則，後續排程也會跟著delay（當前任務耗時大於Period，一結束前任務，後任務立刻執行），但一般情況下，其本質上就是 **定期做某事** 的函式。
     - 關於scheduleWithFixedDelay，其則是等前一個任務執行完畢後，根據設定的delay再多延遲幾秒，預留時間，最後才執行下一任務，確保 **兩任務絕對不重複**。
     - 以下是基本範例 : 
     ```java=
@@ -714,4 +714,3 @@
         3, 3, TimeUnit.SECONDS
     ); // 意即每次執行任務間隔「至少」6秒
     ```
-
