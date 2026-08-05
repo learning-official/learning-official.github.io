@@ -694,7 +694,7 @@
     - 當然，也有其他參數建構式，但這邊就用最簡單的就好了w
 - 任務完成後的回傳 : ScheduleFuture ⭐⭐⭐⭐⭐⭐
     - 當我們打開原始碼，可以發現每一個排程函式，都會回傳 `ScheduleFuture<>`，連Runnable排程函式都有，但我們都知道Runnable不會回傳，那為何需要Future？
-        - 這是因為 ➝ ScheduleFuture取得物件後，可以使用 `.cancel` 來 **取消任務的排程**（當然這建立在任務還沒被執行啦w）。
+        - 這是因為 ➝ ScheduleFuture取得物件後，可以使用 `.cancel` 來 **取消任務的排程**（當然這建立在任務還沒被執行啦w，若已經開始了，則會嘗試使用interrupt去觸發try-catch）。
     - 而在 `<>` 也分為 `<?>`（for Runabble，無回傳） 及 `<V>`（for Callable）。
 - scheduleAtFixedRate vs. scheduleWithFixedDelay ⭐⭐⭐⭐
     - 關於scheduleAtFixedRate，其是週期性執行排程任務，然而當任務delay則，後續排程也會跟著delay，但一般情況下，其本質上就是 **定期做某事** 的函式。
@@ -714,3 +714,4 @@
         3, 3, TimeUnit.SECONDS
     ); // 意即每次執行任務間隔「至少」6秒
     ```
+
