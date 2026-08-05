@@ -681,3 +681,36 @@
     - Timer由於只有 **單一執行緒**，因此處理排程任務會堆在一起。然而SES可以用 **ThreadPool** 作配置，因此可以分配多執行緒來處理多排程。
     - Timer無法處理Uncaught Exception，一旦排程出問題，整個執行緒就bye bye。然而SES的ThreadPool可以捕捉異常，其他排程可繼續工作。
     - Timer取消任務的機制十分笨重，且不支援任務的回傳。然而SES支援 **Callable**，且排程啟動後的回傳物件即為 **ScheduleFuture**，因此可以利用 `.cancel`、`.get` 來取消、取得任務結果。
+
+## Day217
+#### 學習重點 : 關於原生Java的Schedule - 2
+- 深入看ScheduleExcutorService（我簡稱SES） ⭐⭐⭐⭐
+    - 打開SES的原始碼，可以看到它是繼承ExcutorService，因此可以知道當我新建一個排程時，任務一樣是被丟到ThreadPool去執行，這也是昨天我比較Timer的一大重點。
+    - 而排程的特性有幾個 : **Period、Delay、Future**。
+    - 不同Period的任務可能會 **分配至不同的Thread執行**。
+- 怎麼建立一個ScheduleExcutorService？
+    - 首先我們給定 `corePoolSize` : 
+    ![image](https://hackmd.io/_uploads/BkM-kpx8Ge.png)
+    - 當然，也有其他參數建構式，但這邊就用最簡單的就好了w
+- 任務完成後的回傳 : ScheduleFuture ⭐⭐⭐⭐⭐⭐
+    - 當我們打開原始碼，可以發現每一個排程函式，都會回傳 `ScheduleFuture<>`，連Runnable排程函式都有，但我們都知道Runnable不會回傳，那為何需要Future？
+        - 這是因為 ➝ ScheduleFuture取得物件後，可以使用 `.cancel` 來 **取消任務的排程**（當然這建立在任務還沒被執行啦w）。
+    - 而在 `<>` 也分為 `<?>`（for Runabble，無回傳） 及 `<V>`（for Callable）。
+- scheduleAtFixedRate vs. scheduleWithFixedDelay ⭐⭐⭐⭐
+    - 關於scheduleAtFixedRate，其是週期性執行排程任務，然而當任務delay則，後續排程也會跟著delay，但一般情況下，其本質上就是 **定期做某事** 的函式。
+    - 關於scheduleWithFixedDelay，其則是等前一個任務執行完畢後，根據設定的delay再多延遲幾秒，預留時間，最後才執行下一任務，確保 **兩任務絕對不重複**。
+    - 以下是基本範例 : 
+    ```java=
+    schedule.scheduleWithFixedDelay(
+        () -> {
+            long seconds = System.currentTimeMillis() / 1000;
+            System.out.println("Excuted at : " + seconds + " seconds");
+            try{
+                Thread.sleep(3000);
+            }catch (InterruptedException e){
+                System.out.print(e.getMessage());
+            }
+        },
+        3, 3, TimeUnit.SECONDS
+    ); // 意即每次執行任務間隔「至少」6秒
+    ```
