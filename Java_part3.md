@@ -742,3 +742,57 @@
         - 這是因為Linux的 `*` 是任意。而Spring的 `*` 是所有。
     - Spring的 `?`
         - 因此Spring加了 `?` 來針對日、星期表達「忽略、不管」的概念，因此當我們在寫Spring的cron格式時，需注意 「日、星期」**必須** 有一個是 `?`。
+
+## Day219
+#### 學習重點 : Spring Boot的@Schedule架構與Unit Test
+- Schedule類別的架構 ⭐⭐⭐⭐⭐⭐
+    - 首先，先到Spring Boot專案當中加入一個排程類別，我是在我的電商專案的 `task/` 中加入ScheduleTask。
+    - 由於排程也需要被丟進Spring容器當中，因此需要以 `@Component` 將其設為Spring Bean。
+    - 在類別內，我們建立排程函式，我這邊參考[Spring官方的範例](https://spring.io/guides/gs/scheduling-tasks)設一個定期回傳時間的函式。
+    - 以下是完整架構 : 
+    ```java=
+    @Component
+    public class ScheduleTask{
+        
+        private static final Logger log = 
+            LoggerFactory.getLogger(ScheduleTask.class);
+
+        private static final SimpleDateFormat dateFormat =
+            new SimpleDateFormat("HH:mm:ss");
+        
+        @Scheduled(fixedRate = 5000)
+        public void reportCurrentTime(){
+            log.info(
+                "The time is now {}",
+                dateFormat.format(new Date())
+            );
+        } 
+    }
+    ```
+    - 最後，務必在Spring的啟動類別（也就是 `SpringApplication.run` 的類別）加上 `@EnableScheduling`。
+- 關於 `@Scheduled` 的參數 ⭐⭐⭐
+    - 在Scheduled的註解中，通常會寫三種時間格式 ➝ `fixedRate`、`fixedDelay`、`cron`，而這也是我在Java原生Schedule有看到的東西～
+- Unit Test ⭐⭐⭐⭐⭐⭐⭐
+    - 我們可以在SpringBootTest類別中測試排程是否有正確啟動、按照時間呼叫函式。
+    - 而一般我們利用assertion會針對如 : `某段週期是否執行至少n次`、`是否正確更新資料庫`...。
+    - 而這需要用到 `Awaitility` 這個工具，使用 **polling機制**，主執行緒去polling背景執行排程的非同步執行緒，確認assertion是否成功，一旦成功則pass。
+    #### Awaitiliy vs. Thread
+    - 傳統上可能會使用Thread.sleep使主執行緒等待 **特定時間**，待時間結束再確認背景排程的執行狀況。然而這可能因「主機不同」、「啟動時間長短」導致「單元測試時間」拉長，規模放大後則可能導致嚴重問題 ➝ 這種易受影響的Test又稱 **Flaky Test**。
+    - 而Awaitility則是專門來 **測試非同步的工具**，他能夠在主執行緒「定時監控」，也就是polling～且 **不需要等待特定時間**，而是 **一旦成功則pass**。
+    ```java=
+    @SpringBootTest
+    public class ScheduleTaskTest {
+
+        @MockitoSpyBean
+        public ScheduleTask scheduleTask;
+
+        @Test
+        public void reportCurrentTime(){
+            Awaitility.await()
+                    .atMost(Durations.TEN_SECONDS)
+                    .untilAsserted(() -> {
+                        verify(scheduleTask, atLeast(2))
+                            .reportCurrentTime();
+            });
+        }
+    ```
