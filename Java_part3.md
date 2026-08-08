@@ -796,3 +796,60 @@
             });
         }
     ```
+
+## Day220
+#### 學習重點 : 關於Spring的TaskScheduler與TaskExecutor
+- @Scheduled的追本溯源 ⭐⭐⭐⭐⭐
+    - 當我們使用了 `@Scheduled` 來設定排程時，Spring內部其實偷偷將其管交給了 `TaskScheduler` 來運作（像是計時cron、觸發trigger）。
+    - 而這個 `TaskScheduler` 是Spring設計用於排程的一個介面，而一般預設使用的實作類別是 `ThreadPoolTaskScheduler`，很熟悉吧～
+    - 看到ThreadPool，自然而然會想到ExecutorService，而加上Schedule就變成了 ➝ `ScheduledExecutorService`！BANG！
+    - 正如名字所示，ThreadPoolTaskScheduler內部的原理即是採用了Java原生的ScheduleExecutorService！
+    - 那為何Spring不直接使用原生的就好了，還要自己包裝？主要有以下原因 : 
+        - 1️⃣ **支援Cron時間表達式**。原生的排程只有Period、Delay，可沒有Cron！
+        - 2️⃣ **生命週期的控管**。原生需要自行shutdown，然而Spring中，我們將其視為Bean，因此可以直接IoC！
+        - 3️⃣ 對於異常更加靈敏，**自動包裝try-catch**，或者使用自訂ExceptionHandling。原生的儘管有應對方式，然而需自行寫try-catch，稍不注意則排程dead。
+- TaskExecutor是甚麼？ ⭐⭐⭐⭐⭐
+    - TaskExecutor是Spring自行設計的介面。而當然，它繼承自Executor。
+    - 因此它的工作就是分配背景（非同步）執行緒，意即多執行緒！
+        - 我們一般會以 `@Async` 作為使用TaskExecutor實作的一個方式（`.execute`）。這個我先不深入研究，先單就TaskExecutor與ThreadPoolTaskScheduler的關係為主。
+    - 在ThreadPoolTaskScheduler中，除了實作TaskScheduler之外，還有實作了TaskExecutor，因此其 **具備了多排程的功能**！
+    - 到這邊應該對TaskExecutor與ThreadPoolTaskScheduler的關聯有概念了，就讓我來實作看看吧！
+- 實作多排程 ⭐⭐⭐⭐⭐
+    - 首先先讓我們在ScheduleTask中設定兩個(以上)的排程，來看看default的設置。
+    ```java=
+    @Scheduled(fixedRate = 5000L)
+    public void reportCurrentTime_1() {
+        log.info("Schedule_1 reportTime : {}", dateFormat.format(new Date()));
+    }
+
+    @Scheduled(fixedRate = 2000L)
+    public void reportCurrentTime_2() {
+        log.info("Schedule_2 reportTime : {}", dateFormat.format(new Date()));
+    }
+    ```
+    - log結果 : 
+    ```
+    2026-08-08T21:34:07.008+08:00  
+        INFO 25876 --- [mall] [scheduling-1] org.system.task.ScheduleTask             : Schedule_1 reportTime : 21:34:07
+    2026-08-08T21:34:07.009+08:00  
+        INFO 25876 --- [mall] [scheduling-1] org.system.task.ScheduleTask             : Schedule_2 reportTime : 21:34:07
+    ```
+    - 若沒有特別設置排程的poolSize，預設就是1，因此排程之間有「排隊」的概念 ➝ 因此在毫秒上會有誤差(一個是.008，一個是.009)。
+    - 此時我們在application.properties加入poolSize的設定
+    ```properties=
+    spring.task.scheduling.pool.size=2
+    ```
+    - 接著再執行一次，就會看到 : 
+    ```
+    2026-08-08T21:38:08.775+08:00  
+        INFO 3212 --- [mall] [scheduling-2] org.system.task.ScheduleTask             : Schedule_1 reportTime : 21:38:08
+    2026-08-08T21:38:08.775+08:00  
+        INFO 3212 --- [mall] [scheduling-1] org.system.task.ScheduleTask             : Schedule_2 reportTime : 21:38:08
+    ```
+    - 兩者被分配到了不同的執行緒！時間上沒有影響了！（但要注意若同一任務排程之間有Delay則需要加上@Async，讓自己可以跟自己也達到非同步，但這是後續我的研究目標，這邊先打住。）
+- 小小總結 : ⭐⭐⭐⭐⭐
+    - 因此當我們在寫 `@Scheduled` 時，要注意執行緒的default是1，因此需要再注意多排程的設定！
+    - 透過上述可以了解到 ➝ 
+        - `TaskScheduler` 注重 **任務的觸發與時間**。
+        - `TaskExecutor` 注重 **執行緒的調度與執行**！
+        - `ThreadPoolTaskSchedule` 作為 `@Schedule` 的預設實作則 **綜合了兩者的概念**！
