@@ -38,7 +38,14 @@
 - [java.util的四大function - Day163~166](https://hackmd.io/@learning-official/Java_learning_2##Day163)
 - [Iterator與Iterable - Day167~171](https://hackmd.io/@learning-official/Java_learning_2##Day167)
 - ***Java學習歷程Part-3分界線***
-- [Java.lang - Day172 ~ Day???](https://hackmd.io/@learning-official/Java_learning_3#Day172)
+- [Java.lang - Day172 ~ Day180](https://hackmd.io/@learning-official/Java_learning_3#Day172)
+- [JDK、JRE、JVM探究Java根源 - Day181 ~ Day188](https://hackmd.io/@learning-official/Java_learning_3#Day181)
+- [Void object - Day189 ~ Day191](https://hackmd.io/@learning-official/Java_learning_3#Day189)
+- [Comparable介面 - Day191 ~ Day195](https://hackmd.io/@learning-official/Java_learning_3#Day191)
+- [Deque與Stack - Day196 ~ Day198](https://hackmd.io/@learning-official/Java_learning_3#Day196)
+- [String家族 - Day199 ~ Day200](https://hackmd.io/@learning-official/Java_learning_3#Day199)
+- [Builder pattern - Day201 ~ Day204](https://hackmd.io/@learning-official/Java_learning_3#Day201)
+- [Jarkata EE與Tomcat實作 - Day205 ~ Day214](https://hackmd.io/@learning-official/Java_learning_3#Day205)
 ## 學習雜談
 - Day20 : 
     > 老實說，我從來沒有想過可以這麼認真學一樣東西，雖然對大家來說可能很簡單，但對3分鐘熱度的我來說，真的是一大挑戰，不管最後是否有辦法精通Java，我都很滿意了！
