@@ -1,10 +1,6 @@
 預計學習細項 : 
-- [ ] Spring Boot
-    - [ ] Tomcat與Servlet
-- [ ] Collection Framework
 - [ ] Gradle
-- [ ] JavaFX or Swing？
-- [ ] return `<Void>`？
+- [ ] native原生C++、invoke special/virtual(子類父類this歸屬)、Klass
 - 小專案Part-3預計 :
     - [ ] 高併發Stock超賣問題
     - [ ] Async執行緒優化
@@ -38,7 +34,11 @@
 - [Lambda（Method Reference） - Day105~107](https://hackmd.io/@learning-official/Java_learning_2#Day105)
 - [Optional淺入淺出 - Day108~110](https://hackmd.io/@learning-official/Java_learning_2#Day108)
 - [Spring 「使用者資料管控專案Part2」 - Day111~156](https://hackmd.io/@learning-official/Java_learning_2#Day111)
-
+- [Collectors - Day157~162](https://hackmd.io/@learning-official/Java_learning_2##Day157)
+- [java.util的四大function - Day163~166](https://hackmd.io/@learning-official/Java_learning_2##Day163)
+- [Iterator與Iterable - Day167~171](https://hackmd.io/@learning-official/Java_learning_2##Day167)
+- ***Java學習歷程Part-3分界線***
+- [Java.lang - Day172 ~ Day???](https://hackmd.io/@learning-official/Java_learning_3#Day172)
 ## 學習雜談
 - Day20 : 
     > 老實說，我從來沒有想過可以這麼認真學一樣東西，雖然對大家來說可能很簡單，但對3分鐘熱度的我來說，真的是一大挑戰，不管最後是否有辦法精通Java，我都很滿意了！
@@ -50,6 +50,10 @@
     > 距離上次打心得竟然過去40天了OMG，我覺得我最近變得有點迷惘，倒不是說熱忱不見，而是不知道該怎麼學習了QAQ
 - Day144 : 
     > 最近在做小專案Part-2的時候，總有一種體悟 : 為甚麼怎麼做都做不完🤧，做好一部份，就有下一個概念要學，做個系統到底要學多少技術rrrrr。
+- Day176 : 
+    > 時間過好快ouo，總感覺我現在都是在亂學ww，之後幾天很忙，希望自己能維持每日學習rrrr。
+- Day220 : 
+    > 走到現在，感覺少了點熱情，對新知接受度有點下降，似乎可以開始收斂並審視過往的學習成果了emmm...。
     
 **阿對了！如果你是用手機版看的話，版面會亂掉ww，請見諒**
 ## Day1
