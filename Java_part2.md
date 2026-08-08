@@ -8,6 +8,18 @@
 - [Lambda（Method Reference） - Day105~107](##Day105)
 - [Optional淺入淺出 - Day108~110](##Day108)
 - [Spring 「使用者資料管控-電商小專案Part2」 - Day111~156](##Day111)
+- [Collectors - Day157~162](##Day157)
+- [java.util的四大function - Day163~166](##Day163)
+- [Iterator與Iterable - Day167~171](##Day167)
+- ***Java學習歷程Part-3分界線***
+- [Java.lang - Day172 ~ Day180](https://hackmd.io/@learning-official/Java_learning_3#Day172)
+- [JDK、JRE、JVM探究Java根源 - Day181 ~ Day188](https://hackmd.io/@learning-official/Java_learning_3#Day181)
+- [Void object - Day189 ~ Day191](https://hackmd.io/@learning-official/Java_learning_3#Day189)
+- [Comparable介面 - Day191 ~ Day195](https://hackmd.io/@learning-official/Java_learning_3#Day191)
+- [Deque與Stack - Day196 ~ Day198](https://hackmd.io/@learning-official/Java_learning_3#Day196)
+- [String家族 - Day199 ~ Day200](https://hackmd.io/@learning-official/Java_learning_3#Day199)
+- [Builder pattern - Day201 ~ Day204](https://hackmd.io/@learning-official/Java_learning_3#Day201)
+- [Jarkata EE與Tomcat實作 - Day205 ~ Day214](https://hackmd.io/@learning-official/Java_learning_3#Day205)
 
 ## Day66
 #### 學習重點 : JWT token生成與驗證 - 2
