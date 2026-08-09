@@ -853,3 +853,55 @@
         - `TaskScheduler` 注重 **任務的觸發與時間**。
         - `TaskExecutor` 注重 **執行緒的調度與執行**！
         - `ThreadPoolTaskSchedule` 作為 `@Schedule` 的預設實作則 **綜合了兩者的概念**！
+
+## Day221
+#### 學習重點 : Schedule的Configuration與Bean
+- SchedulerConfiguration ⭐⭐⭐⭐⭐
+    - 昨天我是在 `application.properties` 中設定poolSize，這個其實是Spring提供的便捷方式。不過我們也可以 **自己寫一個配置檔**，**更精細化** 的設定參數。
+    - 首先，我們會在專案下建立 `config/SchedulerConfiguration` 專門設定自己的排程。
+    - 而在配置檔中，我們需要實作 `SchedulingConfigurer` 這個介面，並註冊我們設置好的TaskScheduler，這樣Spring才會接收並使用我們設置的TaskScheduler作為後續執行排程的元件。
+    - 以下是範例 : 
+    ```java=
+    @EnableScheduling
+    @Configuration
+    public class SchedulerConfiguration implements SchedulingConfigurer {
+
+        @Override
+        public void configureTasks(ScheduledTaskRegistrar scheduledTaskRegistrar){
+            ThreadPoolTaskScheduler threadPoolTaskScheduler = new ThreadPoolTaskScheduler();
+            // 精細配置
+            threadPoolTaskScheduler.setPoolSize(3);
+            threadPoolTaskScheduler.setThreadNamePrefix("scheduling-task-");
+            threadPoolTaskScheduler.initialize(); 
+            // 註冊
+            scheduledTaskRegistrar.setTaskScheduler(threadPoolTaskScheduler);
+        }
+    }
+    ```
+    - 我後來研究發現 `@EnableScheduling` **不一定** 要寫在 `SpringApplication.run` 的類別中，所以就搬到配置檔裡面ㄌ～
+    - 在Spring啟動時，就會讀取我們設置的配置檔，並將我們設置的TaskScheduler **註冊** 至ScheduledTaskRegister，作為Spring元件（注意！TaskScheduler不是Bean，**只是供排程運作的一個元件**）
+- 將TaskScheduler作為Bean ⭐⭐⭐⭐⭐⭐
+    - 若我們想要在Service中注入TaskScheduler，來實現 「動態排程」➝ 意即不使用 `@Scheduled` 作為伺服器預設排程，而是根據使用者or函式呼叫時「動態」新增排程。
+    - 我們可以將配置檔寫為以下的樣子 : 
+    ```java=
+    @EnableScheduling
+    @Configuration
+    public class SchedulerConfiguration implements SchedulingConfigurer {
+        
+        // ThreadPoolTaskScheduler作為Bean
+        @Bean
+        public ThreadPoolTaskScheduler taskScheduler(){
+            ThreadPoolTaskScheduler threadPoolTaskScheduler = new ThreadPoolTaskScheduler();
+            threadPoolTaskScheduler.setPoolSize(3);
+            threadPoolTaskScheduler.setThreadNamePrefix("scheduling-task-");
+            threadPoolTaskScheduler.initialize();
+            return threadPoolTaskScheduler;
+        }
+
+        @Override
+        public void configureTasks(ScheduledTaskRegistrar scheduledTaskRegistrar){
+            scheduledTaskRegistrar.setTaskScheduler(taskScheduler());
+        }
+    }
+    ```
+    - 這樣，我們即可在Service中注入TaskScheduler啦～
