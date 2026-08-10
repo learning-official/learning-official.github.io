@@ -905,3 +905,54 @@
     }
     ```
     - 這樣，我們即可在Service中注入TaskScheduler啦～
+
+## Day222
+#### 學習重點 : Spring Schedule電商專案實作 - 定期處理未付款訂單
+- OrderSchedule ⭐⭐⭐
+    - 在 `task/` 目錄下，我新建了一個OrderSchedule，處理Order相關排程函式。
+    - 而首先我要處理的是「**未付款訂單**」的事項 ➝ 當訂單呈現未付款狀態超過特定時長，我們需要將這些訂單取消，以 **避免庫存被占用**。
+    - 因此我在OrderSchedule中建立了一個排程 `expiredOrderScheduling` 處理此問題。
+- expiredPaymentScheduling函式處理 ⭐⭐⭐⭐⭐
+    - 在函式處理之前，我先在OrderDao中加入一個Query : 
+    ```java=
+    // OrderDao.java
+    @Query("select order from Order order WHERE order.status = 'UNPAID' AND order.create_time <= :expiredTime")
+    List<Order> findAllExpiredUnpaidOrder(@Param("expiredTime") Instant expiredTime);
+    ```
+    - 這樣我們取出資料時就已經先過濾過一遍了，以此省略Task的工作。
+    - 接著在排程中取出過期訂單的狀態，並修正為 `CANCELED`。
+    ```java=
+    @Transactional
+    // 每分鐘polling一次
+    @Scheduled(cron = "0 */1 * * * ?")
+    public void expiredOrderScheduling(){
+        // 這邊先以1分鐘就過期測試
+        List<Order> orderList = orderDao.findAllExpiredUnpaidOrder(Instant.now().minus(Duration.ofMinutes(1)));
+        if (orderList.isEmpty()) return;
+
+        log.info("Found {} expired orders", orderList.size());
+        int canceledCount = 0;
+        for (Order order : orderList){
+            if (order.getStatus() != Order.STATUS.UNPAID) continue;
+            order.setStatus(Order.STATUS.CANCELED);
+            canceledCount++;
+        }
+        orderDao.saveAll(orderList);
+        log.info("Successfully canceled {} orders", canceledCount);
+    }
+    ```
+    - 這邊再次過濾狀態，同時加上Transactional以 **保持資料一致性**。
+    - 最後利用log紀錄取消訂單數量。
+- 我遇到的問題與解決 ⭐⭐⭐⭐⭐⭐
+    - 首先是關於排程 : 
+        - 我原本的想法是 : 「當使用者下訂單後，新增動態排程，自訂單建立後經特定時長觸發 `CANCELED`」。
+        - 問題在於 : 
+            - 動態排程十分吃資源，且不適用於這種整體金流事務的工作上。
+            - 再來是延遲，新增排程後，此函式的交易就結束了，但背景執行緒還在等特定時段後處理訂單，一旦執行 `.save`，並不會rollback
+            - 最後是重啟，一旦伺服器重啟，背景排程會消失，此時該訂單的「超時排程」就不見了，等於該訂單超時免疫了ww。
+        - 綜合上述問題，我將排程修正為以cron設定定期抓資料，且分離出OrderService的payment過程，獨立出一條新的交易線（排程）。
+- 未處理部分 ⭐⭐
+    - 這邊留了幾個問題 : 
+        - **庫存**的修正rollback。
+        - 通知賣家與使用者。
+        - Batch Update，批此處理未付款訂單。
