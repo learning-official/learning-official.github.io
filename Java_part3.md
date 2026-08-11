@@ -956,3 +956,81 @@
         - **庫存**的修正rollback。
         - 通知賣家與使用者。
         - Batch Update，批此處理未付款訂單。
+
+## Day223
+#### 學習重點 : Spring Schedule電商專案實作 - 定期處理未付款訂單.2
+- @Transactional與@Scheduled並用問題 ⭐⭐⭐⭐⭐
+    - 昨天，我將「**交易**」、「**排程**」的註解都加在了同一函式上，但這會造成一個問題 ➝ 排程占用 **交易資源連線過久**，使得其他功能 **無法取得該資源鎖**。
+    - 為了解決這個問題，我將兩者處理的範圍拆開。將Schedule留在 `OrderSchedule`，而Transactional則丟到新建的一個 `OrderCancelService`。透過排程呼叫Service來處理CANCEL事宜。
+- BATCH Update ⭐⭐⭐⭐⭐
+    - 為了不要一次「交易」過多資源導致資源鎖占用，因此我們可以 **批次處理**，為此我設定了一個BATCH_SIZE來限制一次處理多少資源。
+    ```java=
+    private final int BATCH_SIZE = 10;
+    
+    @Scheduled(cron = "0 */1 * * * ?")
+    public void expiredOrderScheduling(){
+
+        List<Order> orderList = orderCancelService.getExpiredOrderList();
+        if (orderList.isEmpty()) return;
+
+        log.info("Found {} expired orders", orderList.size());
+        int canceledCount = 0;
+        int batch = 1;
+        for (int i=0; i<orderList.size(); i+=BATCH_SIZE){
+            List<Order> ordersubList = orderList.subList(i, Math.min(i+BATCH_SIZE, orderList.size()));
+            // 藉由try-catch來防止某批次出問題而無法執行後續批次
+            try {
+                canceledCount += orderCancelService.expiredOrderScheduling(ordersubList);
+                batch++;
+            }catch (Exception e){
+                log.info("Failed to cancel {} batch", batch);
+            }
+        }
+
+        log.info("Successfully canceled {} orders", canceledCount);
+    }
+    ```
+    - 利用for迴圈，並切 **割資源集合成子集**，分成BATCH_SIZE大小，再送進「交易」，這樣每次占用交易線的時間可以縮短許多～
+- Join Fetch與庫存rollback ⭐⭐⭐⭐⭐⭐
+    - 在處理庫存rollback之前，要先來理解何謂Join Fetch。
+    #### 何謂Join Fetch？
+    - 當我們在Dao層做Query取出orderlist時，若**沒有**將每個order的商品Entity實例化，會發生N+1問題，N+1這部分我不多寫了，之前有研究過了ww。
+    - 因此我們需要在SQL語法中加入 `JOING FETCH order.merchandise`，也就是在Query過程，一併取出order本身關聯merchandise的實體並實例化。儘管我們可能設定Fetch Type是Lazy，但針對Merchandise這個實體則會 **預先載入**。
+    - 完整的Query語法如下 : 
+    ```sql=
+    select order from Order order JOIN FETCH order.merchandise WHERE order.status = 'UNPAID' AND order.create_time <= :expiredTime
+    ```
+    #### 庫存的rollback
+    - 有Order包著預載入Merchandise，我們就可以寫一個restock函式透過取得merchandise的stock，加上order本身的quantity，最後在回存至merchandise即可！
+    ```java=
+    // OrderCancelService.java
+    
+    // 此函式由schedule呼叫
+    public List<Order> getExpiredOrderList(){
+        return orderDao.findAllExpiredUnpaidOrder(Instant.now().minus(Duration.ofMinutes(1)));
+    }
+    
+    // 批次處理交易，回傳成功交易筆數給schedule
+    @Transactional
+    public int expiredOrderScheduling(List<Order> orderList){
+
+        int canceledCount = 0;
+        List<Merchandise> merchandiseList = new ArrayList<>();
+        for (Order order : orderList){
+            if (order.getStatus() != Order.STATUS.UNPAID) continue;
+            order.setStatus(Order.STATUS.CANCELED);
+            merchandiseList.add(restock(order));
+            canceledCount++;
+        }
+        orderDao.saveAll(orderList);
+        merchandiseDao.saveAll(merchandiseList);
+        return canceledCount;
+    }
+    
+    // 補貨機制，由JOIN FETCH解決N+1問題，由交易函式呼叫
+    private Merchandise restock(Order order){
+        Merchandise merchandise = order.getMerchandise();
+        merchandise.setStock(merchandise.getStock() + order.getQuantity());
+        return merchandise;
+    }
+    ```
