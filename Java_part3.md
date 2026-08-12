@@ -1034,3 +1034,45 @@
         return merchandise;
     }
     ```
+
+## Day224
+#### 學習重點 : ShedLock與OptimisticLock
+- OptimisticLock（樂觀鎖） ⭐⭐⭐⭐⭐⭐
+    - 何謂樂觀鎖？其實就是在取得資源時，認為資料不常更新，樂觀認為不會有人改動資料，因此就不對該資源上鎖（而相反的，悲觀鎖即是在SELECT時就先上鎖了）。
+        - 當我們在SELECT、saveAll時，都還是以JPA實體存在，直到函式區塊結束才會統一update並commit至DB佔用鎖。因此占用鎖的期間是「update到鎖釋放的階段」。
+    - 樂觀鎖的原理在於針對某Entity加上一個欄位 `version`，當取得資源時，不上鎖，但在 **version欄位標記**，若最後commit上去時發現先看看version是否一致，若不一致，表示這期間有人動過資料，此時就不更新，反之則更新。
+    #### 樂觀鎖的優缺點
+    - 先說優點 : 
+        - 樂觀鎖 **不會造成執行緒堵塞**（因為version衝突的資源一般不會retry，只有version正確才會待在執行緒commit）。
+        - 適合讀取多，寫入少的時候，因此SELECT時不鎖，讓其他人也能讀取到資源。
+    - 缺點 : 
+        - 在高併發環境下，像是搶票，若大家同時訂票，只會有一個人的version是正確的，此時 **明明庫存還有票**，但 **卻無法下訂**。這時候就應該利用悲觀鎖的排隊機制！
+- ShedLock ⭐⭐⭐⭐
+    - 樂觀/悲觀鎖是針對單一資源，而ShedLock則是針對排程。
+    - 其原理在於可以限制多排程下，只有一個排程可以執行，其餘會被擋下來直接return，而不執行業務邏輯，類似「**鎖住**」排程的感覺。
+    - 一般會設置 `AtLeastFor`、`AtMostFor` 來限制這個排程鎖占用的最大時間跟最小時間。
+    - 以下是簡單範例 : 
+    ```java=
+    @Scheduled(cron = "0 */1 * * * ?")
+    @SchedulerLock(
+        name = "expiredOrderSchedulingLock",
+        lockAtMostFor = "50s",
+        lockAtLeastFor = "10s"
+    )
+    public void expiredOrderScheduling(){
+        // ...省略
+    }
+    ```
+- 關於昨天程式修正 ⭐⭐⭐
+    - 由於計算批次的batch完全可以被取代，因此我改成直接利用 `i`、`BATCH_SIZE` 來計算當前batch。
+    - 另外，由於subList存的只是原本List的子集合（View），因此改動到subList也會影響原List。為了獨立subList，我們可以再new一塊空間把subList複製成獨立的List，這樣對獨立List增刪則不會影響原List！
+    ```java=
+    for (int i=0; i<orderList.size(); i+=BATCH_SIZE){
+        List<Order> ordersubList = new ArrayList<>(orderList.subList(i, Math.min(i+BATCH_SIZE, orderList.size())));
+        try {
+            canceledCount += orderCancelService.expiredOrderScheduling(ordersubList);
+        }catch (Exception e){
+            log.error("Failed to cancel batch {}", (i / BATCH_SIZE)+1, e);
+        }
+    }
+    ```
