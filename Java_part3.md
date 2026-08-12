@@ -1076,3 +1076,62 @@
         }
     }
     ```
+
+## Day225
+#### 學習重點 : Spring Schedule電商專案實作 - 定期處理未付款訂單.3
+- 樂觀鎖應用 ⭐⭐⭐⭐⭐⭐
+    - 由於 **一般的Transactional事務是沒有上鎖的**，它只幫忙開啟交易，最後commit，若出錯則rollback。
+    - 而昨天我探討了樂觀鎖的概念，今天就將它應用到「取消訂單事務」的情況，顯而易見，取消訂單這件事「不是高併發」，訂單資源只對一賣家、一買家、系統三者有關連，使用樂觀鎖是較正確的作法。
+    - 而首先我先針對Order、Merchandise兩者的DB新增了version欄位 ➝ 
+    ```sql=
+    ALTER TABLE orders ADD version INT NOT NULL DEFAULT 0;
+    ALTER TABLE merchandise ADD version INT NOT NULL DEFAULT 0;
+    ```
+    - 接著在Entity中加入 : 
+    ```java=
+    @Version
+    @Column(name = "version")
+    private Integer version;
+    ```
+    - 最後在原本取消訂單Schedule當中的try-catch加入 `OptimisticLockingFailureException` :
+    ```java=
+    catch (OptimisticLockingFailureException lockingFailureE){
+        log.error(
+            "Optimistic lock conflict detected in batch {}...", 
+            (i / BATCH_SIZE)+1
+        );
+    ```
+- ShedLock應用 ⭐⭐⭐⭐⭐⭐
+    - 昨天只有在Schedule中設定參數，但沒有開啟ShedLock以及關聯表。
+    #### 關聯表
+    - 先看為何要有關聯表 ➝ 因為shedlock是針對「**多台主機對一排程**」，主機之間不知道誰先取得排程鎖，此時就得靠shedlock的關聯表做事。
+    - 而關聯表需要有四個欄位 ➝ 鎖開始時間、鎖釋放時間、鎖的名稱、鎖的主機擁有者。
+    - 當排程執行時，每台主機會利用我設定的name作為Primary Key嘗試寫入，**由於name的唯一性**，因此只有一台主機成功寫入，其餘則會報錯 `DuplicateKeyException`，而不執行排程。
+    - 當後續排程再次執行時，主機則會嘗試UPDATE，並根據「鎖釋放時間是否小於現在時間』，若成立則更新 **並將鎖釋放時間延後**，而較慢發送SQL的主機做判斷時，則會因「鎖釋放時間延後而大於現在時間」被擋下來。
+    ```sql=
+    create table shedlock(
+        name      varchar(64)   not null primary key,
+        lock_until timestamp(3) not null,
+        locked_at  timestamp(3) default CURRENT_TIMESTAMP(3) not null,
+        locked_by  varchar(255) not null
+    );
+    ```
+    #### EnableShedLock
+    - 簡單來說就是開啟分散式鎖定的機制，而需要藉由 `@EnableSchedulerLock` 來開啟，同時，我也建立一個Configuration給ShedLock作設定。
+    ```java=
+    @Configuration
+    // 設定當Server崩潰時，鎖最長占用時間
+    @EnableSchedulerLock(defaultLockAtMostFor = "1m")
+    public class ShedLockConfiguration {
+
+        @Bean // 設定排程鎖元件，跟TaskScheduler是一樣的概念
+        public LockProvider lockProvider(DataSource dataSource) {
+            return new JdbcTemplateLockProvider(
+                    JdbcTemplateLockProvider.Configuration.builder()
+                            .withJdbcTemplate(new JdbcTemplate(dataSource))
+                            .usingDbTime()
+                            .build()
+            );
+        }
+    }
+    ```
