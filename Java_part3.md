@@ -1135,3 +1135,66 @@
         }
     }
     ```
+
+## Day226
+#### 學習重點 : Spring Schedule電商專案實作 - 定期處理未付款訂單.final
+- 處理最後的通知part ⭐⭐⭐
+    - 這個部分跟Schedule就比較沒有關係啦～只是單純新增了一個Notification API，並新增一個通知表，藉由CancelService與NotificationService來存取使用者的通知訊息！
+- 以下是我的實作過程 : ⭐⭐⭐⭐⭐⭐⭐
+    - 1️⃣ 建立Notification通知表。本來想說通知跟使用者呈現「**多對多**」，可以建立「通知-使用者關聯表」，但想說 **先以一對多方式處理**，較省時且方便。
+    ```sql=
+    create table notification(
+        id   varchar(100) not null primary key,
+        user_id  varchar(100) not null,
+        msg      varchar(100) not null,
+        is_read  tinyint(1) default 0 not null,
+        create_time timestamp not null,
+        constraint fk_userid_notification
+            foreign key (user_id) 
+            references users (id)
+            on delete cascade
+    );
+    ```
+    - 2️⃣ 建立Controller-Service-Dao三層結構。接著就是在Controller新增 `/notification` 端點，藉著GET取得使用者的訊息集合。
+    - 3️⃣ 接著在 `OrderCancelService` 注入` NotificationDao`，並在排程執行時，設定「取消訊息」並 `.saveAll` 進通知表。
+    ```java=
+    // OrderCancelService.java
+    @Transactional
+    public int expiredOrderScheduling(List<Order> orderList){
+        // ...省略
+        List<Notification> notificationList = new ArrayList<>();
+
+        for (Order order : orderList){
+            // ...省略    
+            Notification noti = new Notification();
+            noti.setUser(order.getUser());
+            noti.setMsg(order.getId() + " has been canceled");
+            noti.setCreate_time(Instant.now());
+            noti.setIs_read(false);
+            notificationList.add(noti);
+            // ...省略
+        }
+        notificationDao.saveAll(notificationList);
+        // ...省略
+    ```
+    - 4️⃣ 設定NotificationResponse回傳至前端，再由前端的 `index.html` 接收並呈現！
+    ```java=
+    // NotificationService.java
+    public Response<List<NotificationResponse>> getNotifications(String account){
+        User user = userDao.findByAccount(account).orElseThrow(() -> ResourcesException.of(ErrorCode.USER_NOT_FOUND));
+        List<Notification> notiList = notificationDao.findAllByUser(user);
+        if (notiList.isEmpty()) return new Response<>("0", "No notification", Collections.emptyList());
+
+        List<NotificationResponse> notiResList = notiList
+                .stream()
+                .map(NotificationResponse::new)
+                .toList();
+
+        return new Response<>("0", "Successfully", notiResList);
+    }
+    ```
+- 成果展示如下 : ⭐⭐⭐
+    - 下圖是呈現的結果，當排程掃描到過期訂單，則將其取消並通知使用者。
+    ![image](https://hackmd.io/_uploads/B1lWav3Lfl.png)
+    - 而在訂單頁面則呈現「已取消」。
+    ![image](https://hackmd.io/_uploads/HkHUTwhLzg.png)
