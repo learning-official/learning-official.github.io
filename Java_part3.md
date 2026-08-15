@@ -1198,3 +1198,17 @@
     ![image](https://hackmd.io/_uploads/B1lWav3Lfl.png)
     - 而在訂單頁面則呈現「已取消」。
     ![image](https://hackmd.io/_uploads/HkHUTwhLzg.png)
+
+## Day227
+#### 學習重點 : Spring Security與AOP驗證
+- 原本的驗證方式 ⭐⭐⭐
+    - 原本我的登入與後續驗證邏輯 : 
+        - `/login` API帶著account、password
+        - `jwtUtil` 以account簽署並生成token放入 `ResponseBody`
+        - 後續打API會以 `jwtAuth` 之AOP接收token並驗證（以 `RequestContextHolder` 取得request中的token）
+- 為何要用Spring Security？ ⭐⭐⭐⭐
+    - **攔截位置** : AOP是在進Controller後做攔截，然而Security是在DispatcherServle前建立一道Filter chain（最外層）來過濾資訊。
+    - **攻擊** : 當有惡意伺服器發送大量請求時，若進到AOP，則需要耗費大量資源。
+    - **請求範圍** : AOP僅限於Spring Bean的範圍，然而Security是Servlet Filter，因此可以攔截所有請求。
+    - **驗證規模** : 日後專案規模擴展到第三方登入、OAuth等功能，使用AOP等於要自己手刻。然而Security有提供資源可以直接使用。
+    - **資安** : 最後是資安防護，遠遠不只JWT驗證這麼簡單，這時就不要再重複造輪子寫AOP了！
