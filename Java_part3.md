@@ -1212,3 +1212,39 @@
     - **請求範圍** : AOP僅限於Spring Bean的範圍，然而Security是Servlet Filter，因此可以攔截所有請求。
     - **驗證規模** : 日後專案規模擴展到第三方登入、OAuth等功能，使用AOP等於要自己手刻。然而Security有提供資源可以直接使用。
     - **資安** : 最後是資安防護，遠遠不只JWT驗證這麼簡單，這時就不要再重複造輪子寫AOP了！
+
+## Day228
+#### 學習重點 : Spring Security - 何謂UserDetails？
+- Principal、Credentials、Authorities ⭐⭐⭐⭐⭐⭐
+    - 在理解UserDetails之前，要先理解Principal、Credential、Authority。
+    - 這三者也是Spring Security的核心原理！
+        - Principal : 表明你是誰？ ➝ **username、account**等都是。
+        - Credential : 證明你真的是你 ➝ **password、token**等。
+        - Authorities : 你的角色/權限有？ ➝ 像是**買家、賣家、可以下單、可以修改訂單**等。
+    - 在Authentication（驗證）Login階段 : 透過account、password驗證，此時Principal為account、Credential為password。驗證後，清空Credential，並取得Authorities，封裝成User物件。
+        - 在Controller當中，除了上述驗證過程，還會以Principal、Authorities簽署JWT token並放入ResponseBody回傳至前端！（這部分就可以用AOP來做）
+        - 當帶著JWT token請求時，經FilterChain驗證後包裝成User物件丟進 `SecurityContextHolder` 中，供當前請求的上下文作用（當前API）。
+    - 而上述的過程就需要藉由UserDetails作為標準User介面格式來給Security驗證！
+- UserDetails介面的成員 ⭐⭐⭐
+    - 作為User標準格式，需要有存取Principal、Credential、Authority的功能，因此介面圍繞著這三者轉！
+    ```java=
+    public interface UserDetails extends Serializable {
+        Collection<? extends GrantedAuthority> getAuthorities();
+        String getPassword();
+        String getUsername();
+        boolean isAccountNonExpired();
+        // 帳號是否鎖住了？ 像是密碼輸錯過多次等 
+        boolean isAccountNonLocked();
+        boolean isCredentialsNonExpired();
+        boolean isEnabled();
+    }
+    ```
+    - 而我們會藉由Spring給定的UserDetailsService介面中的 `loadUserByUsername` 作為標準取得資料庫中User的途徑！
+    - 而當然，UserDeatils需要被實作，因此可以自行加更多成員上去。
+    - 而UserDetailService也是，由於Spring不知道我們使用的DB為何，因此我們需要實作Service。
+- AuthenticationManager介面 ⭐⭐⭐⭐⭐⭐
+    - 上面介紹了UserDetails介面核心的要素，以及Authentication的流程，那麼實際上驗證的工具是誰呢？ ➝ `AuthenticationManager`！
+    - AuthenticationManager機制是這樣 ➝ 「LoginRequest的account與password」跟「UserDetailsService撈出來的UserDetails」，交由 `PasswordEncoder` 比對明文與加密密碼比對驗證過後，給出一個 `UsernamePasswordAuthenticationToken` 作為Authentication物件，最後再存入SecurityContextHolder！
+    - 而同時也會拿著authentication去產生JWT token並回傳，作為後續使用者打api時的身分證。
+- JWT token跟SecurityContextHolde的關聯 ⭐⭐⭐⭐⭐⭐
+    - JWT作為「**Stateless**」的一方，是供使用者可以拿著token打api，再經FilterChain的驗證後，解密token對應的UserDetails物件，最後存入SecurityContextHolder，接著才進到Controller去執行該api的動作！
