@@ -1287,3 +1287,47 @@
     }
     ```
     - 最後是 `AuthenticationManagerBuilder`，在現今版本中，我們通常會宣告 `passwordEncoder`、`UserDetailsService` 為Bean，Spring就會自動組裝成AuthenticationManager供我們的Controller使用拉~ 而這部份我想說留到明天來做好了！
+
+## Day230
+#### 學習重點 : Spring Security - 探討AuthenticationManager與實作UserDetails
+- 完善Security Config ⭐⭐⭐⭐⭐⭐
+    - 首先先把 `PasswordEncoder` 以及 `AuthenticationManager` 作為Bean丟給Spring容器管理！
+    - 而這邊就不得不提到 `AuthenticatoinManager` 的驗證實作流程拉~
+    #### ProviderManager、AuthenticationProvider
+    - 簡單來說，在AuthenticationManager這個介面中，最常實作的類別是 `ProviderManager`，也是預設使用的類別。
+    - 它專門維護Provider，而Provider就是 `驗證方式`，由於驗證方式有很多種，如 : 帳密登入、第三方登入、指紋登入...，因此若都塞在AuthenticationManager，會變得不好維護。
+    - 在ProviderManager中，其委派 `AuthenticationProvider` 介面做驗證處理
+    ```java=
+    public interface AuthenticationProvider {
+
+        // 驗證邏輯
+        Authentication authenticate(Authentication authentication) throws AuthenticationException;
+
+        // 是否能處理XXX驗證方式的集合
+        boolean supports(Class<?> authentication);
+    }
+    ```
+    - 因此實作AuthenticationProvider的類別才是真正處理驗證邏輯的地方！
+    - 而最常使用的Provider則是 `DaoAuthenticationProvider`
+    - 以下是來自 [Spring官網的流程圖](https://docs.spring.io/spring-security/reference/servlet/authentication/passwords/dao-authentication-provider.html) : 
+    ![image](https://hackmd.io/_uploads/BkbGK3bvzg.png)
+    - 因此可以知道 `DaoAuthenticationProvider` 就是結合UserDetailsService以及PasswordEncoder去做驗證。
+- UserDetails、UserDetailsService實作 ⭐⭐⭐⭐
+    - 簡單來說就是在原本我設計的User、UserService後面加上 `implements`，然後覆寫方法！
+    - 比較酷的是關於User的Authorties覆寫方式 : 
+    ```java=
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        if (role == null) return List.of();
+        return List.of(new SimpleGrantedAuthority("ROLE_" + role.getName()));
+    }
+    ```
+    - 由於我本來就有設定Role類別，因此可以直接以role.getName來設計Authorities。
+    - 而UserDetails的部分則是實作loadUserByUsername : 
+    ```java=
+    @Override
+    public UserDetails loadUserByUsername(String account) throws UsernameNotFoundException{
+        return userDao.findByAccount(account).orElseThrow(() -> new UsernameNotFoundException("User not found: " + account));
+    }
+    ```
+    - 這樣寫，當我們在做login驗證時，就可以使用 `AuthenticationManager` 在Controller做驗證啦！
