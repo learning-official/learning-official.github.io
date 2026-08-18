@@ -1248,3 +1248,42 @@
     - 而同時也會拿著authentication去產生JWT token並回傳，作為後續使用者打api時的身分證。
 - JWT token跟SecurityContextHolde的關聯 ⭐⭐⭐⭐⭐⭐
     - JWT作為「**Stateless**」的一方，是供使用者可以拿著token打api，再經FilterChain的驗證後，解密token對應的UserDetails物件，最後存入SecurityContextHolder，接著才進到Controller去執行該api的動作！
+
+## Day229
+#### 學習重點 : Spring Security - 解析SecurityConfig
+- 舊版的Config長怎樣？ ⭐⭐⭐⭐
+    - 在舊版的SecurityConfig中，我們需要繼承 `WebSecurityConfigurerAdapter` 並配合 `@EnableWebSecurity` 才能啟用Spring Security。
+    - 而在繼承Adapter中，一般會需要覆寫configure，包含 `AuthenticationManagerBuilder`、`HttpSecurity`、`WebSecurity`。
+        - HttpSecurity就是針對Http請求的部分，包含 `API驗證`、 `session設定(設定JWT無狀態)`、`CSRF啟用/關閉`、`FilterChain的設定`，可以看出Http請求會經過一連串的檢查才進入Controller。
+        -  而WebSecurity相比HttpSecurity，其不會走FilterChain這條路，而是繞過直達Controller，因此一般來說只會讓靜態資源走這條路。
+        -  最後是 `AuthenticationManagerBuilder`，其根本上就是組裝成AuthenticationManager的配置類別，也就是組裝 `passwordEncoder`、`UserDetailsService` 的配置。
+-  現今的Spring Security Configuration ⭐⭐⭐⭐⭐
+    -  現今的配置檔 **不需要再繼承Adapter**，而是以宣告一個配置SecurityFilterChain的函式並回傳，加上 `@Bean` 放入Spring容器作為元件。
+    -  而透過舊式Config可以知道，FilterChain屬於HttpSecurity，因此內容就是在配置一般Http請求走的路線。
+    -  以下是我的實作 : 
+    ```java=
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception{
+        httpSecurity
+            .csrf(AbstractHttpConfigurer::disable)
+            // 這邊將SessionPolicy宣告成STATELESS
+            // 意即不會利用Session儲存使用者登入資訊，也因此不會有SessionID存入Cookie
+            // 這也是為何要把CSRF關掉，因為根本沒用
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .authorizeHttpRequests(auth -> auth
+                    .requestMatchers("/login", "/registration", "/forgetPassword", "/prod/**", "/webhook/**").permitAll()
+                    .anyRequest().authenticated()
+            );
+        return httpSecurity.build();
+    }
+    ```
+    - 而WebSecurity也是按照上述寫一個Bean丟給Spring管理 : 
+    ```java=
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return (web) -> web.ignoring().requestMatchers(
+                "/css/**", "/js/**", "/images/**", "/favicon.ico", "/swagger-ui/**",  "/*.html", "/*.png", "/static/**"
+        );
+    }
+    ```
+    - 最後是 `AuthenticationManagerBuilder`，在現今版本中，我們通常會宣告 `passwordEncoder`、`UserDetailsService` 為Bean，Spring就會自動組裝成AuthenticationManager供我們的Controller使用拉~ 而這部份我想說留到明天來做好了！
