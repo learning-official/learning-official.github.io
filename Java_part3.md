@@ -1331,3 +1331,87 @@
     }
     ```
     - 這樣寫，當我們在做login驗證時，就可以使用 `AuthenticationManager` 在Controller做驗證啦！
+
+## Day231
+#### 學習重點 : Spring Security - 實作JwtAuthenticationFilter
+- 自訂義Filter？ ⭐⭐⭐⭐⭐⭐⭐
+    - 在看自訂義Filter之前，要先知道Spring Security是如何操控Filter的。
+    - FilterChain的邏輯是這樣的 : 每個Filter接收 `request`、`response`、`filterChain`，經過本身的過濾邏輯後，再把request、response塞入filterChain丟給下一個Filter。
+    - 因此通常在Filter定義中會看到 : 
+    ```java=
+    public final void doFilter(ServletRequest request, 
+                               ServletResponse response, 
+                               FilterChain filterChain
+    ) throws ServletException, IOException {
+        //...省略
+    }
+    ```
+    - 而我們若要自訂義Filter，通常會去繼承 `OncePerRequestFilter`，它是一個抽象類別，而我們需要覆寫其中的doFilterInternal來設計過濾邏輯！但先讓我來釐清一下何謂 `OncePerRequestFilter` : 
+    #### OncePerRequestFilter
+    - 如它的名字，就是針對同一Http請求，只會「執行一次Filter邏輯」。
+    - 但是為何要有這種功能呢？ ➝ 
+        - 當今天我們遇到了 `轉發`、`錯誤處理` 等在 `同一Http請求下` 的動作，會觸發 **多次** Filter。
+        - 這時候，我們不希望同一請求重複過濾（因為同一請求不需要過濾超過一次），就可以利用 `OncePerRequestFilter` 這個類別，利用標記法，先「確認該請求是否過濾過」，來決定是否放行！
+- 設計JwtAuthenticationFilter ⭐⭐⭐⭐⭐
+    - 在了解了FilterChain的邏輯後，就可以來專心寫Jwt過濾邏輯拉～
+    - 步驟如下 : 
+        - 首先針對「**是否有帶JWT token的邏輯判斷**」
+            - 若沒帶token則不屬於JwtAuthenticationFilter的過濾範疇，因此放行給後續的Filter去偵測。 
+        - 再來進入「**token的verify**」
+            - 若取出的token內涵account 且 SecurityContextHolder中的authentication是空的，表示還沒設定過，則可繼續執行設定。
+        - 接著進入「**設定Context環節**」
+            - 透過token中的account與UserDetailService找到User，形成authentication物件，最後放入 `SecurityContextHolder` 完成設定。
+        - 最後「**交由下一個Filter動作**」
+            - 使用 `filterChain.doFilter(request,response)` 交給下一個Filter執行。
+    - 以下是完整程式碼 : 
+    ```java=
+    @Component
+    public class JwtAuthenticationFilter extends OncePerRequestFilter {
+
+        private final UserService userService;
+
+        @Value("${secret}")
+        private String secret;
+
+        @Autowired
+        public JwtAuthenticationFilter(UserService userService){
+            this.userService = userService;
+        }
+
+        @Override
+        protected void doFilterInternal(HttpServletRequest request,
+                                        HttpServletResponse response,
+                                        FilterChain filterChain) throws ServletException, IOException{
+
+            //* 取出原始token
+            String rawToken = request.getHeader("Authorization");
+            
+            //* 若token有問題，交由後續Filter決定是否放行
+            if (rawToken == null || !rawToken.startsWith("Bearer ")) {
+                filterChain.doFilter(request, response);
+                return;
+            }
+            String token = JwtUtil.decode(rawToken);
+
+            try{
+                JwtUtil.verify(token, secret);
+                String account = JwtUtil.getString(token, "account");
+                if (account != null && SecurityContextHolder.getContext().getAuthentication() == null){
+                    UserDetails userDetails = userService.loadUserByUsername(account);
+                    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                            userDetails,
+                            null,
+                            userDetails.getAuthorities()
+                    );
+                    authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                }
+
+            }catch (Exception e){
+                System.out.println("Exception : " + e.getMessage());
+            }
+
+            filterChain.doFilter(request, response);
+        }
+    }
+    ```
