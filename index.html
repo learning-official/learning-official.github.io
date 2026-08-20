@@ -1641,13 +1641,17 @@
         }
 
         try {
-          const res = await fetch('https://api.counterapi.dev/v1/learning-official/likes/');
+          const res = await fetch('https://countapi.mileshilliard.com/api/v1/get/learning-official-likes');
           if (res.ok) {
             const data = await res.json();
-            const count = data.count || 0;
+            const count = (data && typeof data.value !== 'undefined') ? data.value : 0;
             if (sidebarLikeCount) sidebarLikeCount.innerText = count;
             if (dashLikeCount) dashLikeCount.innerText = count;
             if (homeLikeCount) homeLikeCount.innerText = count;
+          } else if (res.status === 404) {
+            if (sidebarLikeCount) sidebarLikeCount.innerText = '0';
+            if (dashLikeCount) dashLikeCount.innerText = '0';
+            if (homeLikeCount) homeLikeCount.innerText = '0';
           }
         } catch (err) {
           console.warn('[Learning-official] Failed to fetch likes:', err);
@@ -1704,10 +1708,10 @@
         showToast('感謝您的點讚支持！🎉', 'success');
 
         try {
-          const res = await fetch('https://api.counterapi.dev/v1/learning-official/likes/up');
+          const res = await fetch('https://countapi.mileshilliard.com/api/v1/hit/learning-official-likes');
           if (res.ok) {
             const data = await res.json();
-            const serverCount = data.count || currentCount;
+            const serverCount = (data && typeof data.value !== 'undefined') ? data.value : currentCount;
             if (sidebarLikeCount) sidebarLikeCount.innerText = serverCount;
             if (dashLikeCount) dashLikeCount.innerText = serverCount;
             if (homeLikeCount) homeLikeCount.innerText = serverCount;
