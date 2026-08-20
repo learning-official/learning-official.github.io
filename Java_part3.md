@@ -1415,3 +1415,73 @@
         }
     }
     ```
+
+## Day232
+#### 學習重點 : Spring Security - 淺談FilterChain的順序
+- 將JwtAuthenticationFilter加入進Security Filter Chain ⭐⭐⭐⭐⭐
+    - 在寫完Jwt的過濾邏輯之後，當然就是要將其加入進Security中啦~
+    - 在SecurityFilerChain的配置方法中，我們需要在httpSecurity的建置過程中，將Jwt填入FilterChain中！
+    ```java=
+    // 先將JwtFilter印入
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+
+    // 並加進初始化中
+    public SecurityConfiguration(JwtAuthenticationFilter jwtAuthenticationFilter) {
+        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+    }
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception{
+        httpSecurity
+                // ...省略
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+        return httpSecurity.build();
+    }
+    ```
+    - 但這邊產生一個問題 ➝ Spring Security的Filter Chain是怎麼設置的？
+- SecurityFilterChain ⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐
+    #### 請求進入到Servlet的動作
+    - 一個請求在進入Servlet時，並不知道要走Spring的Filter Chain，而是直接進入Servlet的Filter。
+    - 這時就需要利用 `DelegatingFilterProxy`，它可以將請求**轉接**到Spring的FilterChain中。
+    - 因此 `DelegatingFilterProxy` 就是將原本Servlet的Filter邏輯委派給Spring Bean（SecurityFilter）來代理！
+    - 而身為SpringSecurityFilter的代理人就是 `FilterChainProxy`，這時請求就正式進入了Spring FilterChain的領域啦~
+    > HTTP Request → DelegatingFilterProxy → FilterChainProxy → Controller
+    #### FilterChain的過濾順序（我簡略很多w，只講重點）
+    - 整個FilterChain的第一線就是 `FilterChainProxy` 本身！
+        - 它會管理多組FilerChains ➝ `List<SecurityFilterChain>`，並針對不同URL使用不同的FilterChain。
+    - 再來是 `SecurityContextHolderFilter`，載入上下文，掌管FilterChain的開始與結束。
+        - 一般來說會從 `SecurityContextRepository` 載入之前的資訊，像是Session，並放入ThreadLocal。
+        - 若找不到Session，代表可能是STATELESS的Jwt，則Context留空，待進入我的JwtFilter時設定Context為authentiction。
+    - 接著進入資安部分的Filter
+        - 如 : `CorsFilter`、`CsrfFilter`、`HeaderWriterFilter`、`LogoutFilter`，這邊就不多贅述，直接進入到重點。
+    - 再來就是重點 : `AuthenticationFilter` ➝ 「**決定你是誰**」
+        - 傳統的login作法，是利用配置中啟用 `.formLogin()` 的登入功能，去攔截 `[POST] /login`，並取得username、password，委派給AuthenticationManager。這樣的功能是寫在 `UsernamePasswordAuthenticationFilter` 中，這是STATEFUL的部分，也就是身分存儲於Session中。
+        - 但我的login是獨立在Controller中，透過Service簽發JWT token，使登入狀態變成STATELESS，因此在配置時，我一開始就放行login，使其不在FilterChain被擋下來，而是直接進入Controller。
+        - 因此昨天設計的JwtFilter，就是針對STATELESS的Filter。
+        - 所以回到上一大點的程式碼 : `.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);`，我將設置Context的動作交由Jwt實施，而由於沒有在配置檔中啟用 `formLogin`，因此UsernamePasswordAuthenticationFilter根本就不會被放進FilterChain中！
+    - 最後是 `AuthorizationFilter` ➝ 「**決定你這個身分能去哪**」
+        - 在配置中設定的 `permitAll`、`authenticated` 都是在這層認證Filter中去做動作，以下是簡略圖 : 
+        ``` 
+                 Request 到達 AuthorizationFilter
+                                 │
+                                 ▼
+                拿URL去比對你在 SecurityConfig 寫的規則
+                                 │
+           ┌─────────────────────┴───────────────────────┐
+           ▼                                             ▼
+       命中 permitAll() 規則                   命中 .authenticated() 規則
+           │                                             │
+      【直接放行！】                          檢查 SecurityContextHolder 
+           │                                 有沒有已認證的 Authentication？
+           │                                             │
+           │                               ┌─────────────┴─────────────┐
+           │                               ▼                           ▼
+           │                         【有（已登入）】             【未登入/Token無效】
+           │                               │                           │
+           │                          【放行通過！】             【拋出 403 / 401】
+           │                               │                           │
+           └─────────────────┬─────────────┘                           │
+                             ▼                                         ▼
+                    順利進入 Controller                           中斷請求，返回錯誤
+        ```
+    - 今天先差不多寫到這！明天繼續完善後續進入Controller的 `PreAuthorize` 等AOP機制！
