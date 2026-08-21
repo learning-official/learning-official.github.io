@@ -1485,3 +1485,33 @@
                     順利進入 Controller                           中斷請求，返回錯誤
         ```
     - 今天先差不多寫到這！明天繼續完善後續進入Controller的 `PreAuthorize` 等AOP機制！
+
+## Day233
+#### 學習重點 : Spring Security - Method Security簡介
+- 甚麼是Method Security？ ⭐⭐⭐⭐
+    - 前幾天我一直研究的屬於 `WebSecurity` 的範疇，而經過FilterChain正式進入Controller時，就屬於 `MethodSecurity` 的部分啦～
+    - 為何要有Method Security？ 
+        - 可以說，Web防禦屬於「**粗粒度**」的過濾，而Method防禦屬於「**細粒度**」的過濾。
+        - `WebSecurity` 負責處理URL訪問權限、身分及使用者驗證等。而 `MethodSecurity` 則可以結合使用者與方法參數加上Service Bean，判斷是否有XX權限。
+        - 因此MethodSecurity的細粒度在於**結合了業務邏輯去檢查**，提升防禦性！
+    - 在最基本的Method Security中，我們會透過驗證過的UserDetails的Authorities內涵的 `ROLE_{身分}` 及 `{權限}` 去判斷使用者是否能進入該Method，作為進入Method前的防線。
+- Method Security怎麼使用？ ⭐⭐⭐⭐
+    - 還記得在剛學實作Spring AOP時，我設計了一個 `@RequirePermission` 去判斷使用者是否含有某個Permission。像是 : `@RequirePermission(needPermissionOf = PermissionCode.GET_USERS_LIST)`
+    - 而在MethodSecurity，則是可以使用Spring Security內涵的四個註解去實現判斷 : 
+        - `PreAuthorize`、`PostAuthorize`、`PreFilter`、`PostFilter`
+    - 但我應該會專注在 `PreAuthorize` 上去做研究，因為它適用於大部分場景！
+    - 在進入註解使用之前，需要先在SecurityConfig上啟用MethodSecurity，因為Spring Security預設是不會啟用方法攔截的！
+    ```java=
+    @Configuration
+    @EnableWebSecurity
+    @EnableMethodSecurity // <-- here
+    public class SecurityConfiguration {
+        //...省略
+    }
+    ```
+- Method Security的基本使用方式（`PreAuthorize` 示範） ⭐⭐⭐⭐⭐
+    - 一般來說，我們會將 `@PreAuthorize` 加註在Contoller的端點Method前面。
+    - 而參數會以字串形式放入 : `hasRole`、`hasAuthority`、`hasPermission` 等。
+        - 如 : `@PreAuthorize("hasRole('ADMIN')")`
+    - 以上面的例子，當呼叫帶有 `PreAuthorize...` 的方法時，MethodSecurity就會以 **SpEL**（Spring Expression Language）去解析字串內的敘述，並到UserDetails中搜尋 `ROLE_ADMIN` 的身分，若找不到則丟出 `AccessDeniedException`，找到則表示通過驗證進入Method中！
+    - 這就是一般MethodSecurity的解析與驗證方式！
