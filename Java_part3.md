@@ -1515,3 +1515,39 @@
         - 如 : `@PreAuthorize("hasRole('ADMIN')")`
     - 以上面的例子，當呼叫帶有 `PreAuthorize...` 的方法時，MethodSecurity就會以 **SpEL**（Spring Expression Language）去解析字串內的敘述，並到UserDetails中搜尋 `ROLE_ADMIN` 的身分，若找不到則丟出 `AccessDeniedException`，找到則表示通過驗證進入Method中！
     - 這就是一般MethodSecurity的解析與驗證方式！
+
+## Day234
+#### 學習重點 : Spring  Security - 深入探討@PreAuthorize.1
+- 前言 ⭐
+    - 昨天有簡單講過Method Security註解的使用方式，而今天將要深入探討PreAuthorize的詳細用法！
+- hasRole vs. hasAuthority ⭐⭐⭐⭐⭐
+    - 這兩者的差別在於 : 是否有加 `ROLE_`。
+    - 在UserDetails中存的Authrities，內涵帶有 `ROLE_` 前輟的身分字串，以及一般的權限字串。
+        - 而當初我在實作UserDetails介面時，我在getAuthorities的函式內寫了這個 : 
+        ```java=
+        //...省略
+        return List.of(new SimpleGrantedAuthority("ROLE_" + role.getName()));
+        ```
+        - 由於我有自行建立Role類別，包含ADMIN跟USER，在藉由Role類別對應到Permission類別，因此一般來說，我的User中不會帶有權限字串，而只有身分字串！
+        - 因此我後續實作一般會使用hasRole而不是hasAuthority！
+    - 若我寫hasRole('ADMIN')，Spring在解析時，會在前面自動加上 `ROLE_` 再去做運算。
+- 關於使用SpEL的解析 與 簡單實作 ⭐⭐⭐⭐⭐
+    - 一般來說，當我寫下 `@PreAuthorize("...")` 時，Spring會做以下事情 : 
+       - 注入 `authentication` (當前登入者身分)
+       - 注入 `principal` (User物件)
+       - 注入 `#方法參數 (如 #id, #account)`
+   - 因此我們一般會透過上述三者注入來實作驗證
+   - 以下是我針對 「**刪除使用者**」 的API端點實作進入前的審查 ➝ 是否為 `ADMIN / 是否是使用者本人`？
+   ```java=
+    //* 刪除使用者
+    @PreAuthorize("hasRole('ADMIN') or #deleteUserRequest.id == authentication.principal.id")
+    @DeleteMapping("/users")
+    public Response<UserResponse> delete(@AuthenticationPrincipal User user, @RequestBody DeleteUserRequest deleteUserRequest){
+        return userService.delete(user.getAccount(), deleteUserRequest);
+    }
+   ```
+   - 針對 `hasRole` 解析時，就會去User物件找到Authority並檢查是否有 `ROLE_ADMIN` 的字串
+   - 而針對刪除方法傳入的 `DTO資料`，可以用 `#` 讓解析去找到DTO物件，並透過DTO.id與principal.id去比對！
+- 這跟我自行建立的 `@RequirePermission` 有甚麼差？ ⭐⭐⭐⭐
+    - Security內建的AOP，是直接取用FilterChain所打包好的UserDetails物件，**不需再去DB搜尋**。
+        - 不像自行建立的AOP，需要先透過AuthAOP解析JWT找到account，接著PermissionAOP再透過 `RequestContextHolder` 的request找到attribute，取出account並從DB去找身分...。
