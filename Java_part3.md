@@ -1551,3 +1551,46 @@
 - 這跟我自行建立的 `@RequirePermission` 有甚麼差？ ⭐⭐⭐⭐
     - Security內建的AOP，是直接取用FilterChain所打包好的UserDetails物件，**不需再去DB搜尋**。
         - 不像自行建立的AOP，需要先透過AuthAOP解析JWT找到account，接著PermissionAOP再透過 `RequestContextHolder` 的request找到attribute，取出account並從DB去找身分...。
+
+## Day235
+#### 學習重點 : Spring Security - 深入探討@PreAuthorize.2
+- 何謂Safe Navigation？ ⭐⭐⭐⭐
+    - 其實在其他語言中，也有Safe navigation的蹤跡，簡單來說，它就是負責處理null出現時的情況。
+    - 在SpEL中，當我們想要呼叫物件的成員or函式時，也是跟一般Java語法相同 ➝ `物件.成員`。然而當物件本身是null時，SpEL無法像Java語法一樣使用if來null check。
+    - 此時我們就會用到 Safe Navigation `?.` 來避免NPE出現。
+    - 實際用法如右 : `#user?.role?.id == "R0001"`。
+    - 邏輯如右 : 當 `?.` 前者的物件為null，呼叫後者成員時，不會拋出NPE，而是直接將該運算式回傳null。
+    - ⚠️然而，需要注意的是，當運算左右值兩者都掛上了Safe Navigation，很有可能會出現 `null == null` 反而使運算式出現非預期性成立的情況發生！
+- Custom Security Service ⭐⭐⭐⭐⭐
+    - 當單純用字串無法完整表達驗證邏輯時，我們就需要依靠自製的Service來驗證，而在SpEL就只需要呼叫Service Bean的判斷方法即可！
+    - 一般來說語法如右 : `@Bean.方法(參數)`。
+    - 雖然說目前我可以單純透過hasRole去過濾，但當日後有其他權限判斷時，也可以使用自製的Service來做PreAuthorize。
+    - 下面是我簡單修改原本的RequirePermission的AOP，變成Security Service的形式 : 
+    ```java=
+    // 設置Bean名稱為ps
+    @Service("ps")
+    public class PermissionService {
+
+        private final RolePermissionDao rolePermissionDao;
+
+        @Autowired
+        public PermissionService(RolePermissionDao rolePermissionDao){
+            this.rolePermissionDao = rolePermissionDao;
+        }
+
+        public boolean hasPerm(PermissionCode permissionCode){
+            if (permissionCode == null) return false;
+            
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            
+            // null、principal check
+            if (authentication == null || !(authentication.getPrincipal() instanceof User user)) return false;
+            if (user.getRole() == null) return false;
+            
+            return rolePermissionDao.existsByRoleAndPermissionId(user.getRole(), permissionCode.getCode());
+        }
+    }
+    ```
+    - 由於在FilterChain中，有個預設Filter叫 `AnonymousFilter`，是當使用者打API時，沒有帶Jwt，表示訪客，此時就會將 `"anonymousUser"` 字串並放入Context中。因此要先檢查authentication帶有的Pricipal是不是User。
+    - 接著就可以在SpEL寫下 : `@ps.hasPerm(T(org.system.enums.PermissionCode).GET_USERS_LIST))`。
+    - 這邊之所以要寫這麼複雜，是因為SpEL支援Enum的寫法，需要以 `T(Enum路徑).成員` 來描述，因此寫成這樣。
