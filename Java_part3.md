@@ -1594,3 +1594,30 @@
     - 由於在FilterChain中，有個預設Filter叫 `AnonymousFilter`，是當使用者打API時，沒有帶Jwt，表示訪客，此時就會將 `"anonymousUser"` 字串並放入Context中。因此要先檢查authentication帶有的Pricipal是不是User。
     - 接著就可以在SpEL寫下 : `@ps.hasPerm(T(org.system.enums.PermissionCode).GET_USERS_LIST))`。
     - 這邊之所以要寫這麼複雜，是因為SpEL支援Enum的寫法，需要以 `T(Enum路徑).成員` 來描述，因此寫成這樣。
+
+## Day236
+#### 學習重點 : Spring Security - hasPermission的深入解析.1
+- 為何要有hasPermission？ ⭐⭐⭐⭐⭐
+    - 或許在我自行實作的PermissionService可以應付一般的RBAC系統，然而針對某個特定資源要確認是否能存取的話，卻不是那麼容易寫。
+        - 讓我們來看看如果要「**刪除訂單id#0001**」這件事要怎麼以PermissionService應付
+            - 我需要建立 `ps.canDeleteOrder(principal, #orderId)`
+        - 那如果要「**編輯訂單id#0001**」呢？
+            - 我需要建立 `ps.canEditOrder(principal, #orderId)`
+    - 透過上述例子可以發現PermissionService應對Permission的方式，是一直建立Method去應付各種狀況。十分不理想。
+    - 因此針對「**特定資源的動作驗證**」，我們可以利用Spring設計的`hasPermission` 來做，其規定了參數的格式必須是 `hasPermission(目標物件, 操作動作)`、`hasPermission(目標ID, 實體型態, 操作動作)`，很能夠看出其對**資源**訪問的細粒程度。
+- SpEL的接收 ⭐⭐⭐⭐⭐⭐
+    - 而在真正了解hasPermission之前，需要先來看看SpEL是怎麼被接收並解析的。
+    #### MethodSecurityExpressionHandler
+    - 在寫下 `@PreAuthorize()` 時，Spring會將內部的SpEL交由 `MethodSecurityExpressionHandler` 來解析文字！
+    - 而 `MethodSecurityExpressionHandler` 是介面，因此會藉由 `DefaultMethodSecurityExpressionHandler` 這個預設實作來解析文字。
+    - 內部包含了 `hasRole`、`hasAuthority` 等解析函式。而 `hasPermission` 則是委派給 「**PermissionEvaluator**」來解析。
+    - 然而預設的PermissionEvaluator介面實作是 `DenyAllPermissionEvaluator`，與字面意思相同，就是遇到任何Permission都回傳false。
+    - 因此我們需要自行建立 `CustomPermissionEvaluator` 來實作PermissionEvaluator，並自行設計屬於自己的Permission過濾器，最後再注入Hanlder當中完成註冊。
+    - 而我們需要實作的PermissionEvaluator是基與Spring設計的統一格式，因此需要實作以下函式 : 
+    ```java=
+    public interface PermissionEvaluator extends AopInfrastructureBean {
+        boolean hasPermission(Authentication authentication, Object targetDomainObject, Object permission);
+        boolean hasPermission(Authentication authentication, Serializable targetId, String targetType, Object permission);
+    }
+    ```
+    - 後續部分留到明天繼續研究吧！
