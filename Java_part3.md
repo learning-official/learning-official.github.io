@@ -1621,3 +1621,21 @@
     }
     ```
     - 後續部分留到明天繼續研究吧！
+
+## Day237
+#### 學習重點 : Spring Security - hasPermission的深入解析.2
+- 兩個hasPermission函式的不同 ⭐⭐⭐⭐⭐⭐
+    - 先來看看hasPermission函式為何要有兩種不同的形式
+    - 1️⃣ 功能性權限 :
+        - `hasPermission(auth, targetObj, permission)`，針對目標實體（DTO）該使用者是否有某permission（如DELETE、EDIT等）。
+        - 功能性權限通常會用 `@PostAuthorize` 去看看回傳的物件能否被使用者看到（可能包含隱私成員）。
+    - 2️⃣ 資源性權限 : 
+        - `hasPermission(auth, targetId, targetType, permission)`，針對某Type的資料(ID)，使用者是否有某permission（如DELETE、EDIT等）。
+        - 一般來說會需要去DB搜尋該資料並判斷，通常在 `@PreAuthorize` 中攔截id與使用者做權限判斷。
+        - 這就跟自製的PermissionService有極高相似之處，若想要統一規格，使用hasPermission語法會較好，若需要高度自由性，則自製Service較優。
+- 分發權限架構設計（Strategy Pattern） ⭐⭐⭐⭐⭐
+    - 由於一個專案中，會有許多實體，因此衍生出不同資源、不同訪問動作。
+    - 我們可以自行建立一個 `DomainPermissionChecker` 介面，並由不同 `資源PermissionChecker` 去實作 ➝ 形成一組CheckerBeans。
+    - 最後自製 `GlobalPermissionEvaluator` 去實作 `PermissionEvaluator`，其中注入 `Map<String, DomainPermissionChecker>`，Map由 `targetTypeName 對 CheckerBean`。
+    - 流程如右 : 使用hasPermission字句 ➝ 呼叫Evaluator的hasPermission ➝ 根據傳入的targetTypeName找到相對應的CheckerBean ➝ 呼叫實際該CheckerBean的 `hasPermission`。
+    > Controller --> PreAuthorize --> @hasPermission --> GlobalEvaluator --> DomainPermissionChecker --> EntityPermissionChecker.hasPermission
