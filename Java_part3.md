@@ -1655,7 +1655,7 @@
     }
     ```
     - getTargetType是用於取得實體的型別名稱。
-    - 而每個實作 `DomainPermissionChecker` 的實體Checker，都需要冠上 `@Component` 的註解，來使其成為Bean。
+    - 而每個實作 `DomainPermissionChecker` 的實體Checker，都需冠上 `@Component` 的註解，來使其成為Bean。
 - GlobalPermissionEvaluator ⭐⭐⭐⭐⭐
     - `DomainPermissionChecker` 是關於實體實作的介面，而 `GlobalPermissionEvaluator` 則是實作 `PermissionEvaluator`，並在內部注入 `Map<String, DomainPermissionChecker>`，此時Spring就會去容器中找到有實作 `DomainPermissionChecker` 的Bean（這也是為何前一點說要對實體Checker冠上Component的原因）。
     - 以下是架構 : 
