@@ -1639,3 +1639,73 @@
     - 最後自製 `GlobalPermissionEvaluator` 去實作 `PermissionEvaluator`，其中注入 `Map<String, DomainPermissionChecker>`，Map由 `targetTypeName 對 CheckerBean`。
     - 流程如右 : 使用hasPermission字句 ➝ 呼叫Evaluator的hasPermission ➝ 根據傳入的targetTypeName找到相對應的CheckerBean ➝ 呼叫實際該CheckerBean的 `hasPermission`。
     > Controller --> PreAuthorize --> @hasPermission --> GlobalEvaluator --> DomainPermissionChecker --> EntityPermissionChecker.hasPermission
+
+## Day238
+#### 學習重點 : Spring Security - Evaluator Strategy Pattern實作.1
+- DomainPermissionChecker ⭐⭐⭐⭐⭐
+    - 首先是關於每個實體CheckerBean必須實作的一個介面，`DomainPermissionChecker`，跟Spring設計的有些許不同，我 **將Authentication的部分改成了User**，且 **針對資源性權限參數，省略了Type的傳入**。
+    - 以下是介面 : 
+    ```java=
+    public interface DomainPermissionChecker {
+        String getTargetType();
+        // 功能性權限
+        boolean hasPermission(User user, Object targetDomainObject, String permission);
+        // 資源性權限
+        boolean hasPermission(User user, Serializable targetId, String permission);
+    }
+    ```
+    - getTargetType是用於取得實體的型別名稱。
+    - 而每個實作 `DomainPermissionChecker` 的實體Checker，都需要冠上 `@Component` 的註解，來使其成為Bean。
+- GlobalPermissionEvaluator ⭐⭐⭐⭐⭐
+    - `DomainPermissionChecker` 是關於實體實作的介面，而 `GlobalPermissionEvaluator` 則是實作 `PermissionEvaluator`，並在內部注入 `Map<String, DomainPermissionChecker>`，此時Spring就會去容器中找到有實作 `DomainPermissionChecker` 的Bean（這也是為何前一點說要對實體Checker冠上Component的原因）。
+    - 以下是架構 : 
+    ```java=
+    @Component
+    public class GlobalPermissionEvaluator implements PermissionEvaluator {
+        
+        // 管理一組CheckerBeans，key是bean的實體名稱，value就是checkerBean本身
+        private final Map<String, DomainPermissionChecker> permissionCheckerMap;
+
+        @Autowired
+        public GlobalPermissionEvaluator(List<DomainPermissionChecker> domainPermissionCheckerList){
+            this.permissionCheckerMap = domainPermissionCheckerList.stream().collect(
+                    Collectors.toMap(
+                            dpc -> dpc.getTargetType().toUpperCase(),
+                            dpc -> dpc
+                    )
+            );
+        }
+
+        @Override
+        public boolean hasPermission(Authentication authentication, Object targetDomainObject, Object permission){
+            // 先做好null防線，並針對Authentication預先取得User
+            if (authentication == null || !(authentication.getPrincipal() instanceof User user) || targetDomainObject == null || permission == null){
+                return false;
+            }
+            
+            // 傳入的targetObject先透過getClass取得實體型態名稱
+            String targetType = targetDomainObject.getClass().getSimpleName().toUpperCase();
+            // 藉由targetType作為key去找checkerBean
+            DomainPermissionChecker dpc = permissionCheckerMap.get(targetType);
+            if (dpc == null) return false;
+            // 利用剛剛null check的user物件傳入自行設計的DomainPermissionChecker介面
+            return dpc.hasPermission(user, targetDomainObject, permission.toString());
+        }
+
+        @Override
+        public boolean hasPermission(Authentication authentication, Serializable targetId, String targetType, Object permission){
+            if (authentication == null || !(authentication.getPrincipal() instanceof User user) || targetId == null || permission == null){
+                return false;
+            }
+            
+            // 針對資源性權限可以直接利用參數的targetType去搜尋鍵值對
+            DomainPermissionChecker dpc = permissionCheckerMap.get(targetType.toUpperCase());
+            if (dpc == null) return false;
+
+            return dpc.hasPermission(user, targetId, permission.toString());
+        }
+    }
+    ```
+- 實際流程 ⭐⭐⭐⭐⭐
+    - 透過下圖可以清楚知道分流，而實際CheckerBean則留到明天來實作吧！
+    ![image](https://hackmd.io/_uploads/r1A6wthvzl.png)
