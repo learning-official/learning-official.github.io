@@ -1709,3 +1709,68 @@
 - 實際流程 ⭐⭐⭐⭐⭐
     - 透過下圖可以清楚知道分流，而實際CheckerBean則留到明天來實作吧！
     ![image](https://hackmd.io/_uploads/r1A6wthvzl.png)
+
+## Day239
+#### 學習重點 : Spring Security - Evaluator Strategy Pattern實作.2
+- DomainPermissionChecker介面實作 - Order ⭐⭐⭐⭐⭐⭐
+    - 今天先從OrderPermissionChecker開始著手設計。
+    - 針對兩個hasPermission我目前 **先採用相同permission檢查設計**。
+    - 先來看看針對Order有什麼樣的操作（permission）出現 : 
+        - `READ、PAY、CANCELED、DELETE`
+    - 進一步的解析，可以歸類成「Owner可操作」 or 「ROLE_ADIMN可操作」
+        - 這邊就融合了**ABAC**(基於屬性存取 : Owner)、**RBAC**(基於角色存取 : ADMIN)
+        - 而Owner可操作的有 `READ、PAY、CANCELED(有限)、DELETE(有限)`
+        - 而ADMIN可操作的有 `READ、CANCELED、DELETE`
+        - 那麼這邊我 **先不加入Seller**，帶整體完善後再來補強！
+    - 透過上述的權限設定，可以用 **swtich-case來做分流** : 
+    ```java=
+    return switch (permission) {
+        case "READ" -> isOwner || isAdmin;
+        case "PAY" -> isOwner;
+        case "REFUND" -> isAdmin;
+        case "DELETE", "CANCELED" -> isAdmin || (isOwner && order.getStatus() == Order.STATUS.UNPAID);
+        default -> false;
+    };
+    ```
+- 實作類別OrderPermissionChecker展示
+    - 以下是完整code : 
+    ```java=
+    @Component
+    public class OrderPermissionChecker implements DomainPermissionChecker {
+
+        private final OrderDao orderDao;
+
+        @Autowired
+        public OrderPermissionChecker(OrderDao orderDao){
+            this.orderDao = orderDao;
+        }
+
+        public String getTargetType(){return "ORDER";}
+
+        @Override
+        public boolean hasPermission(User user, Object targetDomainObject, String permission){
+            if (!(targetDomainObject instanceof Order order)) return false;
+            return checker(user, permission, order);
+        }
+
+        @Override
+        public boolean hasPermission(User user, Serializable targetId, String permission){
+            Order order = orderDao.findById(targetId.toString()).orElseThrow(() -> ResourcesException.of(ErrorCode.ORDER_NOT_FOUND));
+            return checker(user, permission, order);
+
+        }
+
+        private boolean checker(User user, String permission, Order order){
+            boolean isOwner = user.getId().equals(order.getUser().getId());
+            boolean isAdmin = user.getRole().getId().equals(RoleID.ADMIN.getID());
+
+            return switch (permission) {
+                case "READ" -> isOwner || isAdmin;
+                case "PAY" -> isOwner;
+                case "REFUND" -> isAdmin;
+                case "DELETE", "CANCELED" -> isAdmin || (isOwner && order.getStatus() == Order.STATUS.UNPAID);
+                default -> false;
+            };
+        }
+    }
+    ```
