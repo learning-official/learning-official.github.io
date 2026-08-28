@@ -1774,3 +1774,27 @@
         }
     }
     ```
+
+## Day240
+#### 學習重點 : Spring Security - Evaluator Strategy Pattern實作.final
+- 剩餘Contoller與實體 ⭐⭐⭐⭐
+    - 列出目前Controller : `Notification`、`Cart`、`Merchandise`、`User`、`Category`、`Webhook`
+    - 然而其中的Webhook不進入Spring Security的PreAuthorize中，原因如下 : 
+        - 第三方發起API請求時不會帶有JWT，也沒有User物件。
+        - 且在FilterChain當中，通常會設置成permit，不經過FilterChain。
+        - 一般來說，Webhook會直達Controller並透過Service去處理「**檢查碼**」來確認身分。
+    - 其餘實體搭配permission設計，就可以完善Checker啦~
+- 實體CheckerBean完善 ⭐⭐⭐
+    - 在完善Bean之前，我想要微調昨天寫的邏輯 : 
+        - 針對targetID not found時，不丟出Exception，而是直接 `return false`，**更符合Security的規範**，也不會造成資安問題(狀態洩漏)。
+        - 而在checker method的部分，則是加強null check的部分。
+    - 接下來就是每個實體的基本permission設計啦 
+        - Notification : `READ, EDIT, DELETE`
+        - Cart : `READ, ADD, EDIT, DELETE, CLEAR`
+        - Merchandise : `READ, EDIT, DELETE`
+        - User : `READ, EDIT, DELETE`
+        - Category : `READ, CREATE, EDIT, DELETE`
+    - 而最後，則可以根據OrderPermissionChecker的邏輯，將以上實體都完成實作  `DomainPermissionChecker` 的動作！
+    - 但由於程式碼過於冗長，我就不放上來了！
+- 明天預計 : ⭐
+    - 我會開始整合關於Schedule、Security的執行邏輯，並將原本AOP驗證的功能交由PreAuthorize來完成！
