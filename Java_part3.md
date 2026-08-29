@@ -1798,3 +1798,85 @@
     - 但由於程式碼過於冗長，我就不放上來了！
 - 明天預計 : ⭐
     - 我會開始整合關於Schedule、Security的執行邏輯，並將原本AOP驗證的功能交由PreAuthorize來完成！
+
+## Day241
+#### 學習重點 : Spring Security - PreAuthorize全面上線！
+- 前置作業 ⭐⭐⭐⭐
+    - 在我們寫好 `GlobalPermissionEvaluator` 後，還需要將其註冊到SecurityConfig中！否則Spring會使用預設的Evaluator，其中委派的PermissionEvaluator實作是 `DenyAllPermissionEvaluator`。
+    - 而註冊的方式就是設置最頂層的MethodSecurityExpressionHandler Bean : 
+    ```java=
+    // 加入我們的實作
+    private final GlobalPermissionEvaluator globalPermissionEvaluator;
+
+    // 初始化
+    public SecurityConfiguration(JwtAuthenticationFilter jwtAuthenticationFilter, GlobalPermissionEvaluator globalPermissionEvaluator) {
+        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+        this.globalPermissionEvaluator = globalPermissionEvaluator;
+    }
+    
+    // 設置Bean
+    @Bean
+    public MethodSecurityExpressionHandler methodSecurityExpressionHandler(){
+        DefaultMethodSecurityExpressionHandler expressionHandler = new DefaultMethodSecurityExpressionHandler();
+        expressionHandler.setPermissionEvaluator(globalPermissionEvaluator);
+        return expressionHandler;
+    }
+    ```
+- 針對原本AOP的替換 ⭐⭐⭐⭐⭐
+    - 原本我的自製AOP是 `RequirePermission` ➝ 針對PermissionCode做檢查。
+    - 但為了因應RBAC及PreAuthorize系統，我改成 `PreAuthorize("hasRole('ADMIN')")` 形式。
+- 針對純傳入ID執行動作 ⭐⭐⭐⭐⭐⭐⭐
+    - 有些動作只需要我們傳入ID即可執行，如 : 商品的刪除。
+    ```java=
+    @DeleteMapping("/prod/{merchandiseId}")
+    public Response<MerchandiseResponse> deleteById(@PathVariable String merchandiseId){
+        return merchandiseService.deleteById(merchandiseId);
+    }
+    ```
+    - 此時就可以利用PreAuthorize針對資源性的檢查 : 
+    ```java=
+    // 加入hasPermission
+    @PreAuthorize("hasPermission(#merchandiseId, 'MERCHANDISE', 'DELETE')")
+    @DeleteMapping("/prod/{merchandiseId}")
+    public Response<MerchandiseResponse> deleteById(@PathVariable String merchandiseId){
+        return merchandiseService.deleteById(merchandiseId);
+    }
+    ```
+    - 上述針對ID的應用是屬於「會經過FilterChain」，因此Authentication會驗證的。
+    - 若是像 `getCategoryById` 這種看類別功能，訪客也能請求的路徑，一般會permitAll，因此不符合PreAuthorize的概念，也自然不能使用。
+- 業務邏輯簡化 ⭐⭐⭐⭐⭐⭐
+    - 由於PreAuthorize可以幫我們攔截非資源訪問許可，因此Service層就不需要再針對isOwner、isAdmin等去判斷，也可以移除掉！
+    - 原本我的deleteUser Service長這樣 : 
+    ```java=
+    @Transactional
+    public Response<UserResponse> delete(String account, DeleteUserRequest deleteUserRequest){
+        String id = deleteUserRequest.getId();
+
+        User operator = userDao.findByAccount(account).orElseThrow(() -> new AuthException(4001, "UserTokenError"));
+        User target = userDao.findById(id).orElseThrow(() -> ResourcesException.of(ErrorCode.USER_NOT_FOUND));
+
+        boolean isSelf = operator.getId().equals(target.getId());
+        boolean hasDeletePermission = rolePermissionDao.existsByRoleAndPermissionId(operator.getRole(), PermissionCode.DELETE_USER.getCode());
+        if (!(isSelf || hasDeletePermission)) return new Response<>("1", "InValidOperation", null);
+
+        UserResponse userResponse = new UserResponse(target);
+
+        cartDao.findByUser(target).ifPresent(cartDao::delete);
+        userDao.delete(target);
+        return isSelf ? new Response<>("0", "Successfully delete " + target.getUsername() + " By " + target.getUsername(), userResponse)
+                : new Response<>("0", "Successfully delete " + target.getUsername() + " By ADMIN", userResponse);
+    }
+    ```
+    - 而現在可以改成這樣 : 
+    ```java=
+    @Transactional
+    public Response<UserResponse> delete(DeleteUserRequest deleteUserRequest) {
+        User target = userDao.findById(deleteUserRequest.getId())
+                .orElseThrow(() -> ResourcesException.of(ErrorCode.USER_NOT_FOUND));
+        
+        cartDao.findByUser(target).ifPresent(cartDao::delete);
+        userDao.delete(target);
+
+        return new Response<>("0", "Successfully delete " + target.getUsername(), new UserResponse(target));
+    }    
+    ```
