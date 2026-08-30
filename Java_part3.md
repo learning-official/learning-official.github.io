@@ -1880,3 +1880,39 @@
         return new Response<>("0", "Successfully delete " + target.getUsername(), new UserResponse(target));
     }    
     ```
+
+## Day242
+#### 學習重點 : Spring Security - FilterChain的Exception Handling
+- 權限不足、Token過期的處理 ⭐⭐⭐⭐
+    - 在處理Schedule身分問題之前，先要來處理回傳給前端的Http code。
+    - 由於FilterChain是 **處理進入Controller前** 的請求，因此攔截的Exception自然會寫在Spring Config當中（而不會用在RestControllerAdvice），且不是用自訂的業務邏輯回傳碼，而是用Http status code。
+    - 我們一般會實作兩個介面
+        - `AuthenticationEntryPoint` : 負責驗證時的例外，像是token過期、未帶token去打受保護之API...。
+        - `AccessDeniedHandler` : 負責被PreAuthrorize擋下來的請求，因此是跟「權限、角色」相關。
+- 實作於SecurityConfig ⭐⭐⭐⭐
+    - 我們可以直接用lambda實作接在httpSecurity的設置形式中 : 
+    ```java=
+    httpSecurity
+        .csrf(//...)
+        .sessionManagement(//...)
+        .authorizeHttpRequests(//...)
+        .addFilterBefore(//...)
+        .exceptionHandling(ex -> ex
+            // 401: token過期 or 未登入去打受保護API
+            .authenticationEntryPoint((request, response, authException) -> {
+                response.setContentType("application/json;charset=UTF-8");
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.getWriter().write("{\"code\":401,\"message\":\"未登入或憑證已失效，請重新登入\"}");
+            })
+            // 403: 權限不足（被 @PreAuthorize 擋下）
+            .accessDeniedHandler((request, response, accessDeniedException) -> {
+                response.setContentType("application/json;charset=UTF-8");
+                response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                response.getWriter().write("{\"code\":403,\"message\":\"權限不足，拒絕訪問\"}");
+            })
+        );
+    ```
+- 實際成果 : ⭐⭐
+    - 透過上述exceptionHandling的實作，加上原本設計的PreAuthorize，可以看到以下成果 : 
+    ![image](https://hackmd.io/_uploads/rJEp0q-Ofx.png)
+    - 當我想新增商品分類類別時，由於不是ADMIN，因此被PreAuthorize擋下來，並藉由accessDeniedHandler回傳前端。
