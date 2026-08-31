@@ -1916,3 +1916,57 @@
     - 透過上述exceptionHandling的實作，加上原本設計的PreAuthorize，可以看到以下成果 : 
     ![image](https://hackmd.io/_uploads/rJEp0q-Ofx.png)
     - 當我想新增商品分類類別時，由於不是ADMIN，因此被PreAuthorize擋下來，並藉由accessDeniedHandler回傳前端。
+
+## Day243
+#### 學習重點 : Schedule與Security的AOP身分Bypass
+- 為何Schedule要Bypass ⭐⭐⭐
+    - 雖然在現在的架構設計都是在Controller中加上PreAuthorize來驗證請求，但業務邏輯Service方法**本身也可以加上PreAuthorize**，此時我們設計的排程系統可能就會受到影響。
+    - 因此我們有幾種方式能夠讓排程方法不受影響執行某些功能 : 
+        - 設計**函式多載**，讓排程跟使用者針對某函式走不同路線，但結果相同。
+        - 在排程加入SecurityContextHolder，給予身分，使其通過權限檢查。
+        - 設計AOP，針對需要的**排程系統加上註解**，設定身分參數，來通過權限檢查。
+    - 一般來說，只在Controller設計PreAuthorize的專案，是不是需要設計這種bypass的，然而當架構越來越複雜時，可能就需要函式多載或者藉由設計身分給予功能來通過檢查。
+- 設計AOP ⭐⭐⭐⭐
+    - 我們可以針對Schedule的方法來設計一個注入系統身分的切面。
+    - 而首先要先設計註解 : 
+    ```java=
+    @Target(value = ElementType.METHOD)
+    @Retention(RetentionPolicy.RUNTIME)
+    public @interface RunAsSystem {
+        String role() default "ROLE_ADMIN";
+    }
+    ```
+    - 接著可以來處理放入身分的切面設計 : 
+    ```java=
+    @Aspect
+    @Order(1)
+    @Component
+    public class RunAsSystemAspect {
+    
+        // 限定只在task中生效
+        @Around("@annotation(org.system.aop.annotation.RunAsSystem) && execution(public * org.system.task.*.*(..))")
+        public Object grantedSystemIdentification(ProceedingJoinPoint joinPoint) throws Throwable {
+            
+            MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
+            RunAsSystem asSystem = methodSignature.getMethod().getAnnotation(RunAsSystem.class);
+            String role = asSystem.role();
+
+            SecurityContextHolder.getContext().setAuthentication(
+                new UsernamePasswordAuthenticationToken(
+                        "SYSTEM_SCHEDULER",
+                        null,
+                        // 給予指定的role
+                        List.of(new SimpleGrantedAuthority(role))
+                )
+            );
+
+            try {
+                return joinPoint.proceed();
+            }finally {
+                // 無論執行結果，最後一定要清空Context
+                SecurityContextHolder.clearContext();
+            }
+        }
+    }
+    ```
+    - 由於排程執行緒本身就與請求的執行緒錯開，所以不用擔心Context混用問題，但最後一定要clearContext，以避免下次請求帶有上次身分的問題！
