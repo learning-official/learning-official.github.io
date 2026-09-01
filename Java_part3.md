@@ -1970,3 +1970,60 @@
     }
     ```
     - 由於排程執行緒本身就與請求的執行緒錯開，所以不用擔心Context混用問題，但最後一定要clearContext，以避免下次請求帶有上次身分的問題！
+ 
+## Day244
+#### 學習重點 : Spring Security - 如何解決非同步執行緒的身分問題？
+- 關於身分的傳遞 ⭐⭐⭐⭐
+    - 在Spring中，當我們帶著Http請求進入Spring中，會有一條執行緒處理該請求，然而當該請求的業務邏輯中有「非同步執行緒處理其餘事項」的時候就會導致「身分丟失」！
+    - 我們可以利用兩種方式來解決 : 
+        - 直接把User當參數傳入
+        - 利用 `DelegatingSecurityContextAsyncTaskExecutor` 來完成SecurityContext包裝。
+    - 儘管第一種方式就很好了，但在某些情況還是會用到第二種方式。
+- 何謂DelegatingSecurityContextAsyncTaskExecutor？ ⭐⭐⭐⭐⭐
+    - 簡單來說，它可以將呼叫Async標註之方法的身分塞入子執行緒的SecurityContextHolder中。
+    - 而我們會透過設置AsyncConfig時，以其作為實作TaskExecutor的Bean。
+        - 預設是一般的ThreadPoolTaskExecutor，但我們用 `DelegatingSecurityContextAsyncTaskExecutor` 再包裝一層。
+    ```java=
+    @EnableAsync
+    @Configuration
+    public class AsyncConfig {
+
+        @Bean("taskExecutor")
+        public Executor taskExecutor(){
+
+            ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
+            taskExecutor.setCorePoolSize(5);       
+            taskExecutor.setMaxPoolSize(10);       
+            taskExecutor.setQueueCapacity(100);    
+            taskExecutor.setThreadNamePrefix("async-task-");
+            taskExecutor.initialize();
+            
+            return new DelegatingSecurityContextAsyncTaskExecutor(taskExecutor);
+        }
+    }
+    ```
+- 簡易實作 ⭐⭐⭐⭐
+    - 我這邊用原本「建立訂單產生通知」的業務邏輯來開刀！
+    - 原本的流程 : 送出訂單 ➝ 產生訂單 ➝ 送出訂單成立通知
+    - 現在我將產生訂單後的「通知」作為子執行緒分出去，並使用SecurityContextHolder取出user。
+    ```java=
+    // 這邊使用taskExecutor的Bean作為處理非同步執行緒的動作
+    @Async("taskExecutor")
+    public void sendNotifications(String msg, Boolean is_read, Instant create_time){
+        notificationDao.save(Notification.builder()
+                        .user((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal())
+                        .msg(msg)
+                        .is_read(is_read)
+                        .create_time(create_time)
+                        .build());
+    }
+    ```
+    - 當我送出訂單時呼叫sendNotifications會走以下流程 : 
+        - 1️⃣ 發現 `@Async` 將該方法包裝成Runnable
+        - 2️⃣ 送交 `DelegatingSecurityContextAsyncTaskExecutor` 取出原執行緒的身分並送交TaskExecutor執行。
+        - 3️⃣ 進入子執行緒，利用SecurityContextHolder取出身分後執行業務邏輯。
+    - 如果要取得任務回傳的話，則得使用 `CompletableFuture` 來包裝。
+    - 然而一般通知可以使用 `void` 即可。
+- 實測結果 : ⭐⭐
+    - 成功寄送通知到正確的user身上。
+    ![image](https://hackmd.io/_uploads/rJm3rrNdGx.png)
