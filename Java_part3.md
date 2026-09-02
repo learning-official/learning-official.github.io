@@ -2027,3 +2027,29 @@
 - 實測結果 : ⭐⭐
     - 成功寄送通知到正確的user身上。
     ![image](https://hackmd.io/_uploads/rJm3rrNdGx.png)
+
+## Day245
+#### 學習重點 : Spring Schedule、Security兩大元件心得總結
+- 關於Schedule 🌟🌟🌟🌟🌟🌟🌟
+    - 在前半個月，我花了一些時間在處理ScheduleExecutorService的原生設計，並延伸到了Spring中所設計的TaskScheduler、TaskExecutor介面。
+        - TaskScheduler : 排程介面，預設時作為 `ThreadPoolTaskSchduler`。
+        - TaskExecutor : 執行緒介面，接收、執行任務，常用實作 `ThreadPoolTaskExecutor`。
+    - 進入到 `@Scheduled` 後，則是注重在ScheduleConfig的設置，並以「訂單未付款」為題，將Schedule搭配Service來自動取消（以cron排程）。
+        - 其中有運用到Join Fetch預載入的功能！使取消訂單後在restock商品時，不會產生 `N+1` 問題！
+        - 最後收尾則是利用Optimistic Lock、ShedLock來處理資源鎖與排程鎖的問題！
+        - **基本上三層架構就是** : ShedLock處理重複排程執行問題 ➝ Join Fetch + Batch批次處理訂單 ➝ Optimistic Lock處理資源Version問題。
+    - 接著處理了關於Transactional與Scheduled的標註分離，讓單批次資源rollback不影響到其他批次。
+    - 最後自己再設計一個Notification，當訂單取消後可以寄送通知到使用者通知欄中！
+- 關於Security 🌟🌟🌟🌟🌟🌟🌟
+    - 其實Security真的超乎我的想像，生態系有夠龐大，我感覺再學30天也學不完，可能要專門找老師來，不然很難自己學會owo。 
+    - 首先我先比對自己設計的 `切面` 與 Spring Security的設計範圍 : 
+        - 自己設計的切面驗證 : 在Contoller前後設下檢查，但格式不統一，且每種驗證需要自己設計。
+        - Spring Security : 請求進入Spring後即攔截，經歷FilterChain（WebSecurity），MethodSecurity，直到出Controller都有防線，每種驗證都有介面與實作，**擴充性跟統一性高**。
+    - 接著花了些時間在身分的驗證與包裝 `UserDetails`，以及 `Authentication`。
+    - 再來處理了自己的Jwt驗證方式，並理過一次FilterChain的順序。
+    - 最後進入MethodSecurity，這邊其實跟自製AOP很像ww，但格式的設計更加統一，且有處理到資源性問題。
+    - 最後利用MethodSecurity的 `PreAuthorize` 來設計權限過濾！
+        - 其中設計的Evaluator則是將驗證流在業務邏輯外，減少DB查詢次數，**使職責、關注點分離**，降低單元測試複雜度。
+        - 接著加上FilterChain的Exception攔截，抓取Filter層的驗證/權限例外！
+- 心得 🌟🌟🌟🌟🌟🌟🌟
+    - 很高興有一起參與鐵人賽30天的活動，不然平常自己寫筆記都隨便亂寫ww，這次活動讓我重拾過去的熱情，而學習的旅途不會停止，我會繼續完成學Java的系列！
