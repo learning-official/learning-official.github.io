@@ -2053,3 +2053,59 @@
         - 接著加上FilterChain的Exception攔截，抓取Filter層的驗證/權限例外！
 - 心得 🌟🌟🌟🌟🌟🌟🌟
     - 很高興有一起參與鐵人賽30天的活動，不然平常自己寫筆記都隨便亂寫ww，這次活動讓我重拾過去的熱情，而學習的旅途不會停止，我會繼續完成學Java的系列！
+
+## Day246
+#### 學習重點 : 關於購物車 - 設計新增/減少物品數量
+- 前言 ⭐
+    - 從鐵人賽回歸專案設計後，我會把每個實體的功能都盡量完善，把最後的專案part-3收尾！接著就可以來準備朝其他面向、框架學習了！
+- 設計 : 新增/減少物品數量 ⭐⭐⭐⭐
+    - 當物品加入購物車後，我希望能夠在購物車頁面中，設計加減API來直接針對商品做動作。
+    - 由於我們有Security提供的AuthenticationPrincipal，因此不用再做userDao的find動作哩~
+    - 以下是我的設計 : 
+    ```java=
+    // CartController
+    @PutMapping("/item")
+    public Response<CartResponse> changeCartItemQuantity(@AuthenticationPrincipal User user, @RequestBody ChangeCartItemQuantityRequest changeCartItemQuantityRequest){
+        return cartService.changeCartItemQuantity(user, changeCartItemQuantityRequest);
+    }
+    ```
+    ```java=
+    // CartService
+    @Transactional(rollbackFor = Exception.class)
+    public Response<CartResponse> changeCartItemQuantity(User user, ChangeCartItemQuantityRequest changeCartItemQuantityRequest){
+        if (changeCartItemQuantityRequest.getCart_item_id() == null || changeCartItemQuantityRequest.getQuantity() == null) return new Response<CartResponse>("1", "Failed", null);
+        
+        Cart cart = cartDao.findByUser(user).orElseThrow(() -> ResourcesException.of(ErrorCode.CART_NOT_FOUND));
+        CartItem  cartItem = cart.getCartItemList().stream()
+                .filter(ci -> changeCartItemQuantityRequest.getCart_item_id().equals(ci.getId()))
+                .findFirst()
+                .orElseThrow(() -> ResourcesException.of(ErrorCode.CART_ITEM_NOT_FOUND));
+
+        int newQuantity = cartItem.getQuantity() + changeCartItemQuantityRequest.getQuantity();
+
+        if (newQuantity > cartItem.getMerchandise().getStock()) {
+            return new Response<>(CartResponseEnum.OUT_OF_STOCK, new CartResponse(cart));
+        }
+
+        if (newQuantity <= 0) {
+            cart.getCartItemList().remove(cartItem);
+            Cart savedCart = cartDao.save(cart);
+            return new Response<>(CartResponseEnum.SUCCESSFULLY_REMOVED, new CartResponse(savedCart));
+        }
+
+        cartItem.setQuantity(newQuantity);
+        Cart savedCart = cartDao.save(cart);
+        return new Response<>(CartResponseEnum.SUCCESSFULLY_ADD, new CartResponse(savedCart));
+    }
+    ```
+- 關於OSIV與Transactional的那回事 ⭐⭐⭐⭐⭐⭐⭐⭐⭐
+    - 若我們沒有加上 `@Transactional`，則執行完 `cartDao.findByUser` 後，資料庫連線就會斷開，使得後續 `cart.getCartItemList().remove(cartItem);` 會報錯 `LazyInitializationException: : could not initialize proxy - no Session`。
+        - **每次find** 都會經歷一次資料庫連線生命週期（建立、斷開）。
+        - 因此一個方法中可能會多次建立、斷開連線。
+    - 當我們針對一個實體的Lazy成員加載（getter）時，會觸發資料庫查詢，但資料庫連線早早在find完就關閉連線了，因此報錯。
+    - 然而Spring有一個特殊的功能 `OSIV(Open Session in View)`，確保請求開始到結束途中，資料庫都保持連線（Session），因此就算我們不加交易事務註解，也不會報錯。
+    - 然而然而，OSIV在一般企業級專案中，都會 **選擇關閉**，這是因為其十分占用資源！
+    - 因此我們一定得確保 `@Transactional` 有加註在含有Lazy觸發的method上，確保呼叫該method時，**選擇保持連線**。
+- 成果展示 : ⭐
+    - 現在有UI按鈕可以呼叫 `/item` APIㄌ。
+    ![image](https://hackmd.io/_uploads/BkqZkJPuzg.png)
