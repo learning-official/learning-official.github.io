@@ -2109,3 +2109,30 @@
 - 成果展示 : ⭐
     - 現在有UI按鈕可以呼叫 `/item` APIㄌ。
     ![image](https://hackmd.io/_uploads/BkqZkJPuzg.png)
+
+## Day247
+#### 學習重點 : 關於購物車 & 訂單 - 設計清空購物車與取消訂單
+- 清空購物車、取消訂單 ⭐⭐
+    - 功能本身就不多寫了，反正就是那樣，給大家看我的邏輯就好，把重點放在一些設計巧思比較重要owo。
+    - 關於清空購物車 : 
+    ![image](https://hackmd.io/_uploads/HJVPkE_uMl.png)
+    - 關於取消訂單 : 
+    ![image](https://hackmd.io/_uploads/Hke21EOuzl.png)
+    ![image](https://hackmd.io/_uploads/BJJsJNu_zx.png)
+- 巧思 - ResponseEnum介面化、OrderResponseEnum設計 ⭐⭐⭐⭐⭐
+    - 首先是關於Response的多載，在我的Response中，有兩種函式 : 
+        - `Response<T>(String rc, String rm, T data)`
+        - `Response<T>(CartResponseEnum cre, T data)`
+    - 原本只是設計給Cart用，但是我發現Enum可以實作介面，因此我將Response改成 : 
+        - `Response<T>(ResponseEnum re, T data)`
+        - 設計一個ResponseEnum介面 : 
+        ![image](https://hackmd.io/_uploads/HJppgVuuzx.png)
+        - 再由實體ResponseEnum去實作 : 
+        ![image](https://hackmd.io/_uploads/S1MWbNuOfl.png)
+    - 而透過上述的介面，我就可以去寫每個實體的回傳結果拉～
+    - OrderResponseEnum : 
+    ![image](https://hackmd.io/_uploads/ByC4ZEuOfx.png)
+- 成果展示 : ⭐
+    - UI多了「清空購物車」、「刪除訂單」:
+    ![image](https://hackmd.io/_uploads/B1VF-Vu_Mg.png)
+    ![image](https://hackmd.io/_uploads/Hy8FZEO_Mg.png)
