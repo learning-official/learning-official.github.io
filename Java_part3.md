@@ -2136,3 +2136,19 @@
     - UI多了「清空購物車」、「刪除訂單」:
     ![image](https://hackmd.io/_uploads/B1VF-Vu_Mg.png)
     ![image](https://hackmd.io/_uploads/Hy8FZEO_Mg.png)
+
+## Day248
+#### 學習重點 : 關於通知 - 設計已讀
+- 已讀的請求 ⭐⭐⭐⭐⭐⭐⭐
+    - 由於「已讀」屬於針對Notification的「is_read」成員狀態做更新，因此不該使用 `PUT`，而應該使用 `PATCH`。
+    - 讓我來釐清這兩個動作的差異 : 
+        - `PUT` : RequestBody傳入整個DTO資料，少任一欄位，則該欄位變null，因此屬於「**更新整體資料，後端覆蓋掉原本資料**」。
+        - `PATCH` : 針對資源的單一成員狀態、資料做修改，RequestBody只針對單一欄位傳入，因此屬於「更新部分資料，**後端取出原有資料並對成員做更新**」。
+    - 回到已讀的狀態更新，由於前端對已讀API的動作設計為PATCH，因此我們只需要針對某一id資源設計一個URL : `/notification/{id}/read`。
+    - 並利用 `hasPermission檢查資源訪問可行性`，最後後端取出資料做部分更新即可！
+- 程式邏輯與成果展示 ⭐
+    - 以下是Service邏輯（ResponseCode暫時先不寫ww，因為想不到） : 
+    ![image](https://hackmd.io/_uploads/BJO48hYuzl.png)
+    - 以下是成果展示 : 
+    ![image](https://hackmd.io/_uploads/B1XwLnYOGg.png)
+    - 可以點擊「標記已讀」來執行PATCH動作。
