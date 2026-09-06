@@ -2186,3 +2186,66 @@
     }
     ```
     - 實際實作留給明天吧！
+
+## Day250
+#### 學習重點 : 關於分類 - 設計總目錄.1
+- 實作總目錄搜尋邏輯 ⭐⭐⭐⭐⭐⭐
+    - 先來看看CategoryResponse的設計 : 
+    ```java=
+    public class CategoryResponse {
+
+        private String id;
+        private String name;
+        private String parent_id;
+
+        // 當children為empty或者null時，則序列化時排除它不顯示
+        @JsonInclude(JsonInclude.Include.NON_EMPTY)
+        private List<CategoryResponse> children;
+
+        public CategoryResponse(Category c){
+            this.id = c.getId();
+            this.name = c.getName();
+            this.parent_id = c.getParent() == null ? null : c.getParent().getId();
+            this.children = new ArrayList<>();
+        }
+    }
+    ```
+    - 底下根據昨天設計的目錄邏輯設計 : 
+    ```java=
+    private Response<List<CategoryResponse>> getCategoryTree(){
+        List<Category> categoryList = categoryDao.findAll();
+        Map<String, CategoryResponse> categoryResponseMap = new HashMap<>();
+        // 根據分類填入id對照其Response
+        categoryList.forEach(c -> categoryResponseMap.put(c.getId(), new CategoryResponse(c)));
+
+        // 最後回傳的是rootList，存取根目錄的Response
+        // 由於每個Response都帶有children，因此可以藉由children展開後續結構
+        List<CategoryResponse> rootList = new ArrayList<>();
+        for (Category c : categoryList){
+
+            // 透過Map取得當前Response
+            CategoryResponse currentDTO = categoryResponseMap.get(c.getId());
+            String parentId = currentDTO.getParent_id();
+
+            // 若當前DTO為根分類，則放入rootList
+            if (parentId == null){
+                rootList.add(currentDTO);
+            } else {
+                // 若不為根分類，則將其放入其父母的childrenList中
+                CategoryResponse parentDTO = categoryResponseMap.get(parentId);
+                if (parentDTO != null) {
+                    parentDTO.getChildren().add(currentDTO);
+                } else {
+                    // 避免有孤立分類出現(分類有parentId，但沒出現在Map中)，因此直接加到根分類
+                    rootList.add(currentDTO);
+                }
+            }
+        }
+
+        return new Response<>("0", "Successfully", rootList);
+    }
+    ```
+- 結合API呈現 ⭐⭐
+    - 由於gerTree這種屬於「**非驗證型端點**」，因此先在SecurityConfig放行（permit）該端點。
+    - 再來結合前端可以呈現如下圖 : 
+    ![image](https://hackmd.io/_uploads/S1n_IXouGl.png)
