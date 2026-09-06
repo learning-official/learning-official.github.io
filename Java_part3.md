@@ -2152,3 +2152,37 @@
     - 以下是成果展示 : 
     ![image](https://hackmd.io/_uploads/B1XwLnYOGg.png)
     - 可以點擊「標記已讀」來執行PATCH動作。
+
+## Day249
+#### 學習重點 : 關於分類 - 設計總目錄
+- 總分類目錄的結構 ⭐⭐⭐⭐⭐
+    - 在實作這個端點前，要先知道分類結構應該怎麼看。
+    - 每個分類各有 : `id`、`name`、`parent`、`children`
+        - 這邊利用分類Response存取 `String id, String name, String parent_id, List<CategoryResponse> children`。
+    - 當我們想要搜尋整體分類結構要分成底下的步驟 : 
+        - 1️⃣ JPA搜尋所有Category ➝ 取得 `allCategories`。
+        - 2️⃣ 遍歷allCategories，組裝成 `Map<String, CategoryResponse>`，String是分類id。
+        - 3️⃣ 建立空列表 `List<CategoryResponse> rootLis`，存所有根分類。
+        - 4️⃣ 遍歷allCategories，利用當前分類id丟進Map取得Rsponse。
+            - 若分類parent是null，則存進rootList。
+            - 若分類有parent，則找到parent並 `parentResponse.getChildren.add(分類)`。
+        - 5️⃣ 最後回傳 rootList。
+    - 實際結構如下 : 
+    ```json=
+    {
+        "rc" : "...",
+        "rm" : "...",
+        "data" : [
+            {
+                "id" : "...",
+                "name" : "...",
+                "parent_id" : null,
+                "children" : [
+                    {...},{...}
+                ]
+            },
+            {...}
+        ]
+    }
+    ```
+    - 實際實作留給明天吧！
