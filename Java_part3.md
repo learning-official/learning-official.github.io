@@ -2162,7 +2162,7 @@
     - 當我們想要搜尋整體分類結構要分成底下的步驟 : 
         - 1️⃣ JPA搜尋所有Category ➝ 取得 `allCategories`。
         - 2️⃣ 遍歷allCategories，組裝成 `Map<String, CategoryResponse>`，String是分類id。
-        - 3️⃣ 建立空列表 `List<CategoryResponse> rootLis`，存所有根分類。
+        - 3️⃣ 建立空列表 `List<CategoryResponse> rootList`，存所有根分類。
         - 4️⃣ 遍歷allCategories，利用當前分類id丟進Map取得Rsponse。
             - 若分類parent是null，則存進rootList。
             - 若分類有parent，則找到parent並 `parentResponse.getChildren.add(分類)`。
