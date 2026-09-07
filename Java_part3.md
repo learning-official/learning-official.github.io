@@ -2248,4 +2248,4 @@
 - 結合API呈現 ⭐⭐
     - 由於gerTree這種屬於「**非驗證型端點**」，因此先在SecurityConfig放行（permit）該端點。
     - 再來結合前端可以呈現如下圖 : 
-    ![image](https://hackmd.io/_uploads/S1n_IXouGl.png)
+    ![](https://hackmd.io/_uploads/HkDMu6odze.png)
