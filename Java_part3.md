@@ -2249,3 +2249,20 @@
     - 由於gerTree這種屬於「**非驗證型端點**」，因此先在SecurityConfig放行（permit）該端點。
     - 再來結合前端可以呈現如下圖 : 
     ![](https://hackmd.io/_uploads/HkDMu6odze.png)
+
+## Day251
+#### 學習重點 : 關於使用者 - 設計個人頁面讀取/更新寫入.1
+- Patch與DTO的問題 ⭐⭐⭐
+    - 我們知道Patch是應用於「**部分欄位**」的覆蓋動作，不像PUT是直接覆蓋「整個」Entity後寫入。
+    - 而使用者資料更新時，可以更改像是 : `nickname`、`phone_number`、`email`...，這些都會變成一個DTO類別 : `UserUpdateRequest`。
+    - 但當我傳入一個DTO類別又使用**PATCH**動作時，DTO中的欄位就可能有null出現。
+    - 因此我在設計DTO搭配PATCH的流程時，必須要先找出哪些欄位是null並過濾，到時候saveDB時才能避免寫入null！ 
+- BeanWrapper、PropertyDescriptor ⭐⭐⭐⭐⭐⭐
+    - 在寫個人資料更新時，由於PATCH與DTO的搭配，使得我需要先找出null欄位並過濾，此時就需要利用到小節標題的兩個類別 : `BeanWrapper、PropertyDescriptor`。
+    - BeanWrapper : 作為Spring底層設計的**Bean包裝類別**。
+        - 內部會包含一組「**Bean內部的屬性資料**」，也就是metadata！
+        - 而BeanWrapper同時也可以**根據屬性名稱**去取得該屬性的type、value等。
+    - PropertyDescriptor : 剛剛說的 **屬性資料**，就是存在PropertyDescriptor中。
+        - 因此Bean內部的每個屬性都會變成PropertyDescriptor物件，其中包含屬性的name、type，以及屬性在Bean中的getter、setter方法。
+    - 透過上述兩者的介紹，可以知道其實BeanWrapper以及PropertyDescriptor就是幫我 **做完反射的工作**，我們就不需要再去自己寫Field、Method來取得屬性資料了。
+    - 接著我們就只需要抓到Bean的屬性陣列後，找出每個屬性的value，確認是否為null，並做標記，就可以達到在saveDB之前過濾null的動作啦~
