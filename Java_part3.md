@@ -2266,3 +2266,40 @@
         - 因此Bean內部的每個屬性都會變成PropertyDescriptor物件，其中包含屬性的name、type，以及屬性在Bean中的getter、setter方法。
     - 透過上述兩者的介紹，可以知道其實BeanWrapper以及PropertyDescriptor就是幫我 **做完反射的工作**，我們就不需要再去自己寫Field、Method來取得屬性資料了。
     - 接著我們就只需要抓到Bean的屬性陣列後，找出每個屬性的value，確認是否為null，並做標記，就可以達到在saveDB之前過濾null的動作啦~
+
+## Day252
+#### 學習重點 : 關於使用者 - 設計個人頁面讀取/更新寫入.2
+- BeanUtils的複製方式 ⭐⭐⭐⭐⭐
+    - 一般的BeanUtils.copyProperties，接收source objetc、target object，複製前者的屬性並對應到後者。而第三個參數（忽略欄位陣列）可以選擇是否填入。
+    - 我們就可以自行設計一個String陣列，其中放入我們要「忽略的欄位」，也就是選擇不複製哪些欄位到目標物件中。
+    - 這時就會用到昨天所構思的「**找出哪些為null的欄位**」，接著把null欄位名稱存成一個Array，並丟進BeanUtils.copProperties的第三個參數當中。
+- 設計 `getNullPropertyValues`
+    - 首先當然是先將srouce物件存成BeanWrapper物件，接著遍歷其中的 `PropertyDescriptor[]`，檢查每個屬性資料的values是否為null，是的話則存進最終String array當中。
+    ```java=
+    private String[] getNullPropertyValues(Object source){
+        BeanWrapper beanWrapper = new BeanWrapperImpl(source);
+        PropertyDescriptor[] pds = beanWrapper.getPropertyDescriptors();
+
+        Set<String> nullSet = new HashSet<>();
+        for (PropertyDescriptor pd : pds){
+            Object src = beanWrapper.getPropertyValue(pd.getName());
+            if (src==null || (src instanceof String str && str.trim().isEmpty())) nullSet.add(pd.getName());
+        }
+
+        return nullSet.toArray(new String[0]);
+    }
+    ```
+- 搭配Service、Controller、UI作呈現 ⭐⭐⭐⭐
+    - 接著Service設計一個處理取得個人頁面的method : 
+    ```java=
+    @Transactional(rollbackFor = Exception.class)
+    public Response<UserResponse> updateUserProfile(User user, UserUpdateProfileRequest userUpdateProfileRequest){
+        // 由於Authentication驗證的user不在當前事務當中，因此還是得打一次DB去確認為最新user
+        User userDB = userDao.findById(user.getId()).orElseThrow(() -> ResourcesException.of(ErrorCode.USER_NOT_FOUND));
+        BeanUtils.copyProperties(userUpdateProfileRequest, userDB, getNullPropertyValues(userUpdateProfileRequest));
+        User saved = userDao.save(userDB);
+        return new Response<>("0", "Successfully updated user's profile", new UserResponse(saved));
+    }
+    ```
+    - 前端可呈現為下方模樣 : 
+    ![image](https://hackmd.io/_uploads/BkZA7HCOGx.png)
