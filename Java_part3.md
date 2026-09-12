@@ -2322,3 +2322,16 @@
     - 所以設計下來可以長這樣 : 
     ![image](https://hackmd.io/_uploads/Skrl1sZKGe.png)
     - 而在JPA查詢時，我們就得善用Query，來客製化SQL查詢語句！就交由明天來研究吧！
+
+## Day255
+#### 學習重點 : 關於使用者 - 管理員/賣家後台設計Service結合前端UI
+- Query設計 ⭐⭐⭐
+    - 由於在設計面板時，需要搜尋「待送貨訂單、營業總額...」等需要客製化SQL的動作，但由於我對SQL沒有很熟，所以請AI幫我了一下下w。
+    - 而Query有一個需要注意的是 :  COALESCE、SUM的搭配。
+    ```sql=
+    COALESCE(SUM(o.quantity * m.price), 0.0)
+    ```
+    - 上面這段在定義的就是遍歷所有order中的quantity以及其merchandise的價格，並做乘積，那如果沒有找到，就會使用預設值"0.0"。
+- 實作JPQL ⭐⭐⭐
+    - 透過上述的兩個動作可以實現下列JPQL : 
+    ![image](https://hackmd.io/_uploads/SJP-FyXFzx.png)
