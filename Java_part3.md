@@ -2334,4 +2334,5 @@
     - 上面這段在定義的就是遍歷所有order中的quantity以及其merchandise的價格，並做乘積，那如果沒有找到，就會使用預設值"0.0"。
 - 實作JPQL ⭐⭐⭐
     - 透過上述的兩個動作可以實現下列JPQL : 
-    ![image](https://hackmd.io/_uploads/SJP-FyXFzx.png)
+    ![image](https://hackmd.io/_uploads/SJHXoJQKGe.png)
+    
