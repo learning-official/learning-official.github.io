@@ -2336,3 +2336,15 @@
     - 透過上述的兩個動作可以實現下列JPQL : 
     ![螢幕擷取畫面 2026-09-12 225943](https://hackmd.io/_uploads/r1XRGx7YGg.png)
     
+## Day256
+#### 學習重點 : 關於使用者 - 管理員/賣家後台設計Service結合前端UI
+- 如何設計Service連接Controller？ ⭐⭐⭐⭐
+    - 由於我設計了兩種DTO形式（Admin、Seller），因此在Controller設計getDashboard時，一個做PreAuthorize驗證ROLE_ADMIN，另一邊接收User直接進Service（因為人人都可以是Seller）。
+    - 因此Service的getDashboard會有兩個形式，Dao也要有兩種版本 : ADMIN取得全域資訊、Seller取得區域資訊，因此Seller需要加一個 `WHERE user = :user...`，或者使用約定大於配置的函式聲明方式，加上 `AndOwner..(User user)`。
+- Service設計 ⭐⭐⭐
+    - 利用DTO加上 `@Builder`，可以更好的建立DTO。
+    ![image](https://hackmd.io/_uploads/H1roQVEYfg.png)
+    ![image](https://hackmd.io/_uploads/SJjn7NNYfx.png)
+- UI設計 ⭐⭐
+    - 這邊就請AI幫我結合兩種API形式的UI
+    ![image](https://hackmd.io/_uploads/B1dE44EFGx.png)
