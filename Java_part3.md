@@ -2348,3 +2348,60 @@
 - UI設計 ⭐⭐
     - 這邊就請AI幫我結合兩種API形式的UI
     ![image](https://hackmd.io/_uploads/B1dE44EFGx.png)
+
+## Day257
+#### 學習重點 : 關於DTO - 使用mapStruct來轉換資料.1
+- 關於MapStruct ⭐⭐⭐⭐⭐
+    - 先說它與 `BeanWrppaer、PropertyDescriptor` 的差異 : 
+        - BeanWrapper與PropertyDescriptor組合 : **使用Reflection**，不斷在 **Runtime時期** 取得Field資訊。
+        - MapStruct : **在Compile時期**，根據Objects（source/target）之間的getter/setter做Mapping，可以自行設定ignore來忽略敏感資訊，防護資安。
+        - 可以看出MapStruct省下了反射的動作，讓DTO與Entity之間轉換速度大增。
+        - 且由於是在Compile時期，因此型別問題會直接報錯。
+    - 它是一個Interface，而mapStruct會根據我們設定的Mapper annotation來自動生成一個 `XXXMapperImpl` 的實作類別，也是透過這樣的方式做映射。
+- 實際操作MapStruct ⭐⭐⭐
+    - 在這邊要注意的點是 : `MapStruct與Lombok` 的協同關係。
+    - 由於MapStruct需要使用getter/setter，因此若有使用lombok的 `@Getter/@Setter` 註解，則需要讓maven配置時，將lombok置於mapstruct上面搶先啟動，同時還需要有lombok與MapStruct的橋接器。
+    ```xml=
+    <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.13.0</version>
+        <configuration>
+            <source>${java.version}</source>
+            <target>${java.version}</target>
+            <annotationProcessorPaths>
+                <path>
+                    <groupId>org.projectlombok</groupId>
+                    <artifactId>lombok</artifactId>
+                    <version>${lombok.version}</version>
+                </path>
+                <path>
+                    <groupId>org.projectlombok</groupId>
+                    <artifactId>lombok-mapstruct-binding</artifactId>
+                    <version>${lombok-mapstruct-binding.version}</version>
+                </path>
+                <path>
+                    <groupId>org.mapstruct</groupId>
+                    <artifactId>mapstruct-processor</artifactId>
+                    <version>${org.mapstruct.version}</version>
+                </path>
+            </annotationProcessorPaths>
+        </configuration>
+    </plugin>
+    ```
+    - 除了plugin的設定，dependency也要引入mapStruct : 
+    ```xml=
+   <dependency>
+        <groupId>org.mapstruct</groupId>
+        <artifactId>mapstruct</artifactId>
+        <version>${org.mapstruct.version}</version>
+    </dependency>
+    ```
+    - properties也要設定好version : 
+    ```xml=
+    <properties>
+        <!-- ...省略... -->
+        <org.mapstruct.version>1.6.3</org.mapstruct.version>
+        <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
+    </properties>
+    ```
