@@ -2413,10 +2413,10 @@
     - 接著可以設計method接收source與target，其中target要加上　`@MappingTarget` 讓實作檔產生時，使用其setter來設定。
     - 若沒有加上註解，則mapStruct將其視為source並new出新的entity設定後回傳。
     - 而我們也可以利用 `@Mapping` 來設定ignore欄位，以下是完整Interface架構 : 
-    ![image](https://hackmd.io/_uploads/SyaStLIYzg.png)
+    ![image](https://hackmd.io/_uploads/ry9wqILYfl.png)
     - 而前往自動產生的實作檔如下 : 
-    ![image](https://hackmd.io/_uploads/H1VdY88Kzx.png)
+    ![image](https://hackmd.io/_uploads/HJ1O9IIKGx.png)
     - 由於目前的UpdateRequest並沒有password等資訊，因此生成時，不會採取Mapping註解的動作（但Mapping還是加上去比較符合正確資安意識）。
 - 應用於Service ⭐⭐
     - 接著就可以替換原本的BeanWrapper寫法啦～
-    ![image](https://hackmd.io/_uploads/SJqRFU8Kfl.png)
+    ![image](https://hackmd.io/_uploads/rkQd9ILFMe.png)
