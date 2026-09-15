@@ -2405,3 +2405,18 @@
         <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
     </properties>
     ```
+
+## Day258
+#### 學習重點 : 關於DTO - 使用mapStruct來轉換資料.2
+- 實際設計Interface ⭐⭐⭐⭐⭐⭐
+    - 我們可以透過加註 `@Mapper(componentModel = MappingConstants.ComponentModel.SPRING)` 來設計一個轉換DTO的Bean（因為設定ComponentModel為Spring，所以產生實作檔時會自動加上`@Component`）
+    - 接著可以設計method接收source與target，其中target要加上　`@MappingTarget` 讓實作檔產生時，使用其setter來設定。
+    - 若沒有加上註解，則mapStruct將其視為source並new出新的entity設定後回傳。
+    - 而我們也可以利用 `@Mapping` 來設定ignore欄位，以下是完整Interface架構 : 
+    ![image](https://hackmd.io/_uploads/SyaStLIYzg.png)
+    - 而前往自動產生的實作檔如下 : 
+    ![image](https://hackmd.io/_uploads/H1VdY88Kzx.png)
+    - 由於目前的UpdateRequest並沒有password等資訊，因此生成時，不會採取Mapping註解的動作（但Mapping還是加上去比較符合正確資安意識）。
+- 應用於Service ⭐⭐
+    - 接著就可以替換原本的BeanWrapper寫法啦～
+    ![image](https://hackmd.io/_uploads/SJqRFU8Kfl.png)
