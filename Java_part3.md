@@ -2420,3 +2420,18 @@
 - 應用於Service ⭐⭐
     - 接著就可以替換原本的BeanWrapper寫法啦～
     ![image](https://hackmd.io/_uploads/rkQd9ILFMe.png)
+
+## Day259
+#### 學習重點 : 關於商品 - 套用mapStruct用於編輯商品資訊
+- 設計端點 ⭐⭐⭐⭐⭐
+    - 首先先來設計 `[PATCH] /prod/{merchandiseId}`，透過該端點我們可以編輯商品的資訊 : `name、price、stock、description`。
+    - 因此我們可以透過mapStruct加註 `nullProperty...IGNORE` 來忽略null欄位！
+    - 但這邊要注意的是 : 使用primitive type，像是float、int等，就算前端沒填入，也**會被Java自動填入** `0.0f`、`0`，因此我們應該要包裝成 `Float、Integer` 來**避免沒填入卻被歸零的風險**。
+    - 而在Controller則是需要先針對merchandiseId與User做驗證，確認該使用者是否能訪問資源。
+- 實際實作 ⭐⭐
+    - 底下是邏輯 : 
+    ![image](https://hackmd.io/_uploads/rJKMejwtfe.png)
+    ![image](https://hackmd.io/_uploads/HJcXeswKMl.png)
+    ![image](https://hackmd.io/_uploads/Sy54xiDFze.png)
+    - 再來是成果展示 : 
+    ![image](https://hackmd.io/_uploads/BklLeoPFMl.png)
