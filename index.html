@@ -2298,9 +2298,7 @@
           const section = document.createElement('section');
           section.id = `tab-${p.key}`;
           section.className = 'editor-section';
-          if (isJava) {
-            section.style.maxWidth = '95%';
-          }
+          section.style.maxWidth = '95%';
           
           section.innerHTML = `
             <h2><i class="fa-solid fa-file-code" style="color: var(--accent-color);"></i> ${lang} 學習歷程（${p.label}）</h2>
