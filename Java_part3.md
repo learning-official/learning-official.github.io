@@ -2435,3 +2435,12 @@
     ![image](https://hackmd.io/_uploads/Sy54xiDFze.png)
     - 再來是成果展示 : 
     ![image](https://hackmd.io/_uploads/BklLeoPFMl.png)
+
+## Day260
+#### 學習重點 : Swagger API建立
+- Swagger API是甚麼？ ⭐⭐⭐
+    - 簡單來說Swagger就是整合了專案中的api端點，變成一個文檔，供其他人使用，並提供路徑參數、RequestBody等設定以及範例。
+    - 底下是我引入Swagger API dependency以及實際成果的圖 : 
+    ![image](https://hackmd.io/_uploads/rJAEnbYKzx.png)
+    - 我有順便更改了一些API路徑，使其更符合RESTful API的風格！
+    - 由於今天比較忙，明天再來詳細探究這個東西吧！
