@@ -2444,3 +2444,16 @@
     ![image](https://hackmd.io/_uploads/rJAEnbYKzx.png)
     - 我有順便更改了一些API路徑，使其更符合RESTful API的風格！
     - 由於今天比較忙，明天再來詳細探究這個東西吧！
+
+## Day261
+#### 學習重點 : Swagger API的authorize問題與解決
+- 如何設置Swagger的authorize？ ⭐⭐⭐⭐
+    - 一般情況下，Swagger在測試我們提供的API端點時，不會特別特別在Headers放Authorization的JWT token，因此這需要我們自行設定。
+    - 我們會加入一個 `OpenApiConfig`，其中設定關於驗證的機制方案。
+    ![image](https://hackmd.io/_uploads/SyYIcA9YMg.png)
+    - 先向OpenAPI註冊一個components，標題為 `BearerAuth` 的驗證機制。接著指定要使用SecurityScheme.HTTP的方式，格式為JWT，且前綴會加上bearer。
+    - 透過上述指定，到時候放入token就會根據 `Authorization: <scheme> <credentials>` 的方式去做存取！
+- 成果展示 : ⭐⭐⭐ 
+    - 在Swagger UI就會看到以下成果啦～
+    ![image](https://hackmd.io/_uploads/SJmujC9KMx.png)
+    ![image](https://hackmd.io/_uploads/SyAij0ctGl.png)
