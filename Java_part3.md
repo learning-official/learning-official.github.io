@@ -2457,3 +2457,17 @@
     - 在Swagger UI就會看到以下成果啦～
     ![image](https://hackmd.io/_uploads/SJmujC9KMx.png)
     ![image](https://hackmd.io/_uploads/SyAij0ctGl.png)
+
+## Day262
+#### 學習重點 : Response Code Enum最後完善、邏輯完善
+- ResponseEnum的完善 ⭐⭐⭐⭐
+    - 由於原本的Response Code大多都是Hardcod在Service當中，現在我將其完全抽離出來完整橫跨專案整體。
+    - 同時在Response類中設計 
+    ```java=
+    public static <T> Response<T> of(ResponseEnum re);
+    public static <T> Response<T> of(ResponseEnum re, T data)
+    ```
+    - 利用static factory可以多載建構式，我順便留了null data的設計，擴充Response code的靈活性！
+- 邏輯完善 ⭐
+    - 一般來說賣家不能夠新增自己的商品進自己的購物車，因此我在Service中加入了id檢查！
+        - 原本是想針對「賣家不能新增自己的商品進自己的購物車」這件事作為PreAuthorize做資源攔截，但後來想想這樣要重複查兩次DB，且逾越PreAuthorize的職責（權限控制），因此選擇放入Service。
