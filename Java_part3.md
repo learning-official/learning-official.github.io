@@ -2471,3 +2471,15 @@
 - 邏輯完善 ⭐
     - 一般來說賣家不能夠新增自己的商品進自己的購物車，因此我在Service中加入了id檢查！
         - 原本是想針對「賣家不能新增自己的商品進自己的購物車」這件事作為PreAuthorize做資源攔截，但後來想想這樣要重複查兩次DB，且逾越PreAuthorize的職責（權限控制），因此選擇放入Service。
+
+## Day263
+#### 學習重點 : 針對超賣問題新增Retryable、樂觀鎖例外處理
+- 超賣解決 ⭐⭐⭐⭐⭐⭐
+    - 當兩個使用者同時下訂同個商品，可能會發生 **資源不足** 的問題，此時我們可以利用樂觀鎖加註Version的方式，看誰先搶到更新商品的Version，並讓沒搶到鎖的使用者rollback。
+    - 但上述方式需要修正的情況在於 ➞ **當資源充足時**，兩人同時下訂，也會遇到Version衝突，此時某一方 **會被迫rollback**！但明明資源充足，應該兩人都可以順利下訂。
+    - 因此我們需要設計retry，讓訂單送出時遇到的version問題不會因為一次衝突就馬上rollback，此時可以用Spring提供的 `@Retryable` 來設定嘗試次數...。
+    ![image](https://hackmd.io/_uploads/r10tXWpYGx.png)
+    - ❗注意 : createOrder的Version衝突例外是在 **整個事務結束後要commit上去時發生**，因此若Retry是內層而Transactional是外層，則commit時，Retry不會接收到例外，因此 **要注意階層關係**，所以我將Retry移至Controller層面做為外層處理。
+- 樂觀鎖例外處理 ⭐
+    - 我也在ExceptionHandler中攔截了 `ObjectOptimisticLockingFailureException`，讓衝突發生且Retry過後，可以正確回應前端的狀態！
+    ![image](https://hackmd.io/_uploads/rJyZr-6Kfl.png)
