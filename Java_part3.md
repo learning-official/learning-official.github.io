@@ -2483,3 +2483,32 @@
 - 樂觀鎖例外處理 ⭐
     - 我也在ExceptionHandler中攔截了 `ObjectOptimisticLockingFailureException`，讓衝突發生且Retry過後，可以正確回應前端的狀態！
     ![image](https://hackmd.io/_uploads/rJyZr-6Kfl.png)
+
+## Day264
+#### 學習重點 : 例外處理 - ErrorCodeEnum新增、ErrorCode介面化
+- ErrorCode的修正與介面化 ⭐⭐⭐⭐⭐⭐⭐
+    - 原本我的ErrorCode設計成像下方這樣 : 
+    ```java=
+    public enum ErrorCode{
+        USER_NOT_FOUND(3001, "UserNotFoundError"),
+        // ...
+    }
+    ```
+    - 接收code、msg，但這就造成我需要在ExceptionHandler中比對各種errorCode再回傳不同HttpStatus，造成冗長的if-else語法，像下面那樣 : 
+    ![image](https://hackmd.io/_uploads/HkV0oKAKzl.png)
+    - 因此我設計將ErrorCode抽離成介面 : 
+    ```java=
+    public interface ErrorCode{
+        String getErrorMessage();
+        HttpStatus gethttpStatus();
+    }
+    ```
+    - 並設計不同Exception的enum去實作ErrorCode，如 : `BusinessLogicErrorCode`、`ResourceErrorCode`，在其中定義例外訊息、狀態碼 : 
+    ![image](https://hackmd.io/_uploads/r1vYjFAFzl.png)
+    - 接著在Exception類別中建構式接收其enum，最後就可以在Handler輕鬆攔截並處理啦~
+    ![image](https://hackmd.io/_uploads/HJIF2K0KGg.png)
+    - 設計private方法接收ErrorCode介面並取得資訊
+    ![image](https://hackmd.io/_uploads/Bkwr2t0KMl.png)
+    - 攔截處理即可傳入「**有實作ErroCode介面**」的ExceptionEnum！
+    ![image](https://hackmd.io/_uploads/H1g_3YCYzg.png)
+    - 後來發現這種抽離功能，固定邏輯，只針對資訊上的更新就是所謂的OCP原則！
