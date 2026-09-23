@@ -2541,3 +2541,17 @@
 - 未來的想法 : ⭐
     - 我想，在進入Part-4最終收尾之前，我可能會先嘗試不同方向的學習路途，像是Oracle的題目練習(像OCA、OCP等)、Minecraft插件的設計(想做很久了owo)
     - 在最後100天嘗試換條路走走看！我應該會留30天來進行Part-4！
+
+## Day266
+#### 學習重點 : Part-4專案前的規劃、Oracle的考題練習
+- 規劃 ⭐⭐⭐
+    - 最近接了一些事務所以有點小忙.w.，所以在Part-4前我想分成兩個階段，一個是Oracle的題庫練習，另外一個是Minecraft插件的設計！
+    - 而我應該會優先把Oracle題目練習好，這樣之後就可以去考證照了w，雖然證照聽說很花錢，但我還是打算試試看，畢竟學Java這麼久感覺得有個憑證才有成果。
+    - 再來是Minecraft的插件，我打算花一個月來好好學好怎麼做插件，可能會做出一個小功能出來owo？
+- Oracle題目分類 ⭐⭐⭐
+    - 今天先不練習，因為我想去找書來看看(雖然很討厭看書w，我稍微整理了有關Oracle公司所提供的考試項目 : 
+        - **Foundation** : 基本Java語法
+        - Asscociate/SCJA/**OCA** : 物件導向語法、API使用（像String、ArrayList、Exception等）
+        - Professional/SCJP/**OCP** : 至於OCP則會傾向Collection、Stream API、Concurrent還有Lambda、泛型等比較進階的設計。 
+        - Expert/SCJE/**OCE** : 這個就超進階了，比較偏系統架構的設計，先不考慮w。
+    - 我應該會從Foundation/OCA開始，基本上都使以Java SE為主，而題型會因版本不同而有差異，但我應該都會練練。
