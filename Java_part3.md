@@ -2555,3 +2555,18 @@
         - Professional/SCJP/**OCP** : 至於OCP則會傾向Collection、Stream API、Concurrent還有Lambda、泛型等比較進階的設計。 
         - Expert/SCJE/**OCE** : 這個就超進階了，比較偏系統架構的設計，先不考慮w。
     - 我應該會從Foundation/OCA開始，基本上都使以Java SE為主，而題型會因版本不同而有差異，但我應該都會練練。
+
+## Day267
+#### 學習重點 : Java Foundation架構
+- Java 簡介與環境基礎 ⭐⭐⭐
+  - **核心觀念**：JVM / JRE / JDK 的關係與跨平台原理（Write Once, Run Anywhere）。
+  - **程式結構**：基本 `main` 方法入口與編譯指令 (`javac` 轉為 Bytecode，`java` 執行)。
+- 資料型別與運算子 ⭐⭐⭐⭐
+  - **八大基本型別 (Primitive Types)**：`byte`, `short`, `int`, `long`, `float`, `double`, `boolean`, `char`。
+  - **運算與輸入**：算術/邏輯運算子優先權、`String` 基本操作，以及用 `Scanner` 讀取輸入。
+- 流程控制 ⭐⭐⭐⭐
+  - **條件判斷**：`if-else`、三元運算子、`switch-case`。
+  - **迴圈結構**：`for`、`while`、`do-while` 走訪，以及 `break` / `continue` 的跳轉控制。
+- 物件導向與基本 API (OOP & Basic APIs) ⭐⭐⭐⭐⭐
+  - **OOP 核心**：類別 (Class)、物件 (Object)、建構子 (Constructor) 與封裝 (`private`)。
+  - **資料集合與例外**：一維/多維陣列、`ArrayList` 基礎操作，以及 `try-catch` 例外處理。
