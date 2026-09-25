@@ -2574,7 +2574,8 @@
 ## Day268
 #### 學習重點 : Java Foundation測驗.1
 - 測驗內容 ⭐⭐
-    - 今天我去Oracle官網看Foundations第一課的課程，想說先試試看測驗，再看需不需要從頭開始學，結果好像蠻輕鬆就拿100分的ww，但我還是整理了一些比較好玩的問題 : 
+    - 今天我去Oracle官網看Foundations第一課Explorer的課程，想說先試試看測驗，再看需不需要從頭開始學，結果好像蠻輕鬆就拿100分的ww，但我還是整理了一些比較好玩的問題 : 
+    ![image](https://hackmd.io/_uploads/BkYRwGNqfe.png)
 - switch的fall-through與case
     - 雖然都有概念了拉，但還是再複習一下！
     - 若多個case導向的statement相同，其實可以合併為 : 
