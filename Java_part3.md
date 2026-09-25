@@ -2562,7 +2562,7 @@
   - **核心觀念**：JVM / JRE / JDK 的關係與跨平台原理（Write Once, Run Anywhere）。
   - **程式結構**：基本 `main` 方法入口與編譯指令 (`javac` 轉為 Bytecode，`java` 執行)。
 - 資料型別與運算子 ⭐⭐⭐⭐
-  - **八大基本型別 (Primitive Types)**：`byte`, `short`, `int`, `long`, `float`, `double`, `boolean`, `char`。
+  - **八大基本型別Primitive Types**：`byte`, `short`, `int`, `long`, `float`, `double`, `boolean`, `char`。
   - **運算與輸入**：算術/邏輯運算子優先權、`String` 基本操作，以及用 `Scanner` 讀取輸入。
 - 流程控制 ⭐⭐⭐⭐
   - **條件判斷**：`if-else`、三元運算子、`switch-case`。
