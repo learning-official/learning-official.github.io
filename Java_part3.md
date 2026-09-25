@@ -2570,3 +2570,33 @@
 - 物件導向與基本 API (OOP & Basic APIs) ⭐⭐⭐⭐⭐
   - **OOP 核心**：類別 (Class)、物件 (Object)、建構子 (Constructor) 與封裝 (`private`)。
   - **資料集合與例外**：一維/多維陣列、`ArrayList` 基礎操作，以及 `try-catch` 例外處理。
+
+## Day268
+#### 學習重點 : Java Foundation測驗.1
+- 測驗內容 ⭐⭐
+    - 今天我去Oracle官網看Foundations第一課的課程，想說先試試看測驗，再看需不需要從頭開始學，結果好像蠻輕鬆就拿100分的ww，但我還是整理了一些比較好玩的問題 : 
+- switch的fall-through與case
+    - 雖然都有概念了拉，但還是再複習一下！
+    - 若多個case導向的statement相同，其實可以合併為 : 
+    ```java=
+    switch(variable){
+        case 1: case 2: case 3:
+            // ... statement
+            break;
+    }
+    ```
+    - 當然也可以用Java 14引進的 `case 1,2,3 ->` 的語句，但先用傳統的即可！
+    - 而要注意的是switch的fall-through問題 : 
+    ```java=
+    switch(variable){
+        case 1:
+            // ...statement
+        case 2:
+            // ...statement
+            break;
+    }
+    ```
+    - 若case 1符合，但沒有break，則執行完statement，後續會繼續執行且「**無視條件**」，因此case 2也會被執行。
+- 關於Helidon、OCI ⭐⭐
+    - 我看Oracle一直推自己家的Java微服務框架Helidon，但生態系好像蠻小的ww
+    - 關於跟OCI（Oracle Cloud Infrastructure）可能要再研究一下ouo。
