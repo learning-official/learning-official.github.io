@@ -2601,3 +2601,18 @@
 - 關於Helidon、OCI ⭐⭐
     - 我看Oracle一直推自己家的Java微服務框架Helidon，但生態系好像蠻小的ww
     - 關於跟OCI（Oracle Cloud Infrastructure）可能要再研究一下ouo。
+
+## Day269
+#### 學習重點 : Java Foundation測驗.2
+- 測驗心得 ⭐⭐⭐⭐
+    - 今天正式來測驗Java的Foundation題目，一樣是從Oracle官網上找的，也成功取得100分的成績，感覺我可以來挑戰看看OCA、OCP的題目ww，只是好像要買模擬題，所以我還在想。
+    ![image](https://hackmd.io/_uploads/r1EcwLB5fe.png)
+    - 今天一樣是遇到switch的時候有特別思考了一下，要注意的點在於 : 
+    ```java=
+    switch(variable){
+        case 1 -> // ..statement
+        case 2 -> // ..statement
+    }
+    ```
+    - 如果沒加上default，則為一般陳述句，不回傳，通過編譯。
+    - 然而若為Expression，將switch的結果回傳，則需要加上default確保switch有回傳值！
