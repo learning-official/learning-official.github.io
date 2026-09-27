@@ -2644,11 +2644,12 @@
         - JVM執行程式時，會以子介面優先父介面的條件，因此會選擇使用B的default。
     - 「當C實作的兩個介面沒有繼承關係，但兩介面又有同名函式呢？」
         - 此時JVM會報錯，因為不知道要用or覆寫哪個介面！
-- 關於Java針對primitive type未初始化時的動作？ ⭐⭐⭐⭐⭐
+- 關於Java針對成員變數的primitive type未初始化時的動作？ ⭐⭐⭐⭐⭐
     - boolean : 未初始化時，則 **分配false** 給它。
     - numeric type : **一律給予0**（包含char）
     - object : 給予null
     - 所以當我 `boolean[] ba = new boolean[10]` 時，ba中的每個元素由於未被初始化，因此一律設為false！
+    - 注意⚠️，若是在「**函式**」中未初始區域變數，不會像成員變數那樣被Java自動設定預設值，而是直接編譯報錯！
 - 關於main進入口的設定 ⭐⭐⭐
     - 若我寫 `public static Long main(String[] args){return 10L;}`
     - 上述是 **Compile正確，Runtime錯誤** : 
