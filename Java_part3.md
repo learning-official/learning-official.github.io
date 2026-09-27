@@ -2616,3 +2616,41 @@
     ```
     - 如果沒加上default，則為一般陳述句，不回傳，通過編譯。
     - 然而若為Expression，將switch的結果回傳，則需要加上default確保switch有回傳值！
+
+## Day270
+#### 學習重點 : Java OCA測驗.1
+- 測驗整理 ⭐⭐⭐⭐
+    - 今天到enthuware的網站上找到了一些OCA模擬題來寫（測驗10題，有錯一題owo），應該之後會來買他們官網的模擬題集合來寫寫看！
+    - 而我今天有遇到幾個不錯的題目 : 
+- 關於interface的繼承與default問題 ⭐⭐
+    - 底下是範例 : 
+    ```java=
+    public interface A{
+        public default String getAddress(){
+            return "...";
+        }
+    }
+
+    public interface B extends A{
+        public default String getAddress(){
+            return "。。。";
+        }
+    }
+
+    public class C implements A, B{}
+    ```
+    - 當我有兩個介面，且B繼承A時，C類別是可以同時實作AB父子介面的！
+    - 「當我用C物件呼叫getAddress會怎樣？」
+        - JVM執行程式時，會以子介面優先父介面的條件，因此會選擇使用B的default。
+    - 「當C實作的兩個介面沒有繼承關係，但兩介面又有同名函式呢？」
+        - 此時JVM會報錯，因為不知道要用or覆寫哪個介面！
+- 關於Java針對primitive type未初始化時的動作？ ⭐⭐⭐⭐⭐
+    - boolean : 未初始化時，則 **分配false** 給它。
+    - numeric type : **一律給予0**（包含char）
+    - object : 給予null
+    - 所以當我 `boolean[] ba = new boolean[10]` 時，ba中的每個元素由於未被初始化，因此一律設為false！
+- 關於main進入口的設定 ⭐⭐⭐
+    - 若我寫 `public static Long main(String[] args){return 10L;}`
+    - 上述是 **Compile正確，Runtime錯誤** : 
+        - 在編譯時期，main只會被當作一般靜態函式做處理，因此不會出錯。
+        - 但到了Runtime，JVM會因為找不到 `public static void main(String[] args)` 的函式進入口，而噴出 `NoSuchMethodError` 的錯誤。
