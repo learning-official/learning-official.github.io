@@ -2655,3 +2655,49 @@
     - 上述是 **Compile正確，Runtime錯誤** : 
         - 在編譯時期，main只會被當作一般靜態函式做處理，因此不會出錯。
         - 但到了Runtime，JVM會因為找不到 `public static void main(String[] args)` 的函式進入口，而噴出 `NoSuchMethodError` 的錯誤。
+
+## Day271
+#### 學習重點 : Java OCP測驗.1
+- 前言 ⭐⭐
+    - 我已經買了Enthuware的1Z0-829（Java SE 17）模擬題owo，但我不知道貼上來當作筆記會不會有著作權的問題？ 所以我只會分享我的錯題修正重點，其他就不放上來了！
+    - 雖然買了之後才發現好像應該要買Java 21 or 25的w，但買了就買了，先練完再說！
+- 測驗修正重點 : ⭐⭐⭐⭐⭐⭐⭐⭐
+    - Record的特性 : 
+        - record類別會生成 `final類別、final成員、getter、覆寫Object`，注意getter生成時不會加上 `get`，而是直接以成員名稱命名。
+        - **不允許自行宣告實例成員**，但可以設計「實例函式、靜態成員、靜態函式」
+        - 允許實作介面，但不允許繼承(因為其本身就繼承Record類別)
+        - 不能被宣告為抽象Record : `abstract record ...`
+        - 可以設計建構子，但建構子參數列為空，只能用於校驗參數 : 
+        ```java=
+        public Student {
+            if (id < 0) throw new IllegalArgumentException();
+        }
+        ```
+    - String的分行 : 
+        - 假設我有個String長這樣 : 
+        ```java=
+        String name = """
+                      小八\
+                      你好w"""
+        ```
+        - 其中的 `\` 代表的是 `不要換行`，因此實際print出來會長這樣 : `小八你好w`
+    - Lambda的簡寫形式、型別問題 : 
+        - 所謂的簡寫就是簡化了「**return、{}、分號**」的動作，如下方展示 : 
+        ```java=
+        // 兩者都可以
+        Predicate<Data> p1 = (d) -> {return d.value>3;};
+        Predicate<Data> p2 = (d) -> d.value>3;
+        ```
+        - 當然可以將 `(d)` 改成 `(Data d)` 這樣的宣告方式，但就是有點多餘拉w。
+    - 繼承中，轉型後的成員指向 : 
+        - 總結來說，轉型後 : 
+            - 呼叫 **實例變數、靜態變數 & 方法** 以「當前型別」為主 -> Reference Type -> 編譯時即決定，不具備多型。
+            - 呼叫 **實例方法** 則以「原本型別」為主 -> Actual Object Type -> 經轉型後，還是可以找到源頭，因此為多型特徵。
+        - 假設 C繼承B，B繼承A，三者都有i成員跟getI函式，但i的值都不同。
+        ```java=
+        A o1 = new C();
+        B o2 = (B) o1;
+
+        System.out.print(o1.getI()); // o1原本是C，因此呼叫C的getI
+        System.out.print(o2.i); // o2.i以當前型別B為主，因此找B的i
+        ```
