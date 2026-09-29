@@ -2701,3 +2701,32 @@
         System.out.print(o1.getI()); // o1原本是C，因此呼叫C的getI
         System.out.print(o2.i); // o2.i以當前型別B為主，因此找B的i
         ```
+
+## Day272
+#### 學習重點 : Java OCP測驗.2
+- 測驗重點 🌟🌟🌟
+    - Record的精簡建構子 ⭐⭐
+        - 當我們在record中寫下 : 
+        ```java=
+        public record Test(int id, String name){
+            public Test{
+                this.id = id;
+            }
+        }
+        ```
+        - 是不合法的，因為record自動生成的final class檔中，就會使用對final int id賦值，若手動賦值就會違反final特性。
+        - 但倒是可以這樣做 : 
+        ```java=
+        public record Test(int id, String name){
+            public Test{
+                id = id+1;
+            }
+        }
+        ```
+        - 因為這只是對「參數」做修改，而不是本身的成員變數。
+    - Stream API的intermediate跟terminal ⭐⭐⭐⭐
+        - 當我們利用Stream去做事情時，通常會有intermediate及terminal兩種形式。
+        - 用直觀的說法 : 
+            - `map、filter` 等會回傳Stream，等待繼續操作的屬於intermediate。
+            - forEach、toList、findFirst等為terminal（可能是動作、回傳其他型別如Optional、List等）。
+        - 而intermediate通常接收function類型的參數，如Function、Predicate等，這種屬於Lazy Evaluation，只會等到terminal敘述才會被觸發。
