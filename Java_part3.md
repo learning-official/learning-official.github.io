@@ -2730,3 +2730,23 @@
             - `map、filter` 等會回傳Stream，等待繼續操作的屬於intermediate。
             - forEach、toList、findFirst等為terminal（可能是動作、回傳其他型別如Optional、List等）。
         - 而intermediate通常接收function類型的參數，如Function、Predicate等，這種屬於Lazy Evaluation，只會等到terminal敘述才會被觸發。
+
+## Day273
+#### 學習重點 : Java OCP測驗.3
+- 測驗內容 🌟🌟🌟🌟🌟🌟
+    - Java Module的由來 ⭐⭐⭐
+        - 在Java 9之前，程式碼通常只會被簡單的分類（ClassPath單純根據路徑找檔案），因此當我宣告public class時，其他檔案都可以access，但有時候我們只希望該類別只被某些類別使用。
+        - 在Java 9後，提供了一個module-info.java的模組配置檔，舉例來說 : 我在 `com.example` 路徑下加了module-info.java，等於告訴 `com.example` 底下的所有資料夾的所有類別都屬於「同個模組」。
+        - 我可以在module-info.java中使用 :
+            - `requires` : 告訴其他要使用 `com.example` 模組的人，使用這個模組依賴甚麼套件。
+            - `exports` : 來允許哪些Package可被外界看到。
+        - 如果我沒有exports某個類別，就算該類別是public，也只供模組內部使用，這就是所謂的「**強封裝Strong Encapsulation**」
+    - Java ClassPath與Module的關係 ⭐⭐⭐⭐
+        - 一般我們寫的Spring專案其實都還是維持ClassPath這種無模組化的專案，因為Spring使用大量的「反射機制」，這剛好是模組化專案預設不允許的。
+        - 因此Java為了因應多數ClassPath架構，當執行ClassPath架構專案時，會自動將整個專案包裝成一個「Unnamed Module」，做個樣子ww。
+    - Sealed Class ⭐⭐⭐⭐⭐⭐⭐
+        - 而說到Sealed Class的特性，就剛好跟Module有關，在Sealed Class有個規定 : 
+            - 當我有 `public sealed class A permits p2.B{}` 以及 `public final class B extends p1.A{}`，A在package1，B在package2，屬於不同Package，此時就會報錯。
+            - 原因在於sealed class所允許的類別繼承動作，只能夠在 : 同模組 or 同package（Unnamed Module）
+            - 因此我們可以將 **B移到p1**，或者，將 **A跟B作為同一module做打包**，因為Sealed允許同一module內不同package做繼承。
+            - 而B也只能以 `sealed`、`non-sealed`、`final` 之間做修飾。
