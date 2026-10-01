@@ -2750,3 +2750,31 @@
             - 原因在於sealed class所允許的類別繼承動作，只能夠在 : 同模組 or 同package（Unnamed Module）
             - 因此我們可以將 **B移到p1**，或者，將 **A跟B作為同一module做打包**，因為Sealed允許同一module內不同package做繼承。
             - 而B也只能以 `sealed`、`non-sealed`、`final` 之間做修飾。
+
+## Day274
+#### 學習重點 : Java OCP測驗.4
+- 測驗內容 🌟🌟🌟🌟🌟
+    - 關於模組 ⭐⭐⭐⭐⭐
+        - 當我原本有一個 `.jar` 檔，供其他公司的人使用，現在我希望將其模組化，但又希望最小化影響他人的程度，我該怎麼做？
+        - 假設我有專案有 `org.example.bonds` 以及 `org.example.bonds.analytics` 的 packages。
+        ```java=
+        module bondanalytics{
+            exports org.example.bonds;
+            exports org.example.bonds.analytics; 
+        }
+        ```
+        - 在Java的世界中，儘管analytics屬於bonds，但還是會被認為是不同的package，因此若我只exports bonds，而沒有bonds.analytics，則其他公司依賴analytics的部分就會出錯！
+        #### 關於opens那回事
+        - 由於exports不允許反射機制，因此我不能引入模組內類別後，在執行期存取private成員。
+        - 這時候就出現了 opens 的語法，意即「開放該package給大家使用反射機制」。
+        ```java=
+        module myModule{
+            // 開放給特定模組用
+            opens org.example.bonds to spring.core;
+        }
+        ```
+        - 當然也可以直接
+        ```java=
+        open module my.module {
+        }
+        ```
