@@ -2778,3 +2778,30 @@
         open module my.module {
         }
         ```
+
+## Day275
+#### 學習重點 : Java OCP測驗.5
+- 測驗內容 🌟🌟🌟🌟🌟
+    - 關於執行緒 ⭐⭐⭐⭐⭐⭐⭐
+        - 先看底下程式碼 : 
+        ```java=
+        class A extends Thread {
+            boolean flag = true;
+            public void run() {
+                System.out.println("Starting loop");
+                while( flag ){ };   
+                System.out.println("Ending loop");
+            }
+        }
+        public class TestClass {
+            public static void main(String args[]) throws Exception {
+                A a = new A();
+                a.start();
+                Thread.sleep(1000);
+
+            }
+        }
+        ```
+        - 若我在TestClass利用 `a.flag = false` 想要嘗試跳脫執行緒迴圈，會發現執行緒沒有立即反應這個變化！
+        - 這是因為「Happens-Before」特性，由於JVM將 `flag=true` 的 **狀態快取** 到了CPU暫存器中，因此就算在TestClass修改 `a.flag`，也不會讓 `a.flag` 立即更新使其跳出迴圈。我們可以針對flag加上 `volatile` 的修飾詞，使其每次被讀取都是直接從主記憶體抓取，**確保資源可見性**！
+        - 因此能夠中斷無限迴圈的方式只有 `a.interrupt()`，但要注意在 `sleep`、`wait`、`join` 使用interrupt會出現InterruptedException。
