@@ -2800,6 +2800,20 @@
                 Thread.sleep(1000);
 
             }
+
+## Day276
+#### 學習重點 : Java OCP測驗.6
+- 測驗內容 🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟
+    - Stream 之 IntStream ⭐⭐⭐⭐⭐⭐⭐
+        - IntStream的出現是為了解決 `Stream<Integer>` 的問題。
+        - 由於 `Stream<T>` 是處理物件，因此 `一組primitive` 在做運算時都要先做 boxing（`Integer.valueOf`） 再做 unboxing（`intValue`），十分耗資源，而且不支援「**計算**」。
+        - 因此Java提供了 `IntStream` 直接使用原生 `int[]` 做存取運算，更加有效率！
+        - 而基本的用法如下 : 
+            - `.range(startInclusive, endExclusive)` : 接收兩個參數，以step為1生成一組int，開頭包含 & 結尾不包含，回傳IntStream。
+            - `.rangeClosed(startInclusive, endInclusive)` : 跟上一個類似，但結尾包含。
+            - `.concat(intStream1, intStream2)` : 將兩個int陣列做結合**標記**，**屬於Lazy Evaluation**，等到Terminal才真正意義上將其結合。
+            - `.parallel()` : 他會將IntStream以 **多執行緒** 下去做後續動作，因此當我Terminal使用 `.forEach` 時，會分配不同執行緒對IntStream元素做操作（但不保證元素處理順序），其本質上還是IntStream，只是內部在操作時會以多執行緒下去做。
+        - 而最後我們還是可以使用 `.boxed` 將其包裝成 `Stream<Integer>`，做後續動作！（裝箱後就失去了IntStream設計的精隨，因此放到最後在裝箱才是真理！）
         }
         ```
         - 若我在TestClass利用 `a.flag = false` 想要嘗試跳脫執行緒迴圈，會發現執行緒沒有立即反應這個變化！
