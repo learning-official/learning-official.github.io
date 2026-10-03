@@ -2800,6 +2800,11 @@
                 Thread.sleep(1000);
 
             }
+        }
+        ```
+        - 若我在TestClass利用 `a.flag = false` 想要嘗試跳脫執行緒迴圈，會發現執行緒沒有立即反應這個變化！
+        - 這是因為「Happens-Before」特性，由於JVM將 `flag=true` 的 **狀態快取** 到了CPU暫存器中，因此就算在TestClass修改 `a.flag`，也不會讓 `a.flag` 立即更新使其跳出迴圈。我們可以針對flag加上 `volatile` 的修飾詞，使其每次被讀取都是直接從主記憶體抓取，**確保資源可見性**！
+        - 因此能夠中斷無限迴圈的方式只有 `a.interrupt()`，但要注意在 `sleep`、`wait`、`join` 使用interrupt會出現InterruptedException。
 
 ## Day276
 #### 學習重點 : Java OCP測驗.6
@@ -2814,8 +2819,3 @@
             - `.concat(intStream1, intStream2)` : 將兩個int陣列做結合**標記**，**屬於Lazy Evaluation**，等到Terminal才真正意義上將其結合。
             - `.parallel()` : 他會將IntStream以 **多執行緒** 下去做後續動作，因此當我Terminal使用 `.forEach` 時，會分配不同執行緒對IntStream元素做操作（但不保證元素處理順序），其本質上還是IntStream，只是內部在操作時會以多執行緒下去做。
         - 而最後我們還是可以使用 `.boxed` 將其包裝成 `Stream<Integer>`，做後續動作！（裝箱後就失去了IntStream設計的精隨，因此放到最後在裝箱才是真理！）
-        }
-        ```
-        - 若我在TestClass利用 `a.flag = false` 想要嘗試跳脫執行緒迴圈，會發現執行緒沒有立即反應這個變化！
-        - 這是因為「Happens-Before」特性，由於JVM將 `flag=true` 的 **狀態快取** 到了CPU暫存器中，因此就算在TestClass修改 `a.flag`，也不會讓 `a.flag` 立即更新使其跳出迴圈。我們可以針對flag加上 `volatile` 的修飾詞，使其每次被讀取都是直接從主記憶體抓取，**確保資源可見性**！
-        - 因此能夠中斷無限迴圈的方式只有 `a.interrupt()`，但要注意在 `sleep`、`wait`、`join` 使用interrupt會出現InterruptedException。
