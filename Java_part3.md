@@ -2819,3 +2819,28 @@
             - `.concat(intStream1, intStream2)` : 將兩個int陣列做結合**標記**，**屬於Lazy Evaluation**，等到Terminal才真正意義上將其結合。
             - `.parallel()` : 他會將IntStream以 **多執行緒** 下去做後續動作，因此當我Terminal使用 `.forEach` 時，會分配不同執行緒對IntStream元素做操作（但不保證元素處理順序），其本質上還是IntStream，只是內部在操作時會以多執行緒下去做。
         - 而最後我們還是可以使用 `.boxed` 將其包裝成 `Stream<Integer>`，做後續動作！（裝箱後就失去了IntStream設計的精隨，因此放到最後在裝箱才是真理！）
+
+## Day277
+#### 學習重點 : Java OCP測驗.7
+- 測驗內容 🌟🌟🌟🌟🌟🌟
+    - Interface的定義 ⭐⭐⭐⭐
+        - 當我們把 `enum`、`class`、`interface` 塞在interface中，都會隱性加上 `public static`，而若是一般的 `method`，則是加上 `public`。
+        - 若要實作method，則需要加上 `default`。而若在method前加上static、private，則必須實作。
+        - Interace也能使用變數，會隱性加上 `private static final`，因此宣告時必須賦值。
+    - Sealed class巢狀類別的繼承 ⭐⭐⭐⭐⭐⭐
+        - 先看以下程式 : 
+        ```java=
+        public class Test{
+            sealed class A{}
+            
+            non-sealed class B extends A{}
+        }
+        ```
+        - 你會發現，A沒有加上permits關鍵字欸！這是因為當A類別發現沒有permits時，且又在Test內部時，會去看看有沒有同樣在Test類別中的 `final`、`non-sealed`、`sealed` 類別繼承A，若沒有則會報錯，若有則可以通過！
+    - Java的指令應該如何下？ ⭐⭐⭐⭐⭐
+        - 一般來說Java的指令格式如右 : `java [設定選項] [目標] [主程式入口] [參數]`。
+        - 而就一般classpath來說，我們會用 `java -cp . Main` 做為一般的指令，意思是 「根據目前所在資料夾(.)，執行Main」，若Main有用到任何其他class，則從 `.` 開始找。
+        - 而我也可以用 `;`(Windows)、`:`(macOS、Linux) 來加大目標範圍，像是 `java -cp .;org.example.jar Main` which means 「掃過目前資料夾以及org.example.jar的class檔」
+    - 模組化的封包在一般classpath專案使用會有差嗎？ ⭐⭐⭐⭐⭐⭐⭐
+        - Q : 像剛剛的org.example.jar，如果我丟到一般的classpath專案，會怎麼樣？
+        - A : 其實不會，Java會自動無視模組化專案中的 `module-info.class`，將其視為一般的jar，因此我們也可以使用 `-cp` 直接執行一個模組化專案！
