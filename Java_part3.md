@@ -2844,3 +2844,14 @@
     - 模組化的封包在一般classpath專案使用會有差嗎？ ⭐⭐⭐⭐⭐⭐⭐
         - Q : 像剛剛的org.example.jar，如果我丟到一般的classpath專案，會怎麼樣？
         - A : 其實不會，Java會自動無視模組化專案中的 `module-info.class`，將其視為一般的jar，因此我們也可以使用 `-cp` 直接執行一個模組化專案！
+
+## Day278
+#### 學習重點 : Java OCP測驗.8
+- 測驗內容 🌟🌟🌟🌟
+    - 關於ExecutorService ⭐⭐⭐⭐⭐⭐⭐
+        - 當我們利用 `Executors.newSingleThreadExecutor` 來建立ExecutorService後，我們通常會發送任務，使用 `.submit`，而submit的任務又有幾種 `(Runnable task)`、`(Callable<T> task)`、`(Runnable task, T result)`。
+        - 後兩者回傳值都是 `Future<T>`，前者是 `Future<?>`，而最後一個為何要回傳result呢？
+            - 一般來說是因為 `做回傳標記`、`丟容器交給Runnable修改後再做為result傳出`。
+            - 後者跟Callable還是有稍微不同。Callable通常是在 **內部實例化物件** 做運算後傳出; 而Runnable處理物件再藉著result傳出通常是去修改「**既有**」的物件！
+            - 雖然還有一種可能是 **Runnable比較早誕生**，所以才有這種方法出現w。
+        - 而我們在使用Callable時，有時候也沒有要用到回傳值，像是 `寄信+invokeAll(Collection<Callable<T>>)`，一次寄出大量信件又不希望獲得回傳值，則可以使用 `Callable<Void>` 來接收，當然，其中的實作最後就顯式 `return null`。
