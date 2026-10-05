@@ -2855,3 +2855,5 @@
             - 後者跟Callable還是有稍微不同。Callable通常是在 **內部實例化物件** 做運算後傳出; 而Runnable處理物件再藉著result傳出通常是去修改「**既有**」的物件！
             - 雖然還有一種可能是 **Runnable比較早誕生**，所以才有這種方法出現w。
         - 而我們在使用Callable時，有時候也沒有要用到回傳值，像是 `寄信+invokeAll(Collection<Callable<T>>)`，一次寄出大量信件又不希望獲得回傳值，則可以使用 `Callable<Void>` 來接收，當然，其中的實作最後就顯式 `return null`。
+        - 而 `.submit()` 在提交任務時即在背景執行（Eager Execution，無延遲求值）。
+        - `Future.get()` 呼叫時，會以 Blocking 卡住主執行緒，等待結果，若在子執行緒發生例外，會在呼叫 get() 時被包裝成 ExecutionException 拋出。
