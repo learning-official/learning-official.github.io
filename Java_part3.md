@@ -2857,3 +2857,26 @@
         - 而我們在使用Callable時，有時候也沒有要用到回傳值，像是 `寄信+invokeAll(Collection<Callable<T>>)`，一次寄出大量信件又不希望獲得回傳值，則可以使用 `Callable<Void>` 來接收，當然，其中的實作最後就顯式 `return null`。
         - 而 `.submit()` 在提交任務時即在背景執行（Eager Execution，無延遲求值）。
         - `Future.get()` 呼叫時，會以 Blocking 卡住主執行緒，等待結果，若在子執行緒發生例外，會在呼叫 get() 時被包裝成 ExecutionException 拋出。
+
+## Day279
+#### 學習重點 : Java測驗OCP.9
+- 測驗內容 🌟🌟🌟🌟🌟🌟🌟
+    - 關於StringBuilder ⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐
+        - 記得在Day199的時候，我就有寫到關於String家族的觀念，但沒有練習操作過StringBuilder的方法，所以今天在練習時就錯了ww。
+        - 以下是StringBuilder的常用方法 : 
+            - append、insert的綜合參數 : 通常會接收一個 `CharSequence s`，也就是要新增、插入...的字串，接著還有 `start、end` 是去 **切割**「CharSequence」，以上通常是StringBuilder的參數！
+            - append : 
+                - 基於當前字串，在後方加入字串（CahrSequence s），接著必須給予 `start、end`，一般來說都是 `inclusive to exclusive`。
+                - 使用完後，回傳reference，但若 `start小於0、start大於end、end大於s.length` 則拋出 `IndexOutOfBoundsExecption`。
+                - 範例 : `StringBuilder("0123456789").append("AAAXXX", 1, 4).toString();` --> `0123456789AAX`。
+            - insert : 
+                - 基於當前字串，從index為0做Offset，放入要插入之字串（會放在indexOffset **前** 的位置），接著一樣有start、end是切割要插入之字串。
+                - 使用完後，回傳reference，但若 `start小於0、start大於end、end大於s.length` 則拋出 `IndexOutOfBoundsExecption`。
+                - `Offset小於0或大於整個字串`，則拋出 `StringIndexOutOfBoundsException`。
+                - 範例 : `StringBuilder("0123456789").insert(1, "AAAXXX", 0, 3).toString();` --> `0AAA123456789`。
+            - replace : 
+                - 這邊的start、end則是 **針對主字串本身**，選取一個範圍，替換成我們要的字串。
+                - 範例 : `StringBuilder("0123456789").replace(0, 3, "AAAXX").toString();`，將0~2的位置替換成AAAXX。
+            - substring : 
+                - 回傳String，不會修改原本的StringBuilder，而接收start、end跟replace一樣，是選取範圍，但不做替換，而是 **轉成String後回傳**。
+            - replace跟substring若start跟end有誤，則都拋出 `StringIndexOutOfBoundsException`。
