@@ -2880,3 +2880,21 @@
             - substring : 
                 - 回傳String，不會修改原本的StringBuilder，而接收start、end跟replace一樣，是選取範圍，但不做替換，而是 **轉成String後回傳**。
             - replace跟substring若start跟end有誤，則都拋出 `StringIndexOutOfBoundsException`。
+
+## Day280
+#### 學習重點 : Java OCP測驗.10
+- 測驗內容 🌟🌟🌟🌟🌟🌟🌟
+    - 關於Exception ⭐⭐⭐⭐⭐⭐
+        - 首先要先理解 `System.out.print` 與 `printStackTrace` 的差別
+            - 當我們print出一個例外時，Throwable所覆寫的toString方法是將 `className + message` 印出，因此大概會長這樣 : `exceptionT.MyException: Exception from foo`。
+            - 而使用printStackTrace的話，從定義看 : `a complete chain of the names of the methods called, along with the line numbers, is printed`，表示整個源頭跟中間呼叫層都會跑出來。
+        - 以上是Exception的印出方式，而接下來我遇到了一題是關於 `Exception` 繼承階層上的catch衝突
+            - 當我寫下 : 
+            ```java=
+            try{
+                // ...
+            }catch (IOException || Exception e){
+                // ...
+            }
+            ```
+            - 則會報錯，原因在於IOEception與Exception存在「**繼承關係**」，此時我們應該
