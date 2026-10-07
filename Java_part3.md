@@ -2893,8 +2893,9 @@
             ```java=
             try{
                 // ...
-            }catch (IOException || Exception e){
+            }catch (IOException | Exception e){
                 // ...
             }
             ```
-            - 則會報錯，原因在於IOEception與Exception存在「**繼承關係**」，此時我們應該
+            - 則會報錯，原因在於IOEception與Exception存在「**繼承關係**」，此時我們應該選其一。
+            - 且我們宣告的 `e` 具有final屬性，因此不能重新指派。
