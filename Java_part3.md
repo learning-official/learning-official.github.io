@@ -2916,3 +2916,29 @@
     -  關於instanceof
         - 在Java中，我想要知道 C跟A是否有「Is-a」的繼承關係，會使用 `instanceof` 來做確認，而instanceof又屬於 `執行期`，因此在instanceof會看物件實際型別為何去判斷。
         - 但在編譯期，若兩物件在繼承結構上沒有交集，則直接錯誤，不會進入執行期。
+
+## Day282
+#### 學習重點 : Java OCP測驗.12
+- 測驗內容 🌟🌟🌟🌟🌟🌟
+    - 關於Pass by value那回事 ⭐⭐⭐⭐⭐⭐⭐
+        - Java官方所定義的函式參數傳入方式是Pass by value，而不是Pass by reference。
+        - 這點用prmitive type來思考確實很合理。
+        - 但當今天傳入的是「物件」，會發現我使用該物件的setter，是能影響到外部物件的。
+        - 其實這點在我之前滑脆有思考過，我的想法是 : 
+        > 物件所謂的pass by value，其中的value是原物件地址的「一份copy」，因此參數指向的是地址的value，但跟原物件變數是分開的。
+        - 上述這段是我當時針對該議題所做的回應，意即我在函式內部，參數存的也是地址，但與外部物件不是同個東西，which means，兩變數所在的記憶體位置是不相同的，只有值是相同，因此當我看到以下程式碼 : 
+        ```java=
+        public class TestClass{   
+            static String str = "Hello World";   
+            public static void changeIt(String s){    
+                s = "Good bye world";   
+            }   
+            public static void main(String[] args){     
+                changeIt(str);     
+                System.out.println(str);   
+            } 
+        }
+        ```
+        - s與str指向的值相同，但本身變數存的位置不同。
+        - 也因此我改動s不會影響到str，因此輸出不會改變。
+        - 當然，如果我使用StringBuilder這種以method去改動物件的成員，那當然可以使輸出有變化，但這就與setter是一個道理了（改動物件內部，而不是值本身）。
