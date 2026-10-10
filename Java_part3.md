@@ -2942,3 +2942,20 @@
         - s與str指向的值相同，但本身變數存的位置不同。
         - 也因此我改動s不會影響到str，因此輸出不會改變。
         - 當然，如果我使用StringBuilder這種以method去改動物件的成員，那當然可以使輸出有變化，但這就與setter是一個道理了（改動物件內部，而不是值本身）。
+
+## Day283
+#### 學習重點 : Java OCP測驗.13
+- 測驗內容 🌟🌟🌟🌟
+    - 關於Comparator的設計 ⭐⭐⭐⭐⭐
+        - 雖然我在Day192有學習過Comparator的設計與概念，但可以再做一次延伸。
+        - 要做出比較器會使用 `Comparator.comparing` 的overload
+            - `comparing(Function keyExtractor)`
+                - 傳入一個 `Function`（如方法參考 `Person::getName`）來抽取要比對的屬性。
+                - 但該成員必須要實作Comparable。
+            - `comparing(Function keyExtractor, keyComparator)`
+                - 傳入 `Function` 抽取成員後，使用自訂比較器 `keyComparator` 進行比對。
+                - 如果成員本身沒有實作Comparable，則使用此函式
+            - 基本型態有其特殊的比較函式（為避免boxing降低效能）
+                - `comparingInt(ToIntFunction<? super T> keyExtractor)`
+                - `comparingLong(ToLongFunction<? super T> keyExtractor)`
+                - `comparingDouble(ToDoubleFunction<? super T> keyExtractor)`
