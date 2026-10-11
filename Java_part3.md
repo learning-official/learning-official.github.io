@@ -2965,7 +2965,8 @@
 - 測驗內容 🌟🌟🌟🌟🌟🌟🌟🌟
     - 淺談CopyOnWriteArrayList的設計邏輯 ⭐⭐⭐⭐⭐
         - 首先它是 `Thread-safe`，但究竟是哪裡Thread-safe呢？
-        - 原因在這 : 當我們要針對該類別之物件做 `.add`、`.remove` 時，它會先複製一份新List去做更改，操作完後，再將原本變數指向的舊List改指向新List。
+        - 原因在這 : 當我們要針對該類別之物件做 `.add`、`.remove` 時，其內部維護的 `volatile Object[] array` 會複製一份去做更改，操作完後，再將原本變數指向的舊array改指向新array。
+        - 且其本身有加上互斥鎖，因此同時間只能有一執行緒取得鎖。
         - 因此不會引發所謂的 `ConcurrentModificationException`。
         - 當然，由於每次更動都要做一次更改，會非常耗效能，因此該類別只適用於「讀多寫少」的情況。
     - CopyOnWriteArrayList的實際測試 ⭐⭐⭐⭐
@@ -2988,10 +2989,10 @@
         - 若我使用一般的 `ArrayList` 實作，則其中的forEach就會報錯。
         - 然而使用 `CopyOnWriteArrayList` 則會再做remove時，先複製再改指向。
     - CopyOnWriteArrayList原理探究 ⭐⭐⭐⭐⭐⭐⭐⭐
-        - 上一點所寫的forEach本質上底層由Iterator去做事，而一般的ArrayList會確保在迴圈時的List完整性，使得無法修改。
+        - 上一點所寫的forEach本質上底層由Iterator去做事，而一般的ArrayList會確保在迴圈時的array完整性，使得無法修改。
         - 然而在 `CopyOnWriteArrayList` 中，當我們開始迴圈，取得Iterator時，Iterator指向的List就是原本的List，跟我們後續作修改的完全無關，它會如實的走完全程。
         - 而我們在其中做的修改，會經歷幾個步驟 : 
             1. 複製陣列
             2. 修改
-            3. 立刻改list指向（但Iterator還是指向最初的List）
-        - 接著後續的更改就會拿著新的list去做修改。
+            3. 立刻改array指向（但Iterator還是指向最初的array）
+        - 接著後續的更改就會拿著新的array去做修改。
