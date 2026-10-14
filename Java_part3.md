@@ -3033,3 +3033,24 @@
         }
         ```
         - 而如果我寫 `? super String`，則是String以上的任何父類都可以。
+
+## Day287
+#### 學習重點 : Java OCP測驗.17
+- 測驗內容 🌟🌟🌟🌟
+    - 關於module系統（JPMS）的引入規則 ⭐⭐⭐⭐⭐
+        - 雖然現在Swing、AWT好像已經過時了w，但還是會一些有關module的東西需要理解。
+        - module預設引入的唯一例外：`java.base`
+            - 在 Java 模組化架構下，只有 `java.base` 是唯一會被 **自動引入** 的模組（eg. `java.lang`、`java.util`...）。
+            - 只要類別不屬於 `java.base`，即使它是 Java 官方標準內建的工具，都**必須**在 `module-info.java` 中寫 `requires`。
+        - Swing / AWT？
+            - 我們知道這兩個算是很早期的Java GUI工具。
+            - 而其常見的 Package 像是 `javax.swing` 或 `java.awt`。
+        - But... Package 名稱 ≠ Module 名稱
+            - 而 `javax.swing` 這種，是所謂的Package，不是Module，因此不能直接做requires（只接收module）。
+            - 而Java將GUI相關的套件，都打包在了 `java.desktop` 中，因此只要requires這個就行。
+            ```java=
+            module my.app {
+                requires java.desktop;
+            }
+            ```
+        - 不過要注意 `java.base` 是做「requires」，只是告訴外部該模組依賴哪些模組，因此內部還是得做import。
