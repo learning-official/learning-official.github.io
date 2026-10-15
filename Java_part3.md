@@ -3054,3 +3054,25 @@
             }
             ```
         - 不過要注意 `java.base` 是做「requires」，只是告訴外部該模組依賴哪些模組，因此內部還是得做import。
+
+## Day288
+#### 學習重點 : Java OCP測驗.18
+- 測驗內容 🌟🌟🌟🌟
+    - 關於instanceof的pattern變數作用域 ⭐⭐⭐⭐⭐
+        - 我們知道有個語法是 : `if (obj instanceof String s)`，可以直接轉型並宣告變數。
+        - 但是！要注意變數名稱重複宣告的編譯問題：
+            ```java=
+            static void processBase(Base base) {
+                A a = null; 
+                if (base instanceof A a) {
+                    System.out.println(a.power());
+                }
+                System.out.println("a is " + a);
+            }
+            ```
+            - 原因：`instanceof A a` 中的 `a` 本質上就是一個區域變數（Pattern Variable）。
+            - Java 禁止區域變數遮蔽（Shadowing）同一個作用域中已存在的變數名稱。
+            - 上面第一行已經宣告了 `A a`，後面的 `instanceof A a` 又想宣告一次 `a`，會引發重複宣告的機制，**無法通過編譯**。
+        - Pattern Variable 的特性：
+            - pattern變數 `a` 的生命週期只存在於「條件判定為 true」的區塊內部。
+            - 若外層沒有宣告 `A a = null;`，但在 `if` 區塊外部呼叫 `System.out.println(a)`，同樣會引發編譯錯誤，因為離開 `if` 範圍後 `a` 就失效了。
