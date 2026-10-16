@@ -3076,3 +3076,19 @@
         - Pattern Variable 的特性：
             - pattern變數 `a` 的生命週期只存在於「條件判定為 true」的區塊內部。
             - 若外層沒有宣告 `A a = null;`，但在 `if` 區塊外部呼叫 `System.out.println(a)`，同樣會引發編譯錯誤，因為離開 `if` 範圍後 `a` 就失效了。
+
+## Day289
+#### 學習重點 : Java OCP測驗.19
+- 測驗內容 🌟🌟🌟🌟
+    - 關於Deque的詳細使用方式 ⭐⭐⭐⭐⭐
+        - 其實我對Deque已有初步的了解，它具有FIFO/LIFO的特性，且於Java中使用會優於Stack。
+        - 但今天要探討的是其中的method差異。
+        - 關於Queue的特性 : 
+            - `offer`、`add` 都是將element加到rear，而 `poll`、`remove` 則是移除front的element並回傳其值。
+            - 而 `add` 在容器空間不足時，會拋出exception，但 `offer` 不會，它會回傳false。
+            - 另外 `remove` 在容器為空時會拋出exception，但 `poll` 不會，它會回傳null。
+        - 關於Stack的特性 :
+            - 具有LIFO特性，操作皆在front/head。
+            - `push` 是加到front，`pop` 是從front移除並回傳。
+        - 當要查閱前端元素時，`element` 在容器為空時會拋出exception，而 `peek` 則是回傳null。
+        - 所謂的First是指front，Last是指rear，由於LIFO特性push跟pop只針對front，因此沒有所謂的pushLast、pushFirst..等等。但由於Deque可以說是雙向佇列，因此有offerFirst、addLast...等等。
