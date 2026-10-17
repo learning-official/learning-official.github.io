@@ -3092,3 +3092,13 @@
             - `push` 是加到front，`pop` 是從front移除並回傳。
         - 當要查閱前端元素時，`element` 在容器為空時會拋出exception，而 `peek` 則是回傳null。
         - 所謂的First是指front，Last是指rear，由於LIFO特性push跟pop只針對front，因此沒有所謂的pushLast、pushFirst..等等。但由於Deque可以說是雙向佇列，因此有offerFirst、addLast...等等。
+
+## Day290
+#### 學習重點 : Java OCP測驗.20
+- 測驗內容 🌟🌟🌟🌟
+    - 關於virtual call的概念
+        - 所謂的virtual call意思是指在「Runtime時期根據實際型別做呼叫」以此保證「多型」的樣態。
+        - 基本上除了 `private`、`final`、`static`、`constructor` 之外的method，都是以virtual call作為呼叫辦法，相對的，若是上述三種修飾類型則會以 `classical call` 作為呼叫方式。
+        - 若我們使用virtual method時，JIT發現該method並沒有被子類覆寫，則會由virtual轉為classical以加速執行速度。
+        #### 為何 `private`、`final`、`static` 會是classical？
+        - 原因是 : 三者都是在編譯型態就靜態綁定了。
