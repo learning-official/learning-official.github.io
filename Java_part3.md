@@ -3096,9 +3096,31 @@
 ## Day290
 #### 學習重點 : Java OCP測驗.20
 - 測驗內容 🌟🌟🌟🌟
-    - 關於virtual call的概念
+    - 關於virtual call的概念 ⭐⭐⭐⭐⭐⭐⭐
         - 所謂的virtual call意思是指在「Runtime時期根據實際型別做呼叫」以此保證「多型」的樣態。
         - 基本上除了 `private`、`final`、`static`、`constructor` 之外的method，都是以virtual call作為呼叫辦法，相對的，若是上述三種修飾類型則會以 `classical call` 作為呼叫方式。
         - 若我們使用virtual method時，JIT發現該method並沒有被子類覆寫，則會由virtual轉為classical以加速執行速度。
         #### 為何 `private`、`final`、`static` 會是classical？
         - 原因是 : 三者都是在編譯型態就靜態綁定了。
+
+## Day291
+#### 學習重點 : Java OCP測驗.21
+- 測驗內容 🌟🌟🌟🌟🌟
+    - 關於Static Initializer Block ⭐⭐⭐⭐⭐⭐⭐
+        - 當我們在一個class中寫下 `static{}`，就是在做靜態初始化。
+        - 但究竟靜態初始化是如何運作的呢？
+            - 當我們「第一次」呼叫該類別，無論是 `new`、`呼叫靜態成員`，就會以觸發靜態初始化，但後續再呼叫就不會。
+            - 而靜態初始化作用是在Runtime時期，當其被載入JVM中時會觸發。
+        - 但有些前提不會觸發靜態初始化 : ⭐⭐⭐⭐⭐⭐⭐
+            ```java=
+            class Parent{
+                static String name = "Parent";
+                
+            }
+            class Son extends Parent{
+                static final String ID = "final Son";
+                static {System.out.println("Son");}
+            }
+            ```
+            - 如果藉著Son去呼叫Parent的成員，那JVM就不會初始化Son，也就不會對Son做靜態初始化。
+            - 如果第一次呼叫Son是呼叫 `Son.ID`，則由於 `static final` 的特性，也不會加載Son的靜態初始化，原因是final使變數被在編譯期就固定了！因此不會做初始化。
