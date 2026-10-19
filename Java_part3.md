@@ -3128,7 +3128,7 @@
 ## Day292
 #### 學習重點 : Java OCP測驗.22
 - 測驗內容 🌟🌟🌟🌟🌟
-    - 關於Module系統（JPMS）的綜合細節與陷阱 ⭐⭐⭐⭐⭐⭐
+    - 關於Module系統（JPMS）的綜合整理 ⭐⭐⭐⭐⭐⭐
         - 之前看過 `exports` 跟 `requires` 的基本用法，但我想針對Module再做一次延伸。
         - 每個Module都必須有自己獨立的資料夾、jar。
             - 一個資料夾底下絕對不能同時塞兩個以上的Module（因為根目錄只能有一個 `module-info`）。
