@@ -817,3 +817,18 @@
         - Module可以把 `sealed class`（密封類別）匯出給其他Module繼承嗎？
             - `sealed class` 的所有子類別都必須在「同一個Module」裡面！（如果使用unamed module，則必須在「同一個package」裡面）。
             - 因此，就算把 `sealed class` 給 `exports` 出去，外部的class也絕對不能 `extends` 它！
+
+## Day293
+#### 學習重點 : Java OCP測驗.23
+- 測驗內容 🌟🌟🌟
+    - 關於Stream的特性與Comparator ⭐⭐⭐⭐
+        - 先看底下的程式碼：
+            ```java=
+            Comparator<Book> c1 = (b1, b2) -> b1.getGenre().compareTo(b2.getGenre()); // 1
+            books.stream().sorted(c1.thenComparing(Book::getTitle)); // 2
+            System.out.println(books);
+            ```
+        - 題目問最後會印出什麼？答案是：未排序過的books！
+        - 為什麼沒有排序且改動原本books？
+            - Stream **不會修改原始資料**：對Stream呼叫 `sorted()` 只是回傳一個新的Stream參考（which means Intermediate operation，也是我之前學習過的！），原本的 `books` 則不會改動。
+            - 缺少Terminal operation：若要「排序」books，則需要使用Terminal operation才會，但Terminal operation也只是產生一個新結果（List、void...），並不會改動原本的books，因此若要使用排序過後的books，只能賦值改指向。
