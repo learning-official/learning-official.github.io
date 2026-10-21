@@ -832,3 +832,27 @@
         - 為什麼沒有排序且改動原本books？
             - Stream **不會修改原始資料**：對Stream呼叫 `sorted()` 只是回傳一個新的Stream參考（which means Intermediate operation，也是我之前學習過的！），原本的 `books` 則不會改動。
             - 缺少Terminal operation：若要「排序」books，則需要使用Terminal operation才會，但Terminal operation也只是產生一個新結果（List、void...），並不會改動原本的books，因此若要使用排序過後的books，只能賦值改指向。
+
+## Day294
+#### 學習重點 : Java OCP測驗.24
+- 測驗內容 🌟🌟🌟🌟🌟🌟
+    - 關於abstract的一些特性 ⭐⭐⭐⭐⭐
+        - 「abstract class內部可以有實作method」，意即我們可以在抽象類別中寫下具有 `{}` 區塊的method。
+        ```java=
+        abstract class Test{
+            void Impl(){
+                System.out.println("Hello World!");    
+            }
+        }
+        ```
+        - 當然，如果有實作，就不能加上abstract修飾該method。
+        - 「一般class內部不能有abstract method」，意即不能在一般class中加入抽象方法。
+        ```java=
+        public class Test{
+            abstract void test(); // 報錯！
+        }
+        ```
+        - 而當然，有些修飾詞也會跟abstract method互斥 : 
+            - `final` : final會禁止method被覆寫，不適用抽象類別。
+            - `private` : 抽象類別要給子類實作，因此不適用。
+            - `static` : 屬於編譯期綁定類別，不適用需要實作的抽象方法、多型應用。
