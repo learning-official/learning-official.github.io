@@ -856,3 +856,23 @@
             - `final` : final會禁止method被覆寫，不適用抽象類別。
             - `private` : 抽象類別要給子類實作，因此不適用。
             - `static` : 屬於編譯期綁定類別，不適用需要實作的抽象方法、多型應用。
+
+## Day295
+#### 學習重點 : Java OCP測驗.25
+- 測驗內容 🌟🌟🌟🌟🌟
+    - 關於Stream的reduce ⭐⭐⭐⭐⭐
+        - 這個我之前有學過了，所以就把題目的問題整理一下就好w。
+        - 當呼叫不帶初始值的 `reduce((a, b) -> a + b)` 時，回傳型別是 `Optional`。
+        - 若filter條件篩除所有元素（如 `a -> a < 0`），reduce會回傳 `Optional.empty()`。
+        - 而Optional.ifPresent所確認的是 : 
+            - 有值執行傳入的Consumer動作。
+            - 若為空，則略過不執行，且不會拋出Exception。
+    - 關於JDBC PreparedStatement與executeUpdate機制 ⭐⭐⭐⭐⭐
+        - 這題其實我看了很問號ww，但還是紀錄一下好了。
+        - 參數綁定規則：
+            - PreparedStatement 的參數索引是利用 `?` 作為placeholder，接著利用物件的setter，依照Placeholder的順序設定（從索引1開始）。
+            - 設定NULL時，則需使用 `setNull(參數位置, java.sql.Types.型態)`。
+        - executeUpdate() 的回傳：
+            - 用於執行 `INSERT` / `UPDATE` / `DELETE` 的情況。
+            - 其回傳值代表 「**受影響的資料列數**」，並非受影響的欄位數。
+            - 成功新增一筆資料，因此 `ps.executeUpdate()` 回傳並印出 `1`。
