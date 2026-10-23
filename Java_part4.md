@@ -876,3 +876,54 @@
             - 用於執行 `INSERT` / `UPDATE` / `DELETE` 的情況。
             - 其回傳值代表 「**受影響的資料列數**」，並非受影響的欄位數。
             - 成功新增一筆資料，因此 `ps.executeUpdate()` 回傳並印出 `1`。
+
+## Day296
+#### 學習重點 : Java OCP測驗.26
+- 測驗內容 🌟🌟🌟🌟🌟🌟
+    - 關於Java的Unreachable statement ⭐⭐⭐⭐⭐⭐⭐
+        - 在Java中，有些statement會被判定成unreachable，導致Compilation Error。
+        - 但有些條件是需要仔細看 : 
+        ```java=        
+        while (false){
+            // statement
+        }
+
+        // --------------
+
+        for (int i=0; false; i++){
+            // statement
+        }
+
+        // --------------
+
+        do{
+            // statement
+        }while (false);
+
+        // --------------
+
+        if (false){
+            // statement
+        }
+
+        // --------------
+        ```
+        - 前兩者會發生Error，但後兩者不會。
+        - 原因在於 : 
+            - `do-while` 本身保證一定可以被reach一次，因此不會報錯。
+            - `if` 則是因為JLS（Java語言規範）有個「條件編譯」的規定，當我們寫下 `if(false){}`，javac在編譯時，就不會將該段編譯進 `.class` 中，而這個規定可以供開發者在Debug時，決定是否要「開啟Debug mode」。
+        - Debug mode的概念如下 : 
+        ```java=
+        public class Test{
+            public static final boolean DEBUG = false;
+            
+            public static void main(String[] args){
+                if (DEBUG){
+                    System.out.print("使用者ID : " + user.getId());
+                }
+            }
+        }
+        ```
+        - 有時候我們要進行除錯模式，但又不想要上線時要一行一行刪掉除錯程式碼，我們就會利用一個Debug flag來選擇是否進入Debug mode。
+        - 當javac看到if(false)時，就不會報錯，而是直接略過。
+        - 補充一下 : `while (true){}` 這類型的迴圈（內部又沒有跳脫機制），若在其後續加上程式碼，也會報錯(Unreachable statement)。
