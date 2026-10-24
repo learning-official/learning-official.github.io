@@ -927,3 +927,15 @@
         - 有時候我們要進行除錯模式，但又不想要上線時要一行一行刪掉除錯程式碼，我們就會利用一個Debug flag來選擇是否進入Debug mode。
         - 當javac看到if(false)時，就不會報錯，而是直接略過。
         - 補充一下 : `while (true){}` 這類型的迴圈（內部又沒有跳脫機制），若在其後續加上程式碼，也會報錯(Unreachable statement)。
+
+## Day297
+#### 學習重點 : Java OCP測驗.27
+- 測驗內容 🌟🌟🌟🌟🌟🌟🌟🌟
+    - 關於Serializable ⭐⭐⭐⭐⭐
+        - 當我們想要序列化一個物件時，會在類別的宣告後方加上 `implements Serializable`，然而當類別內部有「**非基本型別**」的成員（which means其他類別），我們要確保該成員也有實作Serializable，才不會發生 `NotSerializableException`。
+        - 至於陣列，若是「基本型別陣列、ArrayList」也支援序列化，但若陣列元素是其他類別且未實作序列化，則也會報錯。
+    - transient與Serializable的搭配 ⭐⭐⭐⭐⭐⭐⭐
+        - 若我們想要某些成員 **不被序列化**，可以加上 `transient` 使其被忽略（static成員也會被忽略，所以不用再加上transient）。
+        - 而如果遇到使用「第三方類別成員，且未實作序列化」的情況，但我們又希望保留該成員的狀態，該怎麼辦？
+            - 此時可以先將其加上 `transient`，接著再寫兩個method : `private void writeObject(ObjectOutputStream oos)`、`private void readObject(ObjectInputStream ois)`，內部將該成員的個別資料也寫進去序列化資料中。
+            - 這兩個method就是 **序列化會使用到的method**，原本是預設，而我們自行實作了，因此JVM在序列化時，就會走我們自訂的這條路（注意，**這不是覆寫**，是讓JVM在執行時，以反射找到Method Signature去執行的）。
