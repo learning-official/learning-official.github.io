@@ -939,3 +939,11 @@
         - 而如果遇到使用「第三方類別成員，且未實作序列化」的情況，但我們又希望保留該成員的狀態，該怎麼辦？
             - 此時可以先將其加上 `transient`，接著再寫兩個method : `private void writeObject(ObjectOutputStream oos)`、`private void readObject(ObjectInputStream ois)`，內部將該成員的個別資料也寫進去序列化資料中。
             - 這兩個method就是 **序列化會使用到的method**，原本是預設，而我們自行實作了，因此JVM在序列化時，就會走我們自訂的這條路（注意，**這不是覆寫**，是讓JVM在執行時，以反射找到Method Signature去執行的）。
+
+## Day298
+#### 學習重點 : Java OCP測驗.28
+- 測驗內容 🌟🌟🌟
+    - 探討修飾子的編譯問題
+        - 首先要知道的是，一個 `.java` 檔，只允許有一個 `public` 的類別，其餘只能是 `default`，也不能是 `private`、`protected`。
+        - 而我們也可以在 `method` 內部宣告 `class`、`enum`、`interface`、`record`，但不能加上access modifiers，因為這屬於「Local Type」，意即該類型只存活於method內部，因此無須加上access modifiers。
+    - 關於enum的東西，我有在Day172寫過哩！就先跳過ww。
