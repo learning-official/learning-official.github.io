@@ -947,3 +947,29 @@
         - 首先要知道的是，一個 `.java` 檔，只允許有一個 `public` 的類別，其餘只能是 `default`，也不能是 `private`、`protected`。
         - 而我們也可以在 `method` 內部宣告 `class`、`enum`、`interface`、`record`，但不能加上access modifiers，因為這屬於「Local Type」，意即該類型只存活於method內部，因此無須加上access modifiers。
     - 關於enum的東西，我有在Day172寫過哩！就先跳過ww。
+
+## Day299
+#### 學習重點 : Java OCP測驗.29
+- 測驗內容 🌟🌟🌟🌟🌟🌟🌟
+    - Unchecked Exception 與 Checked Exception在方法與繼承關係上的問題 ⭐⭐⭐⭐⭐⭐⭐⭐
+        - 我們知道在父子類的繼承結構上如果出現以下片段 : 
+        ```java=
+        class Great {     
+            public void doStuff() throws FileNotFoundException{     
+            }     
+        }  
+
+        class Amazing extends Great {   
+            public void doStuff() throws IOException, IllegalArgumentException{   
+            }     
+        } 
+        ```
+        - 會出現以下問題 : 
+            - 子類拋出了 `IOException` 範圍大於父類拋出的 `FileNotFoundException`，這樣在「編譯期」就會報錯，因為我們必須保證子類的覆寫函式所拋出的Checked Exception範圍必須小於等於父類的同函式（且類型必須隸屬於父類所丟出的）。
+        - 而解決方式可以是 : 
+            - 使父類Checked Exception部分大於等於子類，或者是子類的小於等於父類。
+            - 另外，使子類不拋出Checked Exception也可以，其等於保證該函式不會拋出來，一定是沒有，或者內部處理完。
+        - 可以發現 `IllegalArgumentException` 不會出問題，那是因為其繼承 `RuntimeException`，也就是 `Unchecked Exception`，而這個在編譯期可以安穩通過，「編譯期只會受理 `Checked Exception` 的範圍問題！」。
+        - 補張圖幫助理解 : 
+        ![image](https://hackmd.io/_uploads/BJYWb3n3Gl.png)
+        [圖片來源 : Checked and Unchecked Exceptions in Java](https://medium.com/@ahmed.abdelfaheem/checked-and-unchecked-exceptions-in-java-6cb1c9815d32)
