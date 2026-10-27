@@ -973,3 +973,17 @@
         - 補張圖幫助理解 : 
         ![image](https://hackmd.io/_uploads/BJYWb3n3Gl.png)
         [圖片來源 : Checked and Unchecked Exceptions in Java](https://medium.com/@ahmed.abdelfaheem/checked-and-unchecked-exceptions-in-java-6cb1c9815d32)
+
+## Day300
+#### 學習重點 : Java OCP測驗.30
+- 測驗內容 🌟🌟🌟🌟🌟🌟🌟🌟🌟
+    - 關於Checked Exception在method中的跳脫問題 ⭐⭐⭐
+        - 當我在method設下了 `throws XXXException` 的keyword時，表示能從這個method逃脫的只能限定的Checked Exception（與其子類）或者是Unchecked Exception。
+    - 關於Map的用法 ⭐⭐⭐⭐⭐⭐⭐⭐⭐
+        - 在 `SortedMap` 底下有一個介面叫做 `NavigableMap`，先不考慮它的結構為何，先來看看他的用法。
+        #### 關於NavigableMap
+        - 首先是他有兩個method，分別為 `pollFirstEntry` 及 `pollLastEntry`，我們知道poll會移除資料，同時回傳其值，因此也蠻好理解的owo。
+        - 再來是SortedMap的排序方式，我們知道它是利用Natural ordering或者Key所實作的Comparator來做排序。
+            - 但我這邊有點搞混了，假設有三個鍵 : `a`、`b`、`aa`，其所排序的方式應該是先比較開頭，分堆完後，再比較第二個字元，因此排序後應該是 `a -> aa -> b`。
+        - 最後是關於View的問題，跟subList一樣，當我切割一個Map得到一個子集合，我操作該子集合，若有改動還是會**影響到原Map**（which means指向還是原Map的部分記憶體）。
+        - 而NavigableMap有個method是 `tailMap`，先接收一個Key，表示要從該Key到結尾做為一個Map回傳，而第二個參數是boolean，也就是看要不要「**包含**」該Key啦~（單參數版本的話則是預設為true）
