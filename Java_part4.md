@@ -943,7 +943,7 @@
 ## Day298
 #### 學習重點 : Java OCP測驗.28
 - 測驗內容 🌟🌟🌟
-    - 探討修飾子的編譯問題
+    - 探討修飾子的編譯問題 ⭐⭐⭐⭐⭐
         - 首先要知道的是，一個 `.java` 檔，只允許有一個 `public` 的類別，其餘只能是 `default`，也不能是 `private`、`protected`。
         - 而我們也可以在 `method` 內部宣告 `class`、`enum`、`interface`、`record`，但不能加上access modifiers，因為這屬於「Local Type」，意即該類型只存活於method內部，因此無須加上access modifiers。
     - 關於enum的東西，我有在Day172寫過哩！就先跳過ww。
@@ -987,3 +987,29 @@
             - 但我這邊有點搞混了，假設有三個鍵 : `a`、`b`、`aa`，其所排序的方式應該是先比較開頭，分堆完後，再比較第二個字元，因此排序後應該是 `a -> aa -> b`。
         - 最後是關於View的問題，跟subList一樣，當我切割一個Map得到一個子集合，我操作該子集合，若有改動還是會**影響到原Map**（which means指向還是原Map的部分記憶體）。
         - 而NavigableMap有個method是 `tailMap`，先接收一個Key，表示要從該Key到結尾做為一個Map回傳，而第二個參數是boolean，也就是看要不要「**包含**」該Key啦~（單參數版本的話則是預設為true）
+
+## Day301
+#### 學習重點 : Java OCP測驗.31
+- 測驗內容 🌟🌟🌟🌟🌟🌟🌟🌟🌟
+    - 在Java中的Deadlock（死結）事件 ⭐⭐⭐⭐⭐⭐⭐⭐
+        - 其實這件事我好像一直沒有特別認真看待，但好像又很重要ww，先來看看死結是怎麼產生的！
+        - 底下是一個情境 : 
+        ```java=
+        public void run(){         
+            synchronized(from){  
+                from.setBalance(from.getBalance()-amount);      
+                synchronized(to){                
+                    to.setBalance(to.getBalance()+amount);     
+                }
+            }
+        }
+        ```
+        - 假設有兩個執行緒，一個是 `from : a1` 要轉錢到 `to : a2`，一個是 `from : a2` 要轉錢到 `to : a1`，兩者先分別取得 `from` 鎖並執行扣錢後，再來要去取得 `to`，但雙方都握有自己的 `from`，因此就會形成「雙方都在等對方放下鎖」進入 `Deadlock` 環節。
+        - 而以上的Deadlock會形成，隱性符合了四個部分 : 
+            - Mutual Exclusion : 一個鎖一次只能被一執行緒取得。
+            - Hold and Wait : 一方拿著a1不放同時等a2，另一方拿著a2不放同時等a1。
+            - No Preemption : 鎖只有等執行緒執行完synchronized區塊後才會釋出。
+            - Circular Wait : 形成閉環，`Thread1 -> 等Thread2 -> 等Thread1.....`，有點無窮地回的感覺owo？
+        - 只有都符合了這四個部分，才會形成死結！
+        - 而要解決這個問題也很簡單，只需要「固定鎖的排序即可」，讓取得鎖的順序固定，就保證排隊可以排到東西啦w。
+        - 相對應的，有DeadLock，就有LiveLock，也就是雙方都在禮讓對方，結果反而禮讓又衝突到了（這就跟走路要讓路，結果讓路又撞到一樣），也就是看要不要「**包含**」該Key啦~（單參數版本的話則是預設為true）
