@@ -1013,3 +1013,16 @@
         - 只有都符合了這四個部分，才會形成死結！
         - 而要解決這個問題也很簡單，只需要「固定鎖的排序即可」，讓取得鎖的順序固定，就保證排隊可以排到東西啦w。
         - 相對應的，有DeadLock，就有LiveLock，也就是雙方都在禮讓對方，結果反而禮讓又衝突到了（這就跟走路要讓路，結果讓路又撞到一樣）
+
+## Day302
+#### 學習重點 : 重回Minecraft Java Plugin的懷抱
+- 重回Minecraft Java Plugin的懷抱 ⭐⭐⭐⭐
+    - 其實當初促使我學習Java的其中一個原因就是寫麥塊插件ww，而歷經基石的奠定以及框架的設計，我認為我現在對於Java已經算有一定的了解了！
+    - 前幾年我在探索插件的時候，是使用Spigot作為核心，然而現今使用Paper好像是個更好的選擇owo，因此我這次會選擇使用Paper來開發！
+    - 但在進入Plugin之前我想先好好認識何謂Paper？
+    - 早在Paper成為主流之前，Minecraft伺服器經歷了幾個時期 : 
+        - **原生Vanilla Server** : 原版的伺服器是不支援plugins的，也就是原味生存伺服器拉～
+        - **Bukkit的誕生** : 後來玩家訂定了Bukkit API，定義了伺服器上的功能，後續則有 `CraftBukkit` 作為實作。
+        - **Spigot** : 後來Spigot針對CraftBukkit進行了優化，同時結合了BungeeCord奠定了伺服器的興盛。
+        - **Paper** : 針對Spigot單一執行緒加載的問題進行優化，改成非同步，優化伺服器效能！
+    - 話說我今天光是搞Minecraft Plugin的Gradle build就花了一段時間，所以明天寫完再統整好ㄌ～
