@@ -1026,3 +1026,20 @@
         - **Spigot** : 後來Spigot針對CraftBukkit進行了優化，同時結合了BungeeCord奠定了伺服器的興盛。
         - **Paper** : 針對Spigot單一執行緒加載的問題進行優化，改成非同步，優化伺服器效能！
     - 話說我今天光是搞Minecraft Plugin的Gradle build就花了一段時間，所以明天寫完再統整好ㄌ～
+
+## Day303
+#### 學習重點 : Minecraft Plugin第一課 : 伺服器啟動與JavaPlugin
+- 伺服器啟動 ⭐⭐⭐⭐⭐
+    - 記得之前使用spigot時，需要自行建立伺服器，但gradle似乎有提供直接runServer的選項，大幅提升了開發速度！
+    - 而基本的伺服器啟動要素則是需要有一個Class繼承 `JavaPlugin`，並覆寫onEnable與onDisable的method
+        - 而這其中的緣由就如同main作為程式進入點一樣。**作為一個插件的啟動點**，在 `plugin.yml` 中設定了以下東西 : 
+        ```yml=
+        main: me.xiaoba.firstPlugin.FirstPlugin
+        ```
+        - 我們設定了main是指向FirstPlugin這個類別，因此在伺服器啟動時，就會去利用 **反射檢查** 該類別是否繼承JavaPlugin，若是則向上轉型成JavaPlugin，交由Paper去掌控該插件的後續動作。
+        - 而原本我們是應該自行去實作 `Plugin介面`，但JavaPlugin幫我們實作好，並建立起插件的骨架，只需專注在啟動與關閉的事件即可。
+        - 仔細看可以發現JavaPlugin是個 **抽象類別**，其中留了啟動與關閉尚未實作！
+    - 可以發現以上的Plugin類別向上轉型也是一種 **反轉控制** 的經典例子！由伺服器去掌控物件的生命週期owo。
+- 成功載入插件與運行Server！ ⭐
+    - 示意圖 :
+    ![image](https://hackmd.io/_uploads/rkBrsVGaMg.png)
