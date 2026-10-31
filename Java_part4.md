@@ -1058,7 +1058,7 @@
         ![image](https://hackmd.io/_uploads/ryF85tXaMe.png)
         - 代表每次註冊的Listener，Manager會根據內部監聽器所監聽的事件，放進相對應的List。
     - 不過其實我很好奇為何監聽類別要自行new給Manager，而不是使用DI直接注入給IoC容器來管理呢？
-- 事件實作
+- 事件實作 ⭐⭐⭐
     - 由於我以前很喜歡玩Hypixel的遊戲，其返回大廳的方式是對紅色床點右鍵，所以我就寫了一個監聽 `PlayerInteractEvent` 的事件，並偵測 `是否是右鍵` 及 `Material是否為RED_BED` 來觸發！
     ![image](https://hackmd.io/_uploads/BJXthF7TGx.png)
     - 接著再到onEnable註冊！
