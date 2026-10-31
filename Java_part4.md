@@ -1043,3 +1043,24 @@
 - 成功載入插件與運行Server！ ⭐
     - 示意圖 :
     ![image](https://hackmd.io/_uploads/rkBrsVGaMg.png)
+
+## Day304
+#### 學習重點 : Minecraft Plugin第二課 : 事件監聽與註冊
+- 何謂事件監聽？ ⭐⭐⭐⭐⭐⭐⭐
+    - 所謂的事件係指「遊戲內部的任何動態事件」，與昨天所提及的「啟動、關閉」並非同一種類型，因此啟動關閉也是事件，但不屬於監聽範圍。
+    - 而Paper的事件監聽會使用 `Listener` 介面來統一所有事件監聽的實作類別。
+    - 當我們建立一個事件的監聽行為，必須有底下步驟 : 
+        - **建立事件類別，實作 `Listener` 介面**（可以發現該介面沒有任何抽象方法，因其僅作為標記介面Tagging Interface）
+        - 於事件類別內部設計監聽的函式，並掛上 `@EventHandler` 標記為監聽函式。
+        - 最後在 `onEnable` 中註冊監聽類別的物件。
+    - 了解完上述步驟後可以繼續深入挖掘 : 
+        - 對於伺服器啟動時註冊的監聽器，最終都會被PluginManager放進相對應類型的 `HandlerList`，可以注意到，每一個事件的類別開頭都是像底下這樣 : 
+        ![image](https://hackmd.io/_uploads/ryF85tXaMe.png)
+        - 代表每次註冊的Listener，Manager會根據內部監聽器所監聽的事件，放進相對應的List。
+    - 不過其實我很好奇為何監聽類別要自行new給Manager，而不是使用DI直接注入給IoC容器來管理呢？
+- 事件實作
+    - 由於我以前很喜歡玩Hypixel的遊戲，其返回大廳的方式是對紅色床點右鍵，所以我就寫了一個監聽 `PlayerInteractEvent` 的事件，並偵測 `是否是右鍵` 及 `Material是否為RED_BED` 來觸發！
+    ![image](https://hackmd.io/_uploads/BJXthF7TGx.png)
+    - 接著再到onEnable註冊！
+    ![image](https://hackmd.io/_uploads/SJO3ht76Gg.png)
+- 話說我今天筆記寫得好嚴肅ww，寫完才發現ww
