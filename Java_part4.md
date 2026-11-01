@@ -1064,3 +1064,24 @@
     - 接著再到onEnable註冊！
     ![image](https://hackmd.io/_uploads/SJO3ht76Gg.png)
 - 話說我今天筆記寫得好嚴肅ww，寫完才發現ww
+
+## Day305
+#### 學習重點 : Minecraft Plugin第三課 : GUI介面及點擊事件 - 1
+- GUI介面 ⭐⭐⭐⭐
+    - 此次學習重點多出自於 : [PaperMC - Menu Type API](https://docs.papermc.io/paper/dev/menu-type-api/)，如果要參考請前往
+    - 常玩伺服器的玩家應該知道，伺服器通常都會有選單，而早期在寫選單時，會使用 `Bukkit.createInventory` 來建立容器，並使 `player.openInventory` 來打開Menu。
+    - 但自從 `1.21` 之後，Paper加上了 `MenuType` 及更新了 `InventoryView` 的功能，來更直覺的建立Menu。
+    - 而在此得先看看 `Inventory` 跟 `InventoryView` 的差別 : 
+        - `Inventory` : 單純裝ItemStack的地方，也就是很單純的容器。
+        - `InventoryView` : 當玩家打開Menu時所產生，分為 `TopInventory` 跟 `BottomInventory`，而Top就是menu本人，Bottom則是玩家的背包，兩者都是容器，但都在同一視窗，因此整合稱為View。
+    - View除了存取兩個Inventory，還會存取開啟的玩家、視窗標題，並掌控視窗的開啟關閉。
+- MenuType建構View ⭐⭐⭐⭐
+    - 我們一般會使用MenuType來建構一個InventoryView，比起早期的 `Bukkit.createInventory` 需要自行填入slots，新型的MenuType採用的是Enum形式，規定了slots的格式，而且還可以設置成特殊介面（熔爐、工作台等等）
+    - 我就不秀出我怎麼建立的，反正大同小異w。
+- 點擊事件與偵測 ⭐⭐⭐⭐⭐⭐
+    - 我想要設計一個功能，當玩家開啟menu點擊紅色床後可以回大廳，但這產生出幾個問題
+        1. 點擊後要怎麼知道我是點擊「menu內的紅色床」，而不是玩家背包的紅色床？
+        2. menu內的紅色床跟其他的紅色床有甚麼差別？
+    - 第一個問題 : 可以透過 `inventoryView.getTopInventory() == event.getClickedInventory()` 確認玩家是在menu操作。
+    - 第二個問題 : 需要使用物品特殊的PDC（PersistentDataContainer）屬性，它也存在於NBT當中，屬於插件級別的東西，因此不能單純用指令、鐵砧能夠改動，這給我們一個方便之處去賦予紅色床標籤！
+- 今天好像寫得有點太多了，明天再繼續！
