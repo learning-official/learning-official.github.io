@@ -1085,3 +1085,60 @@
     - 第一個問題 : 可以透過 `inventoryView.getTopInventory() == event.getClickedInventory()` 確認玩家是在menu操作。
     - 第二個問題 : 需要使用物品特殊的PDC（PersistentDataContainer）屬性，它也存在於NBT當中，屬於插件級別的東西，因此不能單純用指令、鐵砧能夠改動，這給我們一個方便之處去賦予紅色床標籤！
 - 今天好像寫得有點太多了，明天再繼續！
+
+## Day306
+#### 學習重點 : Minecraft Plugin第三課支線 : ItemStack與ItemMeta
+- 何謂ItemMeta？
+    - 在理解ItemMeta之前，得先看看ItemStack。
+    - 何謂ItemStack？ ⭐⭐⭐
+        - ItemStack簡單理解就是 : 物品的骨幹，包含「數量、材質、ItemMeta」
+        - 可以發現ItemStack似乎把屬性、名字...都包給了ItemMeta，而正是如此！
+    - ItemMeta作為一個物品的詳細資訊，卻獨立成了一個介面，為何呢？ ⭐⭐⭐⭐
+        - 深入Bukkit邏輯可以發現很多物品本身資訊架構就不一樣，像是Book會存取title、author、content...，而旗幟則有pattern，因此不可能所有物品的資訊都塞進ItemMeta作為成員。
+        - 獨立出介面後，ItemMeta本身就只關注所有物品都可以做的「自訂名稱、自訂Lore、附魔...」屬性，而特殊的屬性則由BookMeta、BannerMeta...介面再去繼承，加上函式。
+    - 既然所有物品都有「自訂名稱、自訂Lore...」，幹嘛不直接放在ItemStack？ ⭐⭐⭐⭐⭐⭐⭐⭐⭐
+        - 首先，Minecraft世界的任何掉落物、箱子內的物品都是ItemStack，**預設** 生成這些東西是 **不需要自訂的屬性**，畢竟量大很耗記憶體，因此才會獨立出來給ItemMeta。
+        - 這樣當生成這些物品、或者我建立一個ItemStack，就不會特地去生成ItemMeta，除非等我去設定才會建立。
+        - 這邊很有趣，在ItemStack類別是找不到ItemMeta的成員，只能找到底下這行 : 
+        ```java=
+        public ItemMeta getItemMeta() {
+            return this.craftDelegate.getItemMeta(); // Paper - delegate
+        }
+        ```
+        - 其使用了「委託模式+動態工廠轉換」 : 
+            - `craftDelegate` 本人是 `ItemStackServer` 介面，在執行期預設實作類別是 `CraftItemStack`，實際去抓取原始的物品資料。
+            - 當 `CraftItemStack` 抓到底層的物品meta時，會進到工廠，根據物品回傳相對應的特殊ItemMeta（繼承了 `CraftMetaItem`）。
+        - 綜上所述可以發現，「**ItemMeta就是一種Lazy Evaluation**」！
+        - 我請AI給我一個流程比較好理解owo : 
+        ```
+          │ 1. 呼叫 item.getItemMeta()
+          ▼
+        ItemStack
+          │ 委託：this.delegate.getItemMeta()
+          ▼
+        CraftItemStack (delegate 的具體實作)
+          │ 工廠：CraftItemFactory.getItemMeta(...)
+          ▼
+        CraftMetaItem (動態new出來ItemMeta骨架，實作了ItemMeta)
+          │
+          │ 2. 拿到後進行修改：meta.displayName("大廳")
+          │ 3. 呼叫 item.setItemMeta(meta)
+          ▼
+        CraftItemStack
+          │ 接收 CraftMetaItem，提取內部資料並序列化
+          ▼
+        net.minecraft.world.item.ItemStack (Mojang 原版底層物品)
+        ```
+        ```
+              ItemMeta (介面)
+                   ▲
+                   │ implements
+              CraftMetaItem (基礎實作類別)
+                   ▲
+       ┌──────────┴──────────┬─────────────────────┐
+       │ extends             │ extends             │ extends
+        CraftMetaBook         CraftMetaPotion        CraftMetaSkull ...      
+      │ 
+      ➤ implements BookMeta   
+        ```
+- 我發現我這樣寫下去，demo會一直都找不到時間展示ww，明天稍微消停一下好了。
