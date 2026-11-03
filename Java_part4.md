@@ -1142,3 +1142,63 @@
       ➤ implements BookMeta   
         ```
 - 我發現我這樣寫下去，demo會一直都找不到時間展示ww，明天稍微消停一下好了。
+
+## Day307
+#### 學習重點 : Minecraft Plugin第三課 : GUI介面及點擊事件 - 2
+- 接續ItemMeta與點擊事件 ⭐
+    - 昨天稍微認識了下ItemMeta的特點，今天可以結合昨天所學設計一個特殊的 `RED_BED`，帶有屬性，這樣就可以解決前天的第二個問題 : 「menu內的紅色床跟其他的紅色床有甚麼差別？」。
+- ItemMeta的自訂資料屬性PDC ⭐⭐⭐⭐⭐
+    - 在ItemMeta中，有規定一種 `PersistentDataContainer（PDC）`，雖然他隸屬於NBT內部，但如它的名字所說，是 **持久的資料容器**，因此不會根據遊戲進行而改變（除非自行去設定）。
+    - 且PDC普遍來說是由插件去修改（儘管其隸屬於NBT，但無法輕易透過指令進行修改，除非知道PDC詳細結構）。
+- 應用PDC ⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐
+    - 我們可以透過生成一個ItemStack，材質是RED_BED，接著設定ItemMeta中的PDC，這樣就可以去比對我點這個紅色床是否是正確的紅色床啦～
+    - 底下是我的實作code（參考 [PaperMC : PersistentDataContainer](https://docs.papermc.io/paper/dev/pdc/)）
+    ```java=
+    private void setUpItems(ItemStack item, int pdcValue, int slot){
+        item.editPersistentDataContainer(
+                pdc -> {
+                    pdc.set(
+                        this.namespacedKey,
+                        PersistentDataType.INTEGER,
+                        pdcValue
+                    );
+                }
+        );
+        this.inventoryView.getTopInventory().setItem(slot, item);
+    }
+    ```
+    - 這個NamespacedKey的意義是「**設定命名空間**」。因為可能有多個插件對同一物件加PDC屬性，因此在NBT結構中為了分辨，要先設定命名空間，**作為子空間的概念**。
+        - NBT結構如下（這邊把namespace跟key分成兩層，但實際是namespace : key） 
+        ```
+        {
+            // 物件原本的原生 NBT (物品的 id, Count 等)
+            ... 
+            PublicBukkitValues: {
+
+                // 「命名空間 (Namespace)」
+                "my_plugin": {
+
+                    // 第二層：設定key-value pairs
+                    "my_key": 1b,                         // Byte 
+                    "player_score": 1500,                 // TAG_Int
+                    "custom_description": "這是一行自訂文字" // TAG_String
+                },
+
+                // 另一個插件的命名空間
+                "other_plugin": {
+                    "cooldown_time": 17182938292l         // TAG_Long
+                }
+            }
+        }
+        ```
+        - 而宣告一個NamespaedKey會給定命名空間跟第二層Key : `NamespacedKey actionItem = new NamespacedKey(this, "action");` 像這樣。
+        - 至於value，則會先給定Type，再來是實際的值。
+- GUI View的註冊 ⭐⭐⭐⭐⭐
+    - 由於我要確認「玩家是在menu操作，而不是一般容器操作」，儘管我前天的想法是 `inventoryView.getTopInventory() == event.getClickedInventory()`，但「只能確認玩家是在容器操作而不是背包操作」，我似乎誤解了。
+    - 因此我先設計了一個　`MenuManager`，當玩家使用「**插件給定**」的紅色床or指令or...的方式開啟View時，先把這個View註冊到Manager當中。
+    - 接著玩家點擊事件發生時，我就先去確認該事件的View是否有被註冊，而玩家關閉View時，就自動去呼叫Manager註銷。
+    - 實際作法如下 : 
+    ![image](https://hackmd.io/_uploads/rJZPHT8pMx.png)
+    ![image](https://hackmd.io/_uploads/BJNKH6ITze.png)
+    ![image](https://hackmd.io/_uploads/ByNoS6IpMl.png)
+    ![image](https://hackmd.io/_uploads/rk32Sa86fg.png)
