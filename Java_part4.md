@@ -1202,3 +1202,28 @@
     ![image](https://hackmd.io/_uploads/BJNKH6ITze.png)
     ![image](https://hackmd.io/_uploads/ByNoS6IpMl.png)
     ![image](https://hackmd.io/_uploads/rk32Sa86fg.png)
+
+## Day308
+#### 學習重點 : Minecraft Plugin第三課 : GUI介面及點擊事件 - 3
+- PDC取得及判別 ⭐⭐⭐⭐
+    - 透過昨天的 `item.editPersistenDataContainer` 可以去取得ItemStack的ItemMeta並修改PDC。
+    - 而今天則是要將PDC取出來，並判斷物品PDC是否有正確的標籤，才能執行後續程式。
+    - 取得PDC : 
+    ```java=
+    Integer value = event.getCurrentItem().getItemMeta().getPersistentDataContainer().get(
+            this.namespacedKey, 
+            PersistentDataType.INTEGER
+    );
+    ```
+    - 要注意的是，與一般Container一樣，記得要做null check。
+- Menu解耦與Manager註冊Menu介面代替View ⭐⭐⭐⭐⭐⭐
+    - 我先抽離出了Menu介面，讓其他Menu（如LobbyMenu）去實作它。
+        - Menu介面規範了getView的功能，讓menu與view綁定。
+    - 接著將原本MenuManager存取InventoryView的部分改成了存取Menu介面。
+        - 再藉由「介面規範的getView」與「sessionCheck的InventoryVeiw參數」做比對！
+- addButtons替換setItems，加入Consumer之Callback接收觸發動作 ⭐⭐⭐⭐⭐
+    - **原本** setItems單純接收Material、slot、pdcValue去建立一個帶有資訊的ItemStack，但實際動作卻要我再寫一個對應函式，有點麻煩。
+    - 因此我改成除了接收上述三者，還會接收 `Consumer<InventoryClickEvent>` ，在同一函式 `addButtons` 完成所有設定。
+        - 前三者一樣放進inventoryView去setItem。
+        - 而後者則放進我自製的menuMap，以pdcValue對應Consumer，這樣當我取出pdcValue後就可以找到相對應的動作啦~~
+    - 不過這邊留個小疑問 : 「我似乎可以直接將slot作為key對上Consumer就好，這樣可以省去PDC的存取問題emmmm」。
