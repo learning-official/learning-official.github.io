@@ -1227,3 +1227,19 @@
         - 前三者一樣放進inventoryView去setItem。
         - 而後者則放進我自製的menuMap，以pdcValue對應Consumer，這樣當我取出pdcValue後就可以找到相對應的動作啦~~
     - 不過這邊留個小疑問 : 「我似乎可以直接將slot作為key對上Consumer就好，這樣可以省去PDC的存取問題emmmm」。
+
+## Day309
+#### 學習重點 : Minecraft Plugin第四課 : 指令設計
+- 比對過往指令系統 ⭐⭐
+    - 過往在使用spigot時，是去實作 `CommandExecutor`，同時於onEnable註冊指令，最後還要在 `plugin.yml` 定義指令。
+    - 而使用Paper，則有兩種方式。
+        - 新版的paper提供了 `Brigadier` 的方式來建立指令，簡單來說就是結合Builder+lambda的方式來快速實作
+        - 另外一個是較簡單的、與Bukkit/Spigot類似的方式，但「**省去了plugin.yml定義**的步驟」，其餘幾乎一模一樣。
+    - paperAPI說明是這樣的 : 「For very simple commands Paper has a way to declare **Bukkit-style** commands by implementing the BasicCommand interface.」，我想說先從與spigot類似的風格來設計會比較熟悉！
+- 指令設計 ⭐⭐⭐⭐
+    - 首先要先做的就是實作 `BasicCommand`，基本上只需要覆寫 `execute` 即可，而內容與spigot大同小異，可以直接看我設計的成果！
+    ![image](https://hackmd.io/_uploads/HytyYoKTMg.png)
+    - 由於我將開啟menu的部分獨立出來，因此可以同時在 `RED_BED` 與 `指令系統` 觸發menu的開啟。
+- 抽離MenuManager ⭐⭐⭐⭐
+    - 原本MenuManager是在Listener被new出來的，但我的宗旨是「所有人共用同一個Manager」，因此我將其改到啟動類別中實例化，所有事件/menu/指令都用同一物件（**不過這似乎會有資源競爭的問題**...emmm）
+    - 透過抽離manager，我就可以在指令類別的建構式傳進manager參數去取得啦~
