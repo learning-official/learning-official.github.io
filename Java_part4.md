@@ -1243,3 +1243,20 @@
 - 抽離MenuManager ⭐⭐⭐⭐
     - 原本MenuManager是在Listener被new出來的，但我的宗旨是「所有人共用同一個Manager」，因此我將其改到啟動類別中實例化，所有事件/menu/指令都用同一物件（**不過這似乎會有資源競爭的問題**...emmm）
     - 透過抽離manager，我就可以在指令類別的建構式傳進manager參數去取得啦~
+
+## Day310
+#### 學習重點 : Minecraft Plugin第四課 : 指令樹
+- 何謂指令樹？ ⭐⭐⭐⭐
+    - 我們知道在Minecraft中指令後面可以帶有參數，且每個參數可以對應到更多的參數，因此一個指令可以分出去多個分支，且每個分支還會有分支，如此以來就形成了指令樹。
+    - 在過往的指令設計當中，我們一般會偵測 `args[0].equals("...")`，然後做出相對應的動作，但參數一多，等於是要有很多 `if-else` 做包裝，顯得冗餘且複雜。
+    - 因此paper提供了一個輕鬆建立指令樹的方式，且對每個參數做包裝，這樣一來就有 **規範、包裝** 的概念，讓每個參數得到一個家的感覺ww（不然原本放在if-else）很容易就可以被更動，不是那麼嚴謹。
+- 指令樹如何建立？ ⭐⭐⭐
+    - 參考 [PaperMC - Command trees](https://docs.papermc.io/paper/dev/command-api/basics/command-tree/) 的作法，使用LiteralArgumentBuilder先建立一個指令的根結點，也就是斜線後的指令開頭，接著再接上不同的參數後綴。
+    ```java=
+    LiteralArgumentBuilder<CommandSourceStack> root = Commands.literal("customplugin");
+    root.then(Commands.literal("reload"));
+    root.then(Commands.literal("tphere"));
+    root.then(Commands.literal("killall"));
+    ```
+    - 接著在其中就可以使用execute執行lambda，因此實作與參數本體綁在一起，最後在一起build上去，整套流程明顯清晰許多啦～
+    - 至於實作，明天再來！最近有點忙.w.
