@@ -1260,3 +1260,23 @@
     ```
     - 接著在其中就可以使用execute執行lambda，因此實作與參數本體綁在一起，最後在一起build上去，整套流程明顯清晰許多啦～
     - 至於實作，明天再來！最近有點忙.w.
+
+## Day311
+#### 學習重點 : Minecraft Plugin第四課 : 何謂CommandSourceStack？
+- 前言 ⭐⭐
+    - 我覺得在實作指令樹及參數前，可以先來了解何謂CommandSourceStack！
+    - 這樣對之後寫參數節點時感覺比較清晰一些！
+- 何謂CommandSourceStack ⭐⭐⭐⭐⭐
+    - 在過去的spigot設計當中，我們會使用CommandSender來設計指令，但這有些問題，也就是我們只能「**取得發送指令的來源**」，但沒辦法知道，來源是否等於執行指令的實體，有可能是「伺服器以玩家身分執行指令」，此時來源就是伺服器，但執行者是玩家。
+    - 因此CommandSourceStack作為CommandSender的擴大版，除了內部定義了getSender（指令的根來源是誰），還定義了getExecutor（實際執行實體），甚至是Location、Rotation等定義。
+    - 這樣當伺服器使用 `/execute as xiaoba run ...` 時，sender就是console，而executor就是小八我拉～
+    - 可以發現，CommandSourceStack就是圍繞著execute這個指令在轉嘛！
+- 實際的意義？ ⭐⭐⭐⭐⭐⭐
+    - 既然知道CommandSourceStack會將Executor、Sender、Location全部解耦，表示每次執行指令，這些內容物所代表的涵義都會不同。
+    - 我實際寫了個 `/test hi`，觸發時會發送hi給 `Sender`，且在終端機印出位置。
+    - 當我以終端機發送 `/execute as ... run test hi` 時，會看到以下訊息 : 
+    ![image](https://hackmd.io/_uploads/SkWniYh6Ge.png)
+    - 若是玩家發送 `/test hi`，則會變成 : 
+    ![image](https://hackmd.io/_uploads/rk4hoKhpGx.png)
+    - 因此可以發現Location若沒有指定（`at ...`），那就會是整個Stack當初執行的sender位置。
+    - 這邊就可以看到其實 `execute` 的指令後綴每一步都是在「設定」，無論是 `as ...`（設定Executor），`at ...`（設定Location）都是這樣的！
