@@ -1280,3 +1280,44 @@
     ![image](https://hackmd.io/_uploads/rk4hoKhpGx.png)
     - 因此可以發現Location若沒有指定（`at ...`），那就會是整個Stack當初執行的sender位置。
     - 這邊就可以看到其實 `execute` 的指令後綴每一步都是在「設定」，無論是 `as ...`（設定Executor），`at ...`（設定Location）都是這樣的！
+
+## Day312
+#### 學習重點 : Minecraft Plugin第四課 : 指令樹實作
+- 要怎麼實作？ ⭐⭐⭐
+    - 首先要先分清楚 `LiteralArgumentBuilder` 跟 `LiteralCommandNode` 的協作關係。
+        - 前者是建立樹的過程，而後者是樹本人。
+    - 因此我們會利用 `LiteralArgumentBuilder` 的鍊式寫法，定義每個指令的 `名稱`、`後綴`、`執行內容`。
+    - 接著使用 `.build()` 取得回傳好的樹 `LiteralCommandNode`，並註冊到插件中。
+- 實作過程 ⭐⭐⭐⭐⭐
+    - 先創建一個指令類別，我以 `/spawn <entity>` 做測試。
+    ```java=
+    public class SpawnCommand {
+        public static LiteralCommandNode<CommandSourceStack> create(){
+            return Commands.literal("spawn").then(
+                    Commands.literal("creeper").executes(
+                            // ...執行內容
+                    )
+            ).then(
+                    Commands.literal("zombie").executes(
+                            // ...執行內容
+                    )
+            ).build();
+        }
+    }
+    ```
+    - 接著設計生成生物的函式 : 
+    ```java=
+    private static int spawn(CommandSourceStack source, EntityType type){
+        // 直接以Executor寫，可以避免掉sender是否為實體的問題
+        if (!(source.getExecutor() instanceof Player player)) return 0;
+        Location loc = player.getLocation(); 
+        System.out.println(loc);
+        player.getWorld().spawnEntity(loc, type);
+        return 1;
+    }
+    ```
+    - 我發現我很不會用Early return的設計模式ww，似乎得習慣一下ww。
+    - 最後要到插件啟動點做註冊 : 
+    ![image](https://hackmd.io/_uploads/ryK6DZA6fx.png)
+    - 最後就可以得到 : 
+    ![image](https://hackmd.io/_uploads/S1BkF-0Tfg.png)
