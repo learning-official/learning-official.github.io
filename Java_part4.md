@@ -1321,3 +1321,21 @@
     ![image](https://hackmd.io/_uploads/ryK6DZA6fx.png)
     - 最後就可以得到 : 
     ![image](https://hackmd.io/_uploads/S1BkF-0Tfg.png)
+
+## Day313
+#### 學習重點 : Minecraft Plugin第四課 : 指令參數
+- 關於參數輸入 ⭐⭐⭐
+    - 在Commands中有分成 : `literal`、`argument`，而literal就是所謂文字後綴，而argument是可供使用者自由輸入的「值」。
+    - 一般來說跟literal的寫法相同，但在存取值的部分則需要加個東西 : 
+    ```java=
+    Commands.literal("heal")
+        .then(Commands.argument("amount", DoubleArgumentType.doubleArg(1.0, 20.0))
+              .executes(
+                ctx -> healByAmount(ctx.getSource(), DoubleArgumentType.getDouble(ctx, "amount")
+                )
+        ))
+        .build();
+    ```
+    - 簡單來說就是在當前context設下一個變數來存使用者輸入的值，而這些type是由ArgumentType所規範，當然也可以自己設計，只是這個偏複雜，之後再來研究！
+    - 且參數可以設置大小值，這樣在伺服器當中輸入不符合範圍之值會顯示紅字，十分方便。
+    - 這個感覺跟PDC存的key-value pair很像！感覺Mojang的設計方式都長得很像JSON格式ww
