@@ -1339,3 +1339,33 @@
     - 簡單來說就是在當前context設下一個變數來存使用者輸入的值，而這些type是由ArgumentType所規範，當然也可以自己設計，只是這個偏複雜，之後再來研究！
     - 且參數可以設置大小值，這樣在伺服器當中輸入不符合範圍之值會顯示紅字，十分方便。
     - 這個感覺跟PDC存的key-value pair很像！感覺Mojang的設計方式都長得很像JSON格式ww
+
+## Day314
+#### 學習重點 : Minecraft Plugin第四課 : 特殊指令參數
+- ArgumentTypes的參數 ⭐⭐⭐⭐⭐
+    - 在進入客製化參數之前，我們可以先來看看官方提供的特殊Arguments。
+    - 常見的像是 : `minecraft:...` 後面接上物品的名稱的ItemStack、`players` 提供目標選擇器（也就是所謂的 `@p、@a...`）。
+    - 今天我利用目標選擇器設計了一個可以對特定玩家s發訊息的指令 `/admin send <target> <message>`，剛好結合了特殊argument以及一般String type。
+- 實作內容 ⭐⭐⭐⭐
+    - 以下是我的CommandNode : 
+    ```java=
+    public static LiteralCommandNode<CommandSourceStack> create(){
+        return Commands.literal("admin")
+                .then(Commands.literal("send")
+                .then(Commands.argument("target", ArgumentTypes.players())
+                        .then(Commands.argument("message", StringArgumentType.greedyString())
+                            .executes(
+                                ctx -> {
+                                    var resolver = ctx.getArgument("target", PlayerSelectorArgumentResolver.class);
+                                    var players = resolver.resolve(ctx.getSource());
+                                    var msg = StringArgumentType.getString(ctx, "message");
+                                    players.forEach(p->p.sendMessage(msg));
+                                    return Command.SINGLE_SUCCESS;
+                                })
+                        )
+                ))
+                .build();
+    }
+    ```
+    - 我在實作的時候確實有體會到context的概念，他就像是一個節點儲存庫，我可以針對當前節點存值取值，但僅限於當前分支，下文可以使用上文提供的arguments！
+- 最近剛好在考試，所以沒什麼時間寫其他東西，等考完再報復性學一波ww。
