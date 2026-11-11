@@ -1369,3 +1369,27 @@
     ```
     - 我在實作的時候確實有體會到context的概念，他就像是一個節點儲存庫，我可以針對當前節點存值取值，但僅限於當前分支，下文可以使用上文提供的arguments！
 - 最近剛好在考試，所以沒什麼時間寫其他東西，等考完再報復性學一波ww。
+
+## Day315
+#### 學習重點 : Minecraft Plugin第四課 : 指令權限設計
+- 關於指令權限 ⭐⭐⭐⭐
+    - 在插件當中，我們通常會在指令設計中加入權限驗證，而好處在於只要沒有權限，甚至連指令都 **無法找到**（而不是找到指令送出是紅字）
+    - 而在原本實作BasicCommand的設計中，我們會需要實作 `permission` method並回傳這指令類別的權限要求。
+        - 但這就沒有辦法做細分，像是主指令可以，但後綴限制等等...。
+    - 而在新版的鍊式寫法，可以在每個Commands後加上 `.requires`，並且提供Predicate，通常是以 `hasPermission` 的內建寫法去尋找sender有沒有該權限。
+    - 接上昨天的寫法，就會長這樣 : 
+    ```java=
+    public static LiteralCommandNode<CommandSourceStack> create(){
+        return Commands.literal("admin")
+                .requires(commandSourceStack -> commandSourceStack.getSender().hasPermission("commandPerm.send"))
+                .then(Commands.literal("send").then( // ...
+    ```
+- 給予權限 ⭐⭐⭐
+    - 而一般會在 `plugin.yml` 設計權限對應的角色（是否op、全面開啟...）
+    - 應該會長這樣 : 
+    ```yaml=    
+    permissions:
+      commandPerm.send:
+        description: send command only for operator to use
+        default: op
+    ```
