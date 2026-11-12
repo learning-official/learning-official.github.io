@@ -1393,3 +1393,13 @@
         description: send command only for operator to use
         default: op
     ```
+
+## Day316
+#### 學習重點 : Minecraft Plugin第五課 : TextComponent.1
+- 關於TextCompenent的設計 - 偷懶部分
+    - 今天沒什麼時間，先簡單帶一個Component的設計
+    - 我們知道在Minecraft中，有三種顯示字的形式 : `chat、actionbar、title`
+    - 而字體本身也可以觸發clickEvent，因此這次主軸應該會著重於這些Component的鍊式寫法。
+    - 話說有一個網站似乎可以直接提供模板生成程式！[Component Studio](https://component-studio-six.vercel.app/)
+    ![image](https://hackmd.io/_uploads/SJoyggQCfl.png)
+    - 基本上就是給一個ComponentFactory，只需要取得回傳值即可。
