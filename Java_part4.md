@@ -1401,5 +1401,5 @@
     - 我們知道在Minecraft中，有三種顯示字的形式 : `chat、actionbar、title`
     - 而字體本身也可以觸發clickEvent，因此這次主軸應該會著重於這些Component的鍊式寫法。
     - 話說有一個網站似乎可以直接提供模板生成程式！[Component Studio](https://component-studio-six.vercel.app/)
-    ![image](https://hackmd.io/_uploads/SJoyggQCfl.png)
+    ![image](https://hackmd.io/_uploads/rJyM-x7Czx.png)
     - 基本上就是給一個ComponentFactory，只需要取得回傳值即可。
