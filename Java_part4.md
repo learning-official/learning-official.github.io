@@ -1403,3 +1403,13 @@
     - 話說有一個網站似乎可以直接提供模板生成程式！[Component Studio](https://component-studio-six.vercel.app/)
     ![image](https://hackmd.io/_uploads/rJyM-x7Czx.png)
     - 基本上就是給一個ComponentFactory，只需要取得回傳值即可。
+
+## Day317
+#### 學習重點 : Minecraft Plugin第五課 : TextComponent.2
+- 關於Audience ⭐⭐⭐
+    - 在sender的介面中，可以發現其繼承了Audience的介面，而Audience就用來統一所有訊息的事件，包括chat、actionbar、title等等，再藉由不同實體去實作Audience（Sender就是其中一個。
+    - 基本上只要跟「通訊」相關的實體，都會實作Audience，因此我們才可以使用sendMessage...。
+- 關於actionbar、title的設計 ⭐⭐⭐
+    - 而如同Audience所設計的，有包括actionbar跟title的傳送，且title可以加上Duration這種漸入漸出的字幕設計。
+    - 以下是我的設計 : 
+    ![image](https://hackmd.io/_uploads/BJXmpo4Rfg.png)
