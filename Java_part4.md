@@ -1413,3 +1413,21 @@
     - 而如同Audience所設計的，有包括actionbar跟title的傳送，且title可以加上Duration這種漸入漸出的字幕設計。
     - 以下是我的設計 : 
     ![image](https://hackmd.io/_uploads/BJXmpo4Rfg.png)
+
+## Day318
+#### 學習重點 : Minecraft Plugin第六課 : Configuration
+- 關於Configuration ⭐⭐⭐
+    - 我們知道在插件有個 `config.yml` 可以被設計後讀取，使插件使用者可以於後台藉由該檔案來設定數值。
+    - 像是最常見的Essential就提供了像是更改暱稱前輟、home點數量、權限設計等configuration。
+    - 然而在Minecraft究竟要如何讀取與設計呢？
+- 設計config.yml ⭐⭐⭐⭐
+    - 首先要先在 `resources/` 下建立 `config.yml`，而yml架構就不說了，應該已經很了解了w。
+    - 我們即可在其中寫下要提供給使用者的配置變數。
+    - 而在啟動函式中，需寫下 `saveDefaultConfig` 來將程式設計的config儲存到輸出資料夾中（注意！若目標資料夾已有config，則不會覆蓋）
+- 讀取config.yml ⭐⭐⭐
+    - 假設我要在原本announceCommand被呼叫時，讀取 `config.yml` 的變數路徑，可以這樣寫 : 
+    ```java=
+    //為避免該路徑意外不存在，可以加入預設值
+    plugin.getConfig().getInt("testing", 10) 
+    ```
+    - plugin由啟動函式create該指令時傳入，接著就可以取值拉～
