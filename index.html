@@ -94,7 +94,7 @@
 
     /* Top Navigation Bar */
     .top-nav {
-      height: 72px;
+      height: 68px;
       background: var(--bg-sidebar);
       border-bottom: 1px solid var(--border-subtle);
       backdrop-filter: blur(24px);
@@ -102,7 +102,8 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 40px;
+      gap: 16px;
+      padding: 0 28px;
       z-index: 1000;
       position: relative;
       flex-shrink: 0;
@@ -111,19 +112,21 @@
     .top-nav .brand {
       display: flex;
       align-items: center;
-      gap: 12px;
-      font-size: 17px;
+      gap: 10px;
+      font-size: 16px;
       font-weight: 700;
       color: #ffffff;
       background: linear-gradient(135deg, #ffffff 40%, var(--accent-color) 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      letter-spacing: 0.5px;
+      letter-spacing: 0.4px;
       cursor: pointer;
+      white-space: nowrap;
+      flex-shrink: 0;
     }
 
     .top-nav .brand i {
-      font-size: 19px;
+      font-size: 18px;
       background: linear-gradient(135deg, var(--accent-color) 0%, var(--success-color) 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -132,26 +135,29 @@
     .top-nav .nav-links {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
+      flex-wrap: nowrap;
     }
 
     .top-nav .nav-item {
       background: transparent;
       border: none;
       color: var(--text-muted);
-      padding: 10px 18px;
-      border-radius: 20px;
+      padding: 8px 14px;
+      border-radius: 18px;
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 10px;
-      font-size: 14px;
+      gap: 7px;
+      font-size: 13.5px;
       font-family: inherit;
+      white-space: nowrap;
+      flex-shrink: 0;
       transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .top-nav .nav-item i {
-      font-size: 14px;
+      font-size: 13.5px;
     }
 
     .top-nav .nav-item:hover {
@@ -169,7 +175,8 @@
     .top-nav .nav-actions {
       display: flex;
       align-items: center;
-      gap: 16px;
+      gap: 12px;
+      flex-shrink: 0;
     }
 
     /* Antigravity style CTA button */
@@ -177,15 +184,17 @@
       background: #ffffff;
       color: #0E1117;
       border: none;
-      padding: 10px 22px;
-      border-radius: 24px;
-      font-size: 13.5px;
+      padding: 8px 18px;
+      border-radius: 22px;
+      font-size: 13px;
       font-weight: 600;
       font-family: inherit;
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 7px;
+      white-space: nowrap;
+      flex-shrink: 0;
       box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1);
       transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     }
@@ -922,6 +931,8 @@
     .profile-avatar {
       width: 100px;
       height: 100px;
+      flex-shrink: 0;
+      aspect-ratio: 1 / 1;
       border-radius: 50%;
       background: var(--accent-gradient);
       border: 2px solid var(--border-active);
@@ -1015,7 +1026,7 @@
     }
 
     /* Responsive adjustments */
-    @media (max-width: 992px) {
+    @media (max-width: 1120px) {
       .top-nav {
         padding: 0 20px;
       }
@@ -1025,6 +1036,8 @@
       .mobile-menu-btn {
         display: block;
       }
+    }
+    @media (max-width: 992px) {
       .doc-layout {
         grid-template-columns: 1fr;
         gap: 0;
@@ -1113,6 +1126,390 @@
       background: rgba(88, 166, 255, 0.05) !important;
       transform: translateX(4px);
     }
+
+    /* Summary Topics Page (Sidebar + Column Strip Cards + Reader) */
+    .summary-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-bottom: 22px;
+    }
+    .summary-layout {
+      display: grid;
+      grid-template-columns: 250px 1fr;
+      gap: 24px;
+      align-items: start;
+    }
+    .summary-sidebar {
+      position: sticky;
+      top: 20px;
+      background: var(--bg-panel);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 16px 12px;
+      backdrop-filter: blur(12px);
+    }
+    .summary-sidebar-title {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--text-muted);
+      padding: 0 10px 10px 10px;
+      margin-bottom: 8px;
+      border-bottom: 1px dashed var(--border-subtle);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .summary-filter-bar {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .summary-filter-btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text-muted);
+      padding: 9px 12px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-family: inherit;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .summary-filter-btn:hover {
+      background: rgba(255, 255, 255, 0.04);
+      color: #ffffff;
+    }
+    .summary-filter-btn.active {
+      background: var(--cat-bg, rgba(88, 166, 255, 0.14));
+      border-color: var(--cat-border, rgba(88, 166, 255, 0.35));
+      color: #ffffff;
+      font-weight: 600;
+    }
+    .summary-filter-label {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+    }
+    .summary-filter-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--cat-color, var(--accent-color));
+      flex-shrink: 0;
+    }
+    .summary-filter-count {
+      font-size: 11px;
+      padding: 2px 7px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--text-muted);
+    }
+    .summary-filter-btn.active .summary-filter-count {
+      background: var(--cat-bg, rgba(88, 166, 255, 0.2));
+      color: var(--cat-color, var(--accent-color));
+    }
+    .summary-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .summary-card {
+      --cat-color: #58A6FF;
+      --cat-bg: rgba(88, 166, 255, 0.12);
+      --cat-border: rgba(88, 166, 255, 0.28);
+      background: linear-gradient(90deg, var(--cat-bg) 0%, rgba(22, 27, 34, 0.88) 28%);
+      border: 1px solid var(--border-subtle);
+      border-left: 4px solid var(--cat-color);
+      border-radius: 10px;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      cursor: pointer;
+      transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+      backdrop-filter: blur(12px);
+    }
+    .summary-card:hover {
+      transform: translateX(4px);
+      border-color: var(--cat-color);
+      background: linear-gradient(90deg, var(--cat-bg) 0%, rgba(30, 36, 44, 0.95) 42%);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35), 0 0 14px var(--cat-bg);
+    }
+    .summary-card-main {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .summary-card-top {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .summary-card-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--cat-color, var(--accent-color));
+      background: var(--cat-bg, rgba(88, 166, 255, 0.12));
+      border: 1px solid var(--cat-border, rgba(88, 166, 255, 0.25));
+      padding: 2px 8px;
+      border-radius: 5px;
+    }
+    .summary-card-days {
+      font-size: 11.5px;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+    .summary-card-title {
+      font-size: 15.5px;
+      font-weight: 600;
+      color: #ffffff;
+      line-height: 1.4;
+      margin: 0;
+    }
+    .summary-card-desc {
+      font-size: 12.5px;
+      color: var(--text-muted);
+      line-height: 1.5;
+      margin: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .summary-card-side {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-shrink: 0;
+    }
+    .summary-card-tags {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 5px;
+    }
+    .summary-card-tag {
+      font-size: 11px;
+      padding: 2px 7px;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+    }
+    .summary-card-arrow {
+      font-size: 13px;
+      color: var(--cat-color);
+      opacity: 0.75;
+      transition: transform 0.2s ease, opacity 0.2s ease;
+    }
+    .summary-card:hover .summary-card-arrow {
+      transform: translateX(4px);
+      opacity: 1;
+    }
+    @media (max-width: 992px) {
+      .summary-layout {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+      .summary-sidebar {
+        position: static;
+        padding: 12px;
+      }
+      .summary-filter-bar {
+        flex-direction: row;
+        flex-wrap: wrap;
+      }
+      .summary-filter-btn {
+        width: auto;
+      }
+    }
+    @media (max-width: 640px) {
+      .summary-card {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+      }
+      .summary-card-desc {
+        white-space: normal;
+      }
+      .summary-card-side {
+        width: 100%;
+        justify-content: space-between;
+      }
+    }
+    .summary-reader-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .summary-back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-main);
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 13.5px;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .summary-back-btn:hover {
+      border-color: var(--accent-color);
+      color: #ffffff;
+      background: rgba(88, 166, 255, 0.12);
+    }
+    #tab-about {
+      max-width: 1180px;
+    }
+    .home-layout {
+      display: grid;
+      grid-template-columns: 310px 1fr;
+      gap: 24px;
+      align-items: start;
+    }
+    .home-sidebar-card {
+      position: sticky;
+      top: 20px;
+      background: var(--bg-panel);
+      border: 1px solid var(--border-subtle);
+      border-radius: 14px;
+      padding: 26px 22px;
+      backdrop-filter: blur(12px);
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+    .home-sidebar-profile {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 12px;
+    }
+    .home-sidebar-profile h3 {
+      font-size: 22px;
+      margin: 0;
+    }
+    .home-sidebar-profile p {
+      font-size: 13.5px;
+      color: var(--text-muted);
+      margin: 0;
+    }
+    .home-sidebar-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .home-sidebar-actions button {
+      width: 100%;
+      justify-content: center;
+    }
+    .home-sidebar-contacts {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding-top: 16px;
+      border-top: 1px dashed var(--border-subtle);
+      font-size: 12.5px;
+    }
+    .home-contact-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--text-main);
+      word-break: break-all;
+    }
+    .home-main {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      min-width: 0;
+    }
+    .home-stats-bar {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+    }
+    .home-stat-card {
+      background: var(--bg-panel);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 15px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      backdrop-filter: blur(12px);
+      transition: border-color 0.2s ease, transform 0.2s ease;
+    }
+    .home-stat-card.clickable {
+      cursor: pointer;
+    }
+    .home-stat-card.clickable:hover {
+      border-color: var(--accent-color);
+      transform: translateY(-2px);
+    }
+    .home-stat-label {
+      font-size: 11.5px;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+    .home-stat-value {
+      font-size: 20px;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+    .home-stat-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      flex-shrink: 0;
+    }
+    @media (max-width: 1160px) {
+      .home-stats-bar {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    @media (max-width: 992px) {
+      .home-layout {
+        grid-template-columns: 1fr;
+      }
+      .home-sidebar-card {
+        position: static;
+      }
+    }
+    @media (max-width: 576px) {
+      .home-stats-bar {
+        grid-template-columns: 1fr;
+      }
+    }
   </style>
 </head>
 <body>
@@ -1134,6 +1531,9 @@
       <!-- Dynamic Category Dropdowns -->
       <div id="dynamic-nav-dropdowns" style="display: flex; gap: 8px;"></div>
 
+      <button class="nav-item" id="btn-summary" onclick="ui.switch('summary')">
+        <i class="fa-solid fa-book-bookmark"></i> 綜整筆記
+      </button>
       <button class="nav-item" id="btn-dashboard" onclick="ui.switch('dashboard')">
         <i class="fa-solid fa-chart-line"></i> 進度儀表板
       </button>
@@ -1160,6 +1560,9 @@
     <!-- Dynamic Mobile Category Groups -->
     <div id="dynamic-mobile-nav-groups" style="display: flex; flex-direction: column; gap: 6px; width: 100%;"></div>
 
+    <button class="mobile-nav-item" id="m-btn-summary" onclick="ui.switch('summary')">
+      <i class="fa-solid fa-book-bookmark"></i> 綜整筆記
+    </button>
     <button class="mobile-nav-item" id="m-btn-dashboard" onclick="ui.switch('dashboard')">
       <i class="fa-solid fa-chart-line"></i> 進度儀表板
     </button>
@@ -1184,6 +1587,54 @@
 
     <!-- Dynamic Markdown Content Sections -->
     <div id="dynamic-sections"></div>
+
+    <!-- TAB: Comprehensive Summary Notes (Card Grid + Reader) -->
+    <section id="tab-summary" class="editor-section" style="max-width: 95%;">
+      <!-- View 1: Topic Cards Grid -->
+      <div id="summary-list-view">
+        <div class="summary-header">
+          <div>
+            <h2><i class="fa-solid fa-book-bookmark" style="color: var(--accent-color);"></i> 主題綜整筆記總覽</h2>
+            <p style="color: var(--text-muted); font-size: 13.5px; margin-top: 6px;">依技術領域彙整 319 天學習歷程與跨領域筆記，點選卡片即可進入專題精讀。</p>
+          </div>
+        </div>
+        <div class="summary-layout">
+          <aside class="summary-sidebar">
+            <div class="summary-sidebar-title">
+              <i class="fa-solid fa-folder-tree" style="color: var(--accent-color);"></i> 系列分類
+            </div>
+            <div class="summary-filter-bar" id="summary-filter-bar"></div>
+          </aside>
+          <div class="summary-grid" id="summary-cards-grid">
+            <div class="spinner-container">
+              <i class="fa-solid fa-spinner spinner"></i>
+              <p>正在載入綜整主題清單...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- View 2: Topic Reader -->
+      <div id="summary-reader-view" style="display: none;">
+        <div class="summary-reader-toolbar">
+          <button class="summary-back-btn" onclick="summaryEngine.backToList()">
+            <i class="fa-solid fa-arrow-left"></i> 返回主題卡片牆
+          </button>
+          <div id="summary-reader-meta" style="display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--text-muted);"></div>
+        </div>
+        <div class="doc-layout">
+          <aside class="doc-toc-sidebar">
+            <div class="submenu-title"><i class="fa-solid fa-list-ol"></i> 專題目錄</div>
+            <div class="toc-container">
+              <div id="summary-reader-tocList" class="toc-list"></div>
+            </div>
+          </aside>
+          <div class="idx-panel doc-content">
+            <div class="markdown-body" id="summary-reader-content"></div>
+          </div>
+        </div>
+      </div>
+    </section>
 
     <!-- TAB 3: Dashboard -->
     <section id="tab-dashboard" class="editor-section">
@@ -1277,96 +1728,118 @@
     <!-- TAB 5: User Information / Home Page -->
     <section id="tab-about" class="editor-section active">
       <h2><i class="fa-solid fa-house-user" style="color: var(--accent-color);"></i> 個人學習首頁 // Home</h2>
-      
-      <div class="detail-grid">
-        <!-- Left Side: Profile, Thoughts & Bio -->
-        <div style="display: flex; flex-direction: column; gap: 24px;">
-          <div class="idx-panel" style="margin-bottom: 0;">
-            <div class="profile-card">
-              <div class="profile-avatar" style="overflow: hidden;">
-                <img src="xiaoba_avatar.png" alt="Avatar" style="width: 100%; height: 100%; object-fit: cover;" />
+
+      <div class="home-layout">
+        <!-- Left Sidebar Card: Profile, Quote, Actions, Contacts -->
+        <aside class="home-sidebar-card">
+          <div class="home-sidebar-profile">
+            <div class="profile-avatar" style="overflow: hidden;">
+              <img src="xiaoba_avatar.png" alt="Avatar" style="width: 100%; height: 100%; object-fit: cover;" />
+            </div>
+            <h3>小八</h3>
+            <p>正在修行Java之道</p>
+          </div>
+
+          <blockquote style="margin: 0; font-size: 13.5px;">
+            「我要學會Java，擺脫三分鐘熱度！」
+          </blockquote>
+
+          <div class="home-sidebar-actions">
+            <button class="run-btn" style="padding: 9px 14px; font-size: 13px;" onclick="ui.switch('summary')">
+              <i class="fa-solid fa-book-bookmark"></i> 瀏覽綜整筆記
+            </button>
+            <button class="summary-back-btn" style="padding: 9px 14px; font-size: 13px;" onclick="ui.switch('search')">
+              <i class="fa-solid fa-terminal"></i> 全文探測
+            </button>
+          </div>
+
+          <div class="home-sidebar-contacts">
+            <div class="home-contact-item">
+              <i class="fa-solid fa-envelope" style="color: var(--accent-color); width: 16px; text-align: center;"></i>
+              <span>xfrat.ming@gmail.com</span>
+            </div>
+            <div class="home-contact-item">
+              <i class="fa-brands fa-github" style="color: var(--accent-color); width: 16px; text-align: center;"></i>
+              <a href="https://github.com/learning-official" target="_blank" style="color: var(--accent-color); text-decoration: none;">@learning-official</a>
+            </div>
+          </div>
+        </aside>
+
+        <!-- Right Main Area: Stats, Milestones, Tech Stack -->
+        <div class="home-main">
+          <div class="home-stats-bar">
+            <div class="home-stat-card">
+              <div>
+                <div class="home-stat-label">累積學習天數</div>
+                <div class="home-stat-value" style="color: var(--accent-color);" id="home-total-days">0 天</div>
               </div>
-              <div class="profile-info">
-                <h3>小八</h3>
-                <p>正在修行Java之道</p>
+              <div class="home-stat-icon" style="background: rgba(88, 166, 255, 0.12); color: var(--accent-color);">
+                <i class="fa-solid fa-calendar-days"></i>
               </div>
             </div>
-            
-            <h3 style="border-bottom: 1px dashed var(--border-subtle); padding-bottom: 8px; margin-top: 20px;">想說的話與學習理念</h3>
-            <blockquote style="margin-top: 15px;">
-              「我要學會Java，擺脫三分鐘熱度！」
-            </blockquote>
+            <div class="home-stat-card clickable" onclick="ui.switch('summary')">
+              <div>
+                <div class="home-stat-label">綜整專題數</div>
+                <div class="home-stat-value" style="color: #BC8CFF;" id="home-summary-count">13 篇</div>
+              </div>
+              <div class="home-stat-icon" style="background: rgba(188, 140, 255, 0.12); color: #BC8CFF;">
+                <i class="fa-solid fa-book-bookmark"></i>
+              </div>
+            </div>
+            <div class="home-stat-card clickable" onclick="core.likePage()">
+              <div>
+                <div class="home-stat-label">累積點讚數</div>
+                <div class="home-stat-value" style="color: var(--danger-color);" id="home-like-count">0</div>
+              </div>
+              <div class="home-stat-icon" style="background: rgba(255, 123, 114, 0.12); color: var(--danger-color);">
+                <i class="fa-regular fa-heart" id="home-like-icon"></i>
+              </div>
+            </div>
+            <div class="home-stat-card">
+              <div>
+                <div class="home-stat-label">累積訪客數</div>
+                <div style="margin-top: 6px; height: 22px; display: flex; align-items: center;">
+                  <img src="https://api.visitorbadge.io/api/VisitorHit?user=learning-official&repo=learning-official.github.io&countColor=%2358a6ff" alt="Visitor Count" style="height: 22px; border: none; background: transparent; padding: 0; margin: 0; box-shadow: none;" />
+                </div>
+              </div>
+              <div class="home-stat-icon" style="background: rgba(86, 211, 100, 0.12); color: var(--success-color);">
+                <i class="fa-solid fa-eye"></i>
+              </div>
+            </div>
           </div>
 
           <div class="idx-panel" style="margin-bottom: 0;">
             <h3 style="border-bottom: 1px dashed var(--border-subtle); padding-bottom: 8px;">學習歷程里程碑</h3>
-            <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 15px;">
-              <div class="terminal-row" style="margin: 0; padding: 12px 16px; justify-content: space-between;">
-                <span><i class="fa-solid fa-calendar-check" style="color: var(--success-color); margin-right: 10px;"></i> Java SE 核心語法基礎打底</span>
+            <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
+              <div class="terminal-row" style="margin: 0; padding: 11px 16px; justify-content: space-between; font-size: 13.5px;">
+                <span><i class="fa-solid fa-check" style="color: var(--success-color); margin-right: 10px;"></i>Java SE 核心與集合底層</span>
                 <span class="status-tag">已完成</span>
               </div>
-              <div class="terminal-row" style="margin: 0; padding: 12px 16px; justify-content: space-between;">
-                <span><i class="fa-solid fa-laptop-code" style="color: var(--success-color); margin-right: 10px;"></i> Spring Boot 專案實戰開發</span>
-                <span class="status-tag">進行中</span>
+              <div class="terminal-row" style="margin: 0; padding: 11px 16px; justify-content: space-between; font-size: 13.5px;">
+                <span><i class="fa-solid fa-check" style="color: var(--success-color); margin-right: 10px;"></i>Spring Boot、Security 與電商實戰</span>
+                <span class="status-tag">已完成</span>
               </div>
-              <div class="terminal-row" style="margin: 0; padding: 12px 16px; justify-content: space-between;">
-                <span><i class="fa-solid fa-cubes-stacked" style="color: var(--accent-color); margin-right: 10px;"></i> 系統效能優化與高併發探索</span>
-                <span class="status-tag" style="color: var(--warning-color); border-color: var(--warning-color);">規劃中</span>
+              <div class="terminal-row" style="margin: 0; padding: 11px 16px; justify-content: space-between; font-size: 13.5px;">
+                <span><i class="fa-solid fa-check" style="color: var(--success-color); margin-right: 10px;"></i>JVM 根源與 Oracle OCP 認證</span>
+                <span class="status-tag">已完成</span>
               </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Right Side: Metrics Snapshot, Skills, Contacts -->
-        <div style="display: flex; flex-direction: column; gap: 24px;">
-          <!-- Progress Snapshot -->
-          <div class="idx-panel" style="margin-bottom: 0;">
-            <h3 style="border-bottom: 1px dashed var(--border-subtle); padding-bottom: 8px;">Java 學習進度快照</h3>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 15px;">
-              <div class="terminal-row" style="margin: 0; padding: 12px 16px; flex-direction: column; align-items: flex-start;">
-                <span style="color: var(--text-muted); font-size: 11px; text-transform: uppercase;">總學習天數</span>
-                <span style="font-size: 20px; font-weight: 700; color: var(--accent-color); margin-top: 4px;" id="home-total-days">0 天</span>
-              </div>
-              <div class="terminal-row" style="margin: 0; padding: 12px 16px; flex-direction: column; align-items: flex-start;">
-                <span style="color: var(--text-muted); font-size: 11px; text-transform: uppercase;">任務完成度</span>
-                <span style="font-size: 20px; font-weight: 700; color: var(--success-color); margin-top: 4px;" id="home-task-percent">0%</span>
-              </div>
-              <div class="terminal-row" style="margin: 0; padding: 12px 16px; flex-direction: column; align-items: flex-start; cursor: pointer;" onclick="core.likePage()">
-                <span style="color: var(--text-muted); font-size: 11px; text-transform: uppercase;">累積點讚數</span>
-                <span style="font-size: 20px; font-weight: 700; color: var(--danger-color); margin-top: 4px; display: flex; align-items: center; gap: 6px;">
-                  <i class="fa-regular fa-heart" id="home-like-icon"></i>
-                  <span id="home-like-count">0</span>
-                </span>
-              </div>
-              <div class="terminal-row" style="margin: 0; padding: 12px 16px; flex-direction: column; align-items: flex-start;">
-                <span style="color: var(--text-muted); font-size: 11px; text-transform: uppercase;">累積訪客數</span>
-                <div style="margin-top: 6px; height: 20px; display: flex; align-items: center;">
-                  <img src="https://api.visitorbadge.io/api/VisitorHit?user=learning-official&repo=learning-official.github.io&countColor=%2358a6ff" alt="Visitor Count" style="height: 20px; border: none; background: transparent; padding: 0; margin: 0; box-shadow: none;" />
-                </div>
+              <div class="terminal-row" style="margin: 0; padding: 11px 16px; justify-content: space-between; font-size: 13.5px;">
+                <span><i class="fa-solid fa-cube" style="color: var(--accent-color); margin-right: 10px;"></i>Minecraft PaperMC 插件開發</span>
+                <span class="status-tag" style="color: var(--accent-color); border-color: var(--accent-color);">進行中</span>
               </div>
             </div>
           </div>
 
           <div class="idx-panel" style="margin-bottom: 0;">
-            <h3 style="border-bottom: 1px dashed var(--border-subtle); padding-bottom: 8px;">核心開發技術棧 (Skills)</h3>
+            <h3 style="border-bottom: 1px dashed var(--border-subtle); padding-bottom: 8px;">核心開發技術棧</h3>
             <div class="tech-stack" style="margin-top: 15px;">
-              <div class="tech-tag"><i class="fa-brands fa-java" style="color: #F89820; margin-right: 8px;"></i>Java SE / EE</div>
-              <div class="tech-tag"><i class="fa-solid fa-leaf" style="color: #6DB33F; margin-right: 8px;"></i>Spring Boot</div>
-              <div class="tech-tag"><i class="fa-solid fa-database" style="color: #00758F; margin-right: 8px;"></i>Hibernate / JPA</div>
-              <div class="tech-tag"><i class="fa-solid fa-cubes" style="color: #58A6FF; margin-right: 8px;"></i>Maven / Gradle</div>
-              <div class="tech-tag"><i class="fa-brands fa-git-alt" style="color: #F05032; margin-right: 8px;"></i>Git / GitHub</div>
-            </div>
-
-            <h3 style="border-bottom: 1px dashed var(--border-subtle); padding-bottom: 8px; margin-top: 30px;">通訊介面與連線渠道</h3>
-            <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
-              <div class="terminal-row" style="margin: 0; padding: 12px 16px; font-size: 13px;">
-                <span><i class="fa-solid fa-envelope" style="color: var(--accent-color); margin-right: 12px;"></i>聯絡信箱</span>
-                <span style="color: #fff;">xfrat.ming@gmail.com</span>
-              </div>
-              <div class="terminal-row" style="margin: 0; padding: 12px 16px; font-size: 13px;">
-                <span><i class="fa-brands fa-github" style="color: var(--accent-color); margin-right: 12px;"></i>GitHub 主頁</span>
-                <a href="https://github.com/learning-official" target="_blank" style="color: var(--accent-color); text-decoration: none;">@learning-official</a>
-              </div>
+              <div class="tech-tag"><i class="fa-brands fa-java" style="color: #F89820; margin-right: 8px;"></i>Java 17+ / OCP</div>
+              <div class="tech-tag"><i class="fa-solid fa-leaf" style="color: #6DB33F; margin-right: 8px;"></i>Spring Boot 3</div>
+              <div class="tech-tag"><i class="fa-solid fa-shield-halved" style="color: #56D364; margin-right: 8px;"></i>Spring Security / JWT</div>
+              <div class="tech-tag"><i class="fa-solid fa-database" style="color: #58A6FF; margin-right: 8px;"></i>JPA / MySQL</div>
+              <div class="tech-tag"><i class="fa-solid fa-lock" style="color: #E3B341; margin-right: 8px;"></i>ShedLock / 樂觀鎖</div>
+              <div class="tech-tag"><i class="fa-solid fa-cube" style="color: #39D0D8; margin-right: 8px;"></i>PaperMC / Brigadier</div>
+              <div class="tech-tag"><i class="fa-brands fa-git-alt" style="color: #F05032; margin-right: 8px;"></i>Maven / Git</div>
             </div>
           </div>
         </div>
@@ -1405,11 +1878,14 @@
     const DEFAULT_MD_FILES = [
       'Java_part1.md',
       'Java_part2.md',
-      'Java_part3.md'
+      'Java_part3.md',
+      'Java_part4.md',
+      '雜七雜八的知識_part1.md'
     ];
 
     // Global State for Markdown Data cache (dynamically populated)
     let mdCache = {};
+    let noteKeyToSeries = {};
 
     // Custom renderer for Marked.js to handle checkboxes (compatible with all versions)
     const renderer = new marked.Renderer();
@@ -1497,11 +1973,10 @@
         const mBtnNode = document.getElementById('m-btn-' + tabName);
         if (mBtnNode) mBtnNode.classList.add('active');
 
-        // Dropdown Highlight Logic (supports dynamic language categories)
-        const match = tabName.match(/^([a-zA-Z0-9\u4e00-\u9fa5]+)_part\d+$/i);
-        if (match) {
-          const lang = match[1];
-          const trigger = document.getElementById('btn-' + lang.toLowerCase() + '-series');
+        // Dropdown Highlight Logic (supports any dynamic series/filename format)
+        const series = noteKeyToSeries[tabName];
+        if (series) {
+          const trigger = document.getElementById('btn-' + series.toLowerCase() + '-series');
           if (trigger) trigger.classList.add('active');
           const subBtn = document.querySelector(`.dropdown-content button[onclick="ui.switch('${tabName}')"]`);
           if (subBtn) subBtn.classList.add('active');
@@ -1569,6 +2044,50 @@
       }
     };
 
+    // Helper function to parse any .md filename into { series, key, filename, label, num }
+    function parseNoteFilename(filename) {
+      const baseName = filename.replace(/\.md$/i, '');
+      const key = baseName.replace(/[^a-zA-Z0-9\u4e00-\u9fa5_-]/g, '_');
+
+      // 1. Matches "<series>_part<N>" or "part<N>" (case-insensitive, supports _ / - / space)
+      const partMatch = baseName.match(/^(.*?)[_\-\s]*part[_\-\s]*(\d+)$/i);
+      if (partMatch) {
+        const series = partMatch[1].trim() || '其他筆記';
+        const num = parseInt(partMatch[2], 10);
+        return {
+          series,
+          key,
+          filename,
+          label: `Part ${num} 筆記`,
+          num,
+          isStandalone: false
+        };
+      }
+
+      // 2. Matches "<series>_<subtopic>" or "<series>-<subtopic>"
+      const sepMatch = baseName.match(/^([^_\-]+)[_\-]+(.+)$/);
+      if (sepMatch) {
+        return {
+          series: sepMatch[1].trim(),
+          key,
+          filename,
+          label: sepMatch[2].trim(),
+          num: Number.MAX_SAFE_INTEGER,
+          isStandalone: false
+        };
+      }
+
+      // 3. Standalone markdown file without prefix/part (e.g. "雜七雜八的知識.md")
+      return {
+        series: baseName,
+        key,
+        filename,
+        label: baseName,
+        num: Number.MAX_SAFE_INTEGER,
+        isStandalone: true
+      };
+    }
+
     // Helper function to scan repository files or use fallback
     async function scanMarkdownFiles() {
       if (window.location.protocol === 'file:') {
@@ -1582,7 +2101,7 @@
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         const files = await response.json();
         const mdFiles = files
-          .filter(f => f.type === 'file' && /^[a-zA-Z0-9\u4e00-\u9fa5]+_part\d+\.md$/i.test(f.name))
+          .filter(f => f.type === 'file' && /\.md$/i.test(f.name) && !/^(readme|part\d+|scratch_.*)\.md$/i.test(f.name))
           .map(f => f.name);
         if (mdFiles.length === 0) return DEFAULT_MD_FILES;
         return mdFiles;
@@ -2034,11 +2553,15 @@
 
     // Populate Sidebar TOC dynamically
     function generateTOC(partKey) {
-      const tocList = document.getElementById(partKey + '-tocList');
+      const headings = mdCache[partKey] ? mdCache[partKey].headings : [];
+      renderTOCList(partKey + '-tocList', headings);
+    }
+
+    function renderTOCList(tocListId, headings) {
+      const tocList = document.getElementById(tocListId);
       if (!tocList) return;
       tocList.innerHTML = '';
-      
-      const headings = mdCache[partKey].headings;
+
       if (!headings || headings.length === 0) {
         tocList.innerHTML = '<div style="color: var(--text-muted); font-size: 12px; padding: 5px 12px;">// 無可用的目錄項目</div>';
         return;
@@ -2086,6 +2609,347 @@
 
       setupScrollSpy();
     }
+
+    // Category Color Themes for Summary Cards & Filters
+    const CATEGORY_THEMES = {
+      'Java 核心': { color: '#58A6FF', bg: 'rgba(88, 166, 255, 0.13)', border: 'rgba(88, 166, 255, 0.30)' },
+      '併發與效能': { color: '#E3B341', bg: 'rgba(227, 179, 65, 0.13)', border: 'rgba(227, 179, 65, 0.30)' },
+      'OCP 認證': { color: '#FF7B72', bg: 'rgba(255, 123, 114, 0.13)', border: 'rgba(255, 123, 114, 0.30)' },
+      'Spring 生態': { color: '#56D364', bg: 'rgba(86, 211, 100, 0.13)', border: 'rgba(86, 211, 100, 0.30)' },
+      '系統架構': { color: '#BC8CFF', bg: 'rgba(188, 140, 255, 0.13)', border: 'rgba(188, 140, 255, 0.30)' },
+      'Minecraft 插件': { color: '#39D0D8', bg: 'rgba(57, 208, 216, 0.13)', border: 'rgba(57, 208, 216, 0.30)' },
+      '綜合知識庫': { color: '#F778BA', bg: 'rgba(247, 120, 186, 0.13)', border: 'rgba(247, 120, 186, 0.30)' }
+    };
+
+    const getCategoryTheme = (cat) => CATEGORY_THEMES[cat] || {
+      color: '#58A6FF',
+      bg: 'rgba(88, 166, 255, 0.13)',
+      border: 'rgba(88, 166, 255, 0.30)'
+    };
+
+    // Comprehensive Summary Notes Engine
+    const DEFAULT_SUMMARY_TOPICS = [
+      {
+        id: 'java-oop-and-types',
+        title: 'OOP、資料型態、Enum 與 Object 合約',
+        category: 'Java 核心',
+        icon: 'fa-cubes',
+        summary: '編譯與資料型態、OOP 封裝繼承多型、Inner Class / GC / Annotation 與 Enum / Object。',
+        tags: ['OOP', 'Enum', 'Object'],
+        relatedDays: 'Day 1~20, 29~32, 172~180',
+        file: 'summary/java-oop-and-types.md'
+      },
+      {
+        id: 'java-collections-and-generics',
+        title: '集合框架、泛型與比較器',
+        category: 'Java 核心',
+        icon: 'fa-layer-group',
+        summary: 'List / HashMap / HashSet、Generics、Iterator 與 Comparable / Deque。',
+        tags: ['Collections', 'Generics', 'Deque'],
+        relatedDays: 'Day 21~28, 104, 167~171, 191~198',
+        file: 'summary/java-collections-and-generics.md'
+      },
+      {
+        id: 'java-jvm-and-modern-features',
+        title: 'JVM 根源、IO、String 與設計模式',
+        category: 'Java 核心',
+        icon: 'fa-microchip',
+        summary: 'Serializable、Java IO 與例外處理、JDK/JRE/JVM、String 家族與 Builder。',
+        tags: ['JVM', 'Java IO', 'String'],
+        relatedDays: 'Day 91~103, 181~190, 199~204',
+        file: 'summary/java-jvm-and-modern-features.md'
+      },
+      {
+        id: 'java-concurrency-and-jmm',
+        title: '多執行緒、鎖與 JMM 記憶體模型',
+        category: '併發與效能',
+        icon: 'fa-bolt',
+        summary: 'Multi-Thread 同步與鎖機制，搭配 Happens-Before 與 volatile 可見性。',
+        tags: ['Multi-Thread', 'JMM', 'volatile'],
+        relatedDays: 'Day 81~90, 275',
+        file: 'summary/java-concurrency-and-jmm.md'
+      },
+      {
+        id: 'java-functional-and-streams',
+        title: 'Lambda、Optional 與 Stream',
+        category: '併發與效能',
+        icon: 'fa-wand-magic-sparkles',
+        summary: 'Lambda、Optional、Collectors、四大 Function 與 IntStream 效能。',
+        tags: ['Lambda', 'Optional', 'IntStream'],
+        relatedDays: 'Day 105~110, 157~166, 276',
+        file: 'summary/java-functional-and-streams.md'
+      },
+      {
+        id: 'java-ocp-pitfalls',
+        title: 'Java Foundation / OCA / OCP 測驗全集',
+        category: 'OCP 認證',
+        icon: 'fa-certificate',
+        summary: '完整收錄 Oracle Foundation、OCA 與 OCP 31 篇實戰測驗筆記。',
+        tags: ['OCP', 'JPMS', 'Sealed'],
+        relatedDays: 'Day 266~301',
+        file: 'summary/java-ocp-pitfalls.md'
+      },
+      {
+        id: 'spring-boot-core-and-web',
+        title: 'Spring Boot 核心與 Servlet / Tomcat',
+        category: 'Spring 生態',
+        icon: 'fa-leaf',
+        summary: 'Spring Boot IoC/DI、RESTful 與 JPA，結合 Tomcat / JSP / Servlet MVC。',
+        tags: ['Spring Boot', 'JPA', 'Servlet'],
+        relatedDays: 'Day 33~62, 205~214',
+        file: 'summary/spring-boot-core-and-web.md'
+      },
+      {
+        id: 'spring-security-jwt',
+        title: 'Spring Security + JWT 策略授權',
+        category: 'Spring 生態',
+        icon: 'fa-shield-halved',
+        summary: '使用者資料管控 Part 1 JWT、FilterChain、@PreAuthorize 與策略模式。',
+        tags: ['Security', 'JWT', 'Strategy'],
+        relatedDays: 'Day 63~80, 227~245',
+        file: 'summary/spring-security-jwt.md'
+      },
+      {
+        id: 'spring-schedule-and-locking',
+        title: 'Spring Schedule 排程與分散式鎖',
+        category: 'Spring 生態',
+        icon: 'fa-clock',
+        summary: 'Cron 表達式、TaskScheduler 執行緒池、ShedLock 與 OptimisticLock。',
+        tags: ['@Scheduled', 'ShedLock', 'Lock'],
+        relatedDays: 'Day 215~226',
+        file: 'summary/spring-schedule-and-locking.md'
+      },
+      {
+        id: 'ecommerce-engineering-practices',
+        title: '電商專案實戰（Part 2 ~ Part 3）',
+        category: '系統架構',
+        icon: 'fa-cart-shopping',
+        summary: '電商系統完整開發紀錄：MapStruct、Swagger、ErrorCode 與防超賣。',
+        tags: ['MapStruct', 'Swagger', 'Retryable'],
+        relatedDays: 'Day 111~156, 246~265',
+        file: 'summary/ecommerce-engineering-practices.md'
+      },
+      {
+        id: 'minecraft-plugin-gui-and-events',
+        title: 'Paper 插件：事件、GUI 與 PDC',
+        category: 'Minecraft 插件',
+        icon: 'fa-cube',
+        summary: 'JavaPlugin、Listener 事件、MenuType 視窗、ItemMeta 與 PDC。',
+        tags: ['PaperMC', 'MenuType', 'PDC'],
+        relatedDays: 'Day 302~308',
+        file: 'summary/minecraft-plugin-gui-and-events.md'
+      },
+      {
+        id: 'minecraft-plugin-commands-and-config',
+        title: 'Brigadier 指令樹與 Config 設計',
+        category: 'Minecraft 插件',
+        icon: 'fa-terminal',
+        summary: 'CommandSourceStack、指令樹權限、TextComponent 與 YamlConfiguration。',
+        tags: ['Brigadier', 'Adventure', 'YAML'],
+        relatedDays: 'Day 309~319',
+        file: 'summary/minecraft-plugin-commands-and-config.md'
+      },
+      {
+        id: 'general-cs-and-ai-notes',
+        title: '雜七雜八的知識',
+        category: '綜合知識庫',
+        icon: 'fa-brain',
+        summary: '完整收錄菱形繼承、Forward / Reverse Proxy 與 RAG 原理筆記。',
+        tags: ['Proxy', 'RAG', 'CS 基礎'],
+        relatedDays: '雜七雜八知識',
+        file: 'summary/general-cs-and-ai-notes.md'
+      }
+    ];
+
+    const summaryCache = {};
+    const summaryEngine = {
+      topics: [],
+      currentCategory: '全部',
+
+      async init() {
+        try {
+          const base = window.location.href.endsWith('/')
+            ? window.location.href
+            : window.location.href.substring(0, window.location.href.lastIndexOf('/') + 1);
+          const res = await fetch(base + 'summary/index.json', { cache: 'no-store' });
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
+          const data = await res.json();
+          this.topics = Array.isArray(data) && data.length > 0 ? data : DEFAULT_SUMMARY_TOPICS;
+        } catch (err) {
+          console.warn('[Learning-official] Failed to fetch summary/index.json, using fallback list:', err);
+          this.topics = DEFAULT_SUMMARY_TOPICS;
+        }
+        this.renderFilters();
+        this.renderCards();
+        const homeSummaryCount = document.getElementById('home-summary-count');
+        if (homeSummaryCount) homeSummaryCount.innerText = `${this.topics.length} 篇`;
+      },
+
+      renderFilters() {
+        const bar = document.getElementById('summary-filter-bar');
+        if (!bar) return;
+        const categories = ['全部', ...new Set(this.topics.map(t => t.category))];
+        bar.innerHTML = categories.map(cat => {
+          const safeCat = escapeHTML(cat);
+          const count = cat === '全部' ? this.topics.length : this.topics.filter(t => t.category === cat).length;
+          const activeClass = this.currentCategory === cat ? 'active' : '';
+          const theme = getCategoryTheme(cat);
+          const styleAttr = `style="--cat-color: ${theme.color}; --cat-bg: ${theme.bg}; --cat-border: ${theme.border};"`;
+          return `
+            <button class="summary-filter-btn ${activeClass}" ${styleAttr} onclick="summaryEngine.filter('${safeCat.replace(/'/g, "\\'")}')">
+              <span class="summary-filter-label">
+                <span class="summary-filter-dot"></span>
+                <span>${safeCat}</span>
+              </span>
+              <span class="summary-filter-count">${count}</span>
+            </button>
+          `;
+        }).join('');
+      },
+
+      filter(category) {
+        this.currentCategory = category;
+        this.renderFilters();
+        this.renderCards();
+        const homeSummaryCount = document.getElementById('home-summary-count');
+        if (homeSummaryCount) homeSummaryCount.innerText = `${this.topics.length} 篇`;
+      },
+
+      renderCards() {
+        const grid = document.getElementById('summary-cards-grid');
+        if (!grid) return;
+
+        const filtered = this.currentCategory === '全部'
+          ? this.topics
+          : this.topics.filter(t => t.category === this.currentCategory);
+
+        if (filtered.length === 0) {
+          grid.innerHTML = '<p style="color: var(--text-muted); text-align: center; padding: 30px;">// 此分類暫無綜整筆記</p>';
+          return;
+        }
+
+        grid.innerHTML = filtered.map(topic => {
+          const icon = escapeHTML(topic.icon || 'fa-book');
+          const category = escapeHTML(topic.category || '綜整');
+          const title = escapeHTML(topic.title);
+          const summary = escapeHTML(topic.summary || '');
+          const relatedDays = escapeHTML(topic.relatedDays || '');
+          const tagsHtml = (topic.tags || []).slice(0, 3).map(tag => `<span class="summary-card-tag">#${escapeHTML(tag)}</span>`).join('');
+          const safeId = escapeHTML(topic.id).replace(/'/g, "\\'");
+          const theme = getCategoryTheme(topic.category);
+          const cardStyle = `--cat-color: ${theme.color}; --cat-bg: ${theme.bg}; --cat-border: ${theme.border};`;
+
+          return `
+            <article class="summary-card" style="${cardStyle}" onclick="summaryEngine.openTopic('${safeId}')">
+              <div class="summary-card-main">
+                <div class="summary-card-top">
+                  <span class="summary-card-badge"><i class="fa-solid ${icon}"></i> ${category}</span>
+                  <span class="summary-card-days">${relatedDays}</span>
+                </div>
+                <h3 class="summary-card-title">${title}</h3>
+                <p class="summary-card-desc">${summary}</p>
+              </div>
+              <div class="summary-card-side">
+                <div class="summary-card-tags">${tagsHtml}</div>
+                <i class="fa-solid fa-chevron-right summary-card-arrow"></i>
+              </div>
+            </article>
+          `;
+        }).join('');
+      },
+
+      async openTopic(topicId) {
+        const topic = this.topics.find(t => t.id === topicId);
+        if (!topic) return;
+
+        const listView = document.getElementById('summary-list-view');
+        const readerView = document.getElementById('summary-reader-view');
+        const contentDiv = document.getElementById('summary-reader-content');
+        const metaDiv = document.getElementById('summary-reader-meta');
+        const mainContent = document.getElementById('main-content');
+
+        if (listView) listView.style.display = 'none';
+        if (readerView) readerView.style.display = 'block';
+        if (mainContent) mainContent.scrollTo({ top: 0, behavior: 'smooth' });
+
+        if (metaDiv) {
+          const theme = getCategoryTheme(topic.category);
+          metaDiv.innerHTML = `
+            <span class="summary-card-badge" style="--cat-color: ${theme.color}; --cat-bg: ${theme.bg}; --cat-border: ${theme.border};"><i class="fa-solid ${escapeHTML(topic.icon || 'fa-book')}"></i> ${escapeHTML(topic.category)}</span>
+            <span><i class="fa-regular fa-calendar" style="margin-right: 4px;"></i>${escapeHTML(topic.relatedDays || '')}</span>
+          `;
+        }
+
+        if (summaryCache[topicId]) {
+          this.renderTopicHtml(topicId, summaryCache[topicId]);
+          return;
+        }
+
+        if (contentDiv) {
+          contentDiv.innerHTML = `
+            <div class="spinner-container">
+              <i class="fa-solid fa-spinner spinner"></i>
+              <p>正在載入專題筆記「${escapeHTML(topic.title)}」...</p>
+            </div>
+          `;
+        }
+
+        try {
+          const base = window.location.href.endsWith('/')
+            ? window.location.href
+            : window.location.href.substring(0, window.location.href.lastIndexOf('/') + 1);
+          const res = await fetch(base + topic.file, { cache: 'no-store' });
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
+          const text = await res.text();
+          summaryCache[topicId] = text;
+          this.renderTopicHtml(topicId, text);
+        } catch (err) {
+          if (contentDiv) {
+            contentDiv.innerHTML = `
+              <div style="padding: 24px; background: rgba(255,123,114,0.1); border: 1px solid rgba(255,123,114,0.2); border-radius: 8px;">
+                <h4 style="color: var(--danger-color); margin-bottom: 8px;"><i class="fa-solid fa-terminal"></i> 無法載入專題檔案</h4>
+                <p>讀取 <code>${escapeHTML(topic.file)}</code> 失敗（${escapeHTML(err.message)}）。若為本地開啟，請使用 Live Server 或 <code>npx serve</code>。</p>
+              </div>
+            `;
+          }
+          renderTOCList('summary-reader-tocList', []);
+        }
+      },
+
+      renderTopicHtml(topicId, text) {
+        const contentDiv = document.getElementById('summary-reader-content');
+        if (!contentDiv) return;
+
+        let cleanText = text.replace(/^---[\s\S]*?---/, '');
+        cleanText = cleanText.replace(/```(\w+)=.*/g, '```$1');
+        const parsedHtml = marked.parse(cleanText);
+        contentDiv.innerHTML = typeof DOMPurify !== 'undefined' ? DOMPurify.sanitize(parsedHtml) : parsedHtml;
+
+        const headings = contentDiv.querySelectorAll('h2, h3');
+        const tocHeadings = Array.from(headings).map((h, i) => {
+          if (!h.id) h.id = `summary-${topicId}-heading-${i}`;
+          let label = h.innerText.replace(/^[⭐#\s]+/, '').trim();
+          if (h.tagName === 'H2' && h.nextElementSibling && h.nextElementSibling.tagName === 'H4') {
+            const sub = h.nextElementSibling.innerText.replace(/^學習重點\s*[:：]\s*/i, '').trim();
+            if (sub) label = `${label}｜${sub}`;
+          }
+          return { id: h.id, text: label, tagName: h.tagName };
+        });
+
+        Prism.highlightAllUnder(contentDiv);
+        renderTOCList('summary-reader-tocList', tocHeadings);
+      },
+
+      backToList() {
+        const listView = document.getElementById('summary-list-view');
+        const readerView = document.getElementById('summary-reader-view');
+        const mainContent = document.getElementById('main-content');
+
+        if (readerView) readerView.style.display = 'none';
+        if (listView) listView.style.display = 'block';
+        if (mainContent) mainContent.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    };
 
     // ScrollSpy to highlight currently visible headings in TOC
     function setupScrollSpy() {
@@ -2201,31 +3065,24 @@
       const mdFiles = await scanMarkdownFiles();
       console.log('[Learning-official] Detected markdown files:', mdFiles);
 
-      // 2. Parse files into structured categories
-      // categories format: { 'Java': [ { key: 'Java_part1', filename: 'Java_part1.md', label: 'Part 1 筆記', num: 1 }, ... ] }
+      // 2. Parse any .md files into structured series & sort by part number
       const categories = {};
+      noteKeyToSeries = {};
       mdFiles.forEach(filename => {
-        const match = filename.match(/^([a-zA-Z0-9\u4e00-\u9fa5]+)_part(\d+)\.md$/i);
-        if (match) {
-          const lang = match[1];
-          const num = parseInt(match[2], 10);
-          const key = `${lang}_part${num}`;
-          
-          if (!categories[lang]) {
-            categories[lang] = [];
-          }
-          categories[lang].push({
-            key: key,
-            filename: filename,
-            label: `Part ${num} 筆記`,
-            num: num
-          });
+        const parsed = parseNoteFilename(filename);
+        if (!categories[parsed.series]) {
+          categories[parsed.series] = [];
         }
+        categories[parsed.series].push(parsed);
+        noteKeyToSeries[parsed.key] = parsed.series;
       });
 
-      // Sort parts numerically within each category
-      Object.keys(categories).forEach(lang => {
-        categories[lang].sort((a, b) => a.num - b.num);
+      // Sort parts numerically within each series (Part 1, Part 2... then natural alphabetical)
+      Object.keys(categories).forEach(series => {
+        categories[series].sort((a, b) => {
+          if (a.num !== b.num) return a.num - b.num;
+          return a.label.localeCompare(b.label, 'zh-Hant', { numeric: true });
+        });
       });
 
       // 3. Initialize cache for all detected notes
@@ -2255,43 +3112,63 @@
         const parts = categories[lang];
         const isJava = lang.toLowerCase() === 'java';
         const iconClass = isJava ? 'fa-code' : 'fa-folder-open';
-        const categoryLabel = `${lang}系列`;
+        const isSingleStandalone = parts.length === 1 && parts[0].isStandalone;
 
-        // Desktop nav dropdown
-        const dropdown = document.createElement('div');
-        dropdown.className = 'nav-dropdown';
-        
-        let dropdownHtml = `
-          <button class="nav-item" id="btn-${lang.toLowerCase()}-series">
-            <i class="fa-solid ${iconClass}"></i> ${categoryLabel} <i class="fa-solid fa-chevron-down dropdown-caret"></i>
-          </button>
-          <div class="dropdown-content">
-        `;
-        parts.forEach(p => {
-          dropdownHtml += `
-            <button onclick="ui.switch('${p.key}')"><i class="fa-solid fa-file-code"></i> ${p.label}</button>
-          `;
-        });
-        dropdownHtml += `</div>`;
-        dropdown.innerHTML = dropdownHtml;
-        if (desktopContainer) desktopContainer.appendChild(dropdown);
+        if (isSingleStandalone) {
+          const single = parts[0];
+          // Direct clickable nav button for single standalone .md note
+          const btn = document.createElement('button');
+          btn.className = 'nav-item';
+          btn.id = `btn-${single.key}`;
+          btn.setAttribute('onclick', `ui.switch('${single.key}')`);
+          btn.innerHTML = `<i class="fa-solid fa-file-lines"></i> ${escapeHTML(single.label)}`;
+          if (desktopContainer) desktopContainer.appendChild(btn);
 
-        // Mobile nav group
-        const mobileGroup = document.createElement('div');
-        mobileGroup.className = 'mobile-nav-group';
-        
-        let mobileHtml = `
-          <div class="mobile-nav-group-title"><i class="fa-solid ${iconClass}"></i> ${categoryLabel}</div>
-        `;
-        parts.forEach(p => {
-          mobileHtml += `
-            <button class="mobile-nav-item" id="m-btn-${p.key}" onclick="ui.switch('${p.key}')">
-              <i class="fa-solid fa-file-code"></i> ${p.label}
+          const mBtn = document.createElement('button');
+          mBtn.className = 'mobile-nav-item';
+          mBtn.id = `m-btn-${single.key}`;
+          mBtn.setAttribute('onclick', `ui.switch('${single.key}')`);
+          mBtn.innerHTML = `<i class="fa-solid fa-file-lines"></i> ${escapeHTML(single.label)}`;
+          if (mobileContainer) mobileContainer.appendChild(mBtn);
+        } else {
+          const categoryLabel = `${lang}系列`;
+
+          // Desktop nav dropdown
+          const dropdown = document.createElement('div');
+          dropdown.className = 'nav-dropdown';
+          
+          let dropdownHtml = `
+            <button class="nav-item" id="btn-${lang.toLowerCase()}-series">
+              <i class="fa-solid ${iconClass}"></i> ${escapeHTML(categoryLabel)} <i class="fa-solid fa-chevron-down dropdown-caret"></i>
             </button>
+            <div class="dropdown-content">
           `;
-        });
-        mobileGroup.innerHTML = mobileHtml;
-        if (mobileContainer) mobileContainer.appendChild(mobileGroup);
+          parts.forEach(p => {
+            dropdownHtml += `
+              <button onclick="ui.switch('${p.key}')"><i class="fa-solid fa-file-code"></i> ${escapeHTML(p.label)}</button>
+            `;
+          });
+          dropdownHtml += `</div>`;
+          dropdown.innerHTML = dropdownHtml;
+          if (desktopContainer) desktopContainer.appendChild(dropdown);
+
+          // Mobile nav group
+          const mobileGroup = document.createElement('div');
+          mobileGroup.className = 'mobile-nav-group';
+          
+          let mobileHtml = `
+            <div class="mobile-nav-group-title"><i class="fa-solid ${iconClass}"></i> ${escapeHTML(categoryLabel)}</div>
+          `;
+          parts.forEach(p => {
+            mobileHtml += `
+              <button class="mobile-nav-item" id="m-btn-${p.key}" onclick="ui.switch('${p.key}')">
+                <i class="fa-solid fa-file-code"></i> ${escapeHTML(p.label)}
+              </button>
+            `;
+          });
+          mobileGroup.innerHTML = mobileHtml;
+          if (mobileContainer) mobileContainer.appendChild(mobileGroup);
+        }
 
         // Render dynamic tab section elements
         parts.forEach(p => {
@@ -2333,8 +3210,9 @@
       });
       await Promise.all(loadPromises);
       
-      // Initialize Likes counter
+      // Initialize Likes counter & Summary Notes
       core.initLikes();
+      summaryEngine.init();
     });
   </script>
 

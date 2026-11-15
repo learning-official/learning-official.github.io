@@ -1,0 +1,132 @@
+[
+  {
+    "id": "java-oop-and-types",
+    "title": "OOP、資料型態、Enum 與 Object 合約",
+    "category": "Java 核心",
+    "icon": "fa-cubes",
+    "summary": "編譯與資料型態、OOP 封裝繼承多型、Inner Class / GC / Annotation 與 Enum / Object。",
+    "tags": ["OOP", "Enum", "Object"],
+    "relatedDays": "Day 1~20, 29~32, 172~180",
+    "file": "summary/java-oop-and-types.md"
+  },
+  {
+    "id": "java-collections-and-generics",
+    "title": "集合框架、泛型與比較器",
+    "category": "Java 核心",
+    "icon": "fa-layer-group",
+    "summary": "List / HashMap / HashSet、Generics、Iterator 與 Comparable / Deque。",
+    "tags": ["Collections", "Generics", "Deque"],
+    "relatedDays": "Day 21~28, 104, 167~171, 191~198",
+    "file": "summary/java-collections-and-generics.md"
+  },
+  {
+    "id": "java-jvm-and-modern-features",
+    "title": "JVM 根源、IO、String 與設計模式",
+    "category": "Java 核心",
+    "icon": "fa-microchip",
+    "summary": "Serializable、Java IO 與例外處理、JDK/JRE/JVM、String 家族與 Builder。",
+    "tags": ["JVM", "Java IO", "String"],
+    "relatedDays": "Day 91~103, 181~190, 199~204",
+    "file": "summary/java-jvm-and-modern-features.md"
+  },
+  {
+    "id": "java-concurrency-and-jmm",
+    "title": "多執行緒、鎖與 JMM 記憶體模型",
+    "category": "併發與效能",
+    "icon": "fa-bolt",
+    "summary": "Multi-Thread 同步與鎖機制，搭配 Happens-Before 與 volatile 可見性。",
+    "tags": ["Multi-Thread", "JMM", "volatile"],
+    "relatedDays": "Day 81~90, 275",
+    "file": "summary/java-concurrency-and-jmm.md"
+  },
+  {
+    "id": "java-functional-and-streams",
+    "title": "Lambda、Optional 與 Stream",
+    "category": "併發與效能",
+    "icon": "fa-wand-magic-sparkles",
+    "summary": "Lambda、Optional、Collectors、四大 Function 與 IntStream 效能。",
+    "tags": ["Lambda", "Optional", "IntStream"],
+    "relatedDays": "Day 105~110, 157~166, 276",
+    "file": "summary/java-functional-and-streams.md"
+  },
+  {
+    "id": "java-ocp-pitfalls",
+    "title": "Java Foundation / OCA / OCP 測驗全集",
+    "category": "OCP 認證",
+    "icon": "fa-certificate",
+    "summary": "完整收錄 Oracle Foundation、OCA 與 OCP 31 篇實戰測驗筆記。",
+    "tags": ["OCP", "JPMS", "Sealed"],
+    "relatedDays": "Day 266~301",
+    "file": "summary/java-ocp-pitfalls.md"
+  },
+  {
+    "id": "spring-boot-core-and-web",
+    "title": "Spring Boot 核心與 Servlet / Tomcat",
+    "category": "Spring 生態",
+    "icon": "fa-leaf",
+    "summary": "Spring Boot IoC/DI、RESTful 與 JPA，結合 Tomcat / JSP / Servlet MVC。",
+    "tags": ["Spring Boot", "JPA", "Servlet"],
+    "relatedDays": "Day 33~62, 205~214",
+    "file": "summary/spring-boot-core-and-web.md"
+  },
+  {
+    "id": "spring-security-jwt",
+    "title": "Spring Security + JWT 策略授權",
+    "category": "Spring 生態",
+    "icon": "fa-shield-halved",
+    "summary": "使用者資料管控 Part 1 JWT、FilterChain、@PreAuthorize 與策略模式。",
+    "tags": ["Security", "JWT", "Strategy"],
+    "relatedDays": "Day 63~80, 227~245",
+    "file": "summary/spring-security-jwt.md"
+  },
+  {
+    "id": "spring-schedule-and-locking",
+    "title": "Spring Schedule 排程與分散式鎖",
+    "category": "Spring 生態",
+    "icon": "fa-clock",
+    "summary": "Cron 表達式、TaskScheduler 執行緒池、ShedLock 與 OptimisticLock。",
+    "tags": ["@Scheduled", "ShedLock", "Lock"],
+    "relatedDays": "Day 215~226",
+    "file": "summary/spring-schedule-and-locking.md"
+  },
+  {
+    "id": "ecommerce-engineering-practices",
+    "title": "電商專案實戰（Part 2 ~ Part 3）",
+    "category": "系統架構",
+    "icon": "fa-cart-shopping",
+    "summary": "電商系統完整開發紀錄：MapStruct、Swagger、ErrorCode 與防超賣。",
+    "tags": ["MapStruct", "Swagger", "Retryable"],
+    "relatedDays": "Day 111~156, 246~265",
+    "file": "summary/ecommerce-engineering-practices.md"
+  },
+  {
+    "id": "minecraft-plugin-gui-and-events",
+    "title": "Paper 插件：事件、GUI 與 PDC",
+    "category": "Minecraft 插件",
+    "icon": "fa-cube",
+    "summary": "JavaPlugin、Listener 事件、MenuType 視窗、ItemMeta 與 PDC。",
+    "tags": ["PaperMC", "MenuType", "PDC"],
+    "relatedDays": "Day 302~308",
+    "file": "summary/minecraft-plugin-gui-and-events.md"
+  },
+  {
+    "id": "minecraft-plugin-commands-and-config",
+    "title": "Brigadier 指令樹與 Config 設計",
+    "category": "Minecraft 插件",
+    "icon": "fa-terminal",
+    "summary": "CommandSourceStack、指令樹權限、TextComponent 與 YamlConfiguration。",
+    "tags": ["Brigadier", "Adventure", "YAML"],
+    "relatedDays": "Day 309~319",
+    "file": "summary/minecraft-plugin-commands-and-config.md"
+  },
+  {
+    "id": "general-cs-and-ai-notes",
+    "title": "雜七雜八的知識",
+    "category": "綜合知識庫",
+    "icon": "fa-brain",
+    "summary": "完整收錄菱形繼承、Forward / Reverse Proxy 與 RAG 原理筆記。",
+    "tags": ["Proxy", "RAG", "CS 基礎"],
+    "relatedDays": "雜七雜八知識",
+    "file": "summary/general-cs-and-ai-notes.md"
+  }
+]
