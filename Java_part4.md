@@ -1431,3 +1431,23 @@
     plugin.getConfig().getInt("testing", 10) 
     ```
     - plugin由啟動函式create該指令時傳入，接著就可以取值拉～
+
+## Day319
+#### 學習重點 : Minecraft Plugin第六課 : 客製化Configuration與讀取
+- 關於YamlConfiguration讀取這回事 ⭐⭐⭐⭐
+    - 首先要先釐清兩件事 : 
+        - `.jar` 內部通常會在 `resources/..` 放預設配置檔，無論是官方提供的config，抑或者是自己的檔案。
+        - 執行插件後，`resources/..` 的配置檔會輸出到 `plugins/<插件名稱>/..` 之中，也就是所謂的硬碟存取區。
+        - 接著我先透過讀取配置檔時，會先將其讀到RAM中，直到save被呼叫才會更新到硬碟中，因此未save前只要伺服器關閉，配置檔也不會更新。
+- 該如何客製化檔案 ⭐⭐⭐⭐⭐
+    - 簡單來說，需要幾行程式
+    ```java=    
+    File itemYml = new File(getDataFolder(), "item.yml");
+    if (!itemYml.exists()) saveResource("item.yml", false);
+    YamlConfiguration config = YamlConfiguration.loadConfiguration(itemYml);
+    ```
+    - 當啟動 `.jar` 時，會先確認item.yml是否存於硬碟中，不存在才會做新增，存在的話也不會做覆蓋（因為設為false）。
+    - 接著我們就可以透過 `loadConfiguration` 將檔案讀到RAM中，進行後續getString、getInt等動作。
+- 關於讀寫占用執行緒問題 ⭐⭐⭐⭐⭐
+    - 一般來說，我們可以先設計POJO並在啟動時反序列化yml檔，將其映射到POJO上，這樣當要讀取配置時，直接使用物件即可。
+    - 但若是遇到需要時常更新硬碟配置的檔案時，可能就得使用非同步寫法來優化效能。
