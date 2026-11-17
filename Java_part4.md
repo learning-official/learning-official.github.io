@@ -1451,3 +1451,16 @@
 - 關於讀寫占用執行緒問題 ⭐⭐⭐⭐⭐
     - 一般來說，我們可以先設計POJO並在啟動時反序列化yml檔，將其映射到POJO上，這樣當要讀取配置時，直接使用物件即可。
     - 但若是遇到需要時常更新硬碟配置的檔案時，可能就得使用非同步寫法來優化效能。
+
+ ## Day320
+#### 學習重點 : Minecraft Plugin第六課 : 客製化Configuration實測
+- 客製讀取YamlConfiguration ⭐⭐⭐
+    - 透過昨天的測試，我們可以客製化自己的yml檔，並且透過 `YamlConfiguration` 來做讀取，而今天我將其獨立了出來，並宣告一個客製化config物件，供其他系統使用。
+    ![image](https://hackmd.io/_uploads/BJFtQI_AMe.png)
+    - 透過載入、getter，即可在enable時，將資料載入進RAM中等待使用。
+    - 不過要注意的是，若更動了announce.yml的檔案，只能重啟server以載入最新的yml配置。 
+- 實際測試 ⭐⭐⭐
+    - 我透過 `/announce`，讀取 `announce.yml` 的messages，並藉由配置length去跑迴圈，最後sendMessage！
+    ![image](https://hackmd.io/_uploads/ryoWXUuRGx.png)
+    ![image](https://hackmd.io/_uploads/H10bm8_Czl.png)
+
