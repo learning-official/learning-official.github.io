@@ -1475,4 +1475,4 @@
         - 接著透過config取值出來後，以MiniMessage的 `MiniMessage.miniMessage().deserialize(...)` 做解析，接著就可以取得一串Component後就可以輸出拉～
 - 實際測試 ⭐⭐
     - 我設定當我使用 `/announce` 時，可以輸入訊息並搭配自訂義顏色 : 
-    ![image](https://hackmd.io/_uploads/r1L3exc0Ge.png)
+    ![image](https://hackmd.io/_uploads/SyBnbg5Cfg.png)
