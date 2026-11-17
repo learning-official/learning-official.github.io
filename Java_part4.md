@@ -1464,3 +1464,15 @@
     ![image](https://hackmd.io/_uploads/ryoWXUuRGx.png)
     ![image](https://hackmd.io/_uploads/H10bm8_Czl.png)
 
+## Day321
+#### 學習重點 : Minecraft Plugin第六課 : MiniMessae結合Configuration
+- MiniMessage ⭐⭐⭐
+    - 原本設定TextComponent需要使用 `.color`、`.decorate` 把一段文字做包裝，我原本還很好奇不是可以使　`&a` 之類的方式嗎？
+    - 但現在主流似乎都使用 `<green>` 這種方式來設計，一方面是支援性高，且還支援點擊事件、懸停文字等。
+    - 而且ChatColor現在也被改為 `Depreciated` 了QAQ。
+    - 現在支援 `<>` 寫法的，會使用MiniMessage來操作 : 
+        - 一樣先在config設置message，但其中加上 `<bold>hi</bold>` 類似html的形式。
+        - 接著透過config取值出來後，以MiniMessage的 `MiniMessage.miniMessage().deserialize(...)` 做解析，接著就可以取得一串Component後就可以輸出拉～
+- 實際測試 ⭐⭐
+    - 我設定當我使用 `/announce` 時，可以輸入訊息並搭配自訂義顏色 : 
+    ![image](https://hackmd.io/_uploads/r1L3exc0Ge.png)
