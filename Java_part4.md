@@ -1465,7 +1465,7 @@
     ![image](https://hackmd.io/_uploads/H10bm8_Czl.png)
 
 ## Day321
-#### 學習重點 : Minecraft Plugin第六課 : MiniMessae結合Configuration
+#### 學習重點 : Minecraft Plugin第六課 : MiniMessage結合Configuration
 - MiniMessage ⭐⭐⭐
     - 原本設定TextComponent需要使用 `.color`、`.decorate` 把一段文字做包裝，我原本還很好奇不是可以使　`&a` 之類的方式嗎？
     - 但現在主流似乎都使用 `<green>` 這種方式來設計，一方面是支援性高，且還支援點擊事件、懸停文字等。
