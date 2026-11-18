@@ -1476,3 +1476,30 @@
 - 實際測試 ⭐⭐
     - 我設定當我使用 `/announce` 時，可以輸入訊息並搭配自訂義顏色 : 
     ![image](https://hackmd.io/_uploads/SyBnbg5Cfg.png)
+
+## Day322
+#### 學習重點 : Minecraft Plugin第七課 : Vector、Direction、Location
+- 關於Location、Direction、Vector ⭐⭐⭐⭐
+    - 首先要釐清這三者的關係 : 
+        - Location : 表示Entity位置，x、y、z軸、pitch(抬頭低頭)、yaw(左右擺頭)等等
+        - Vector : 一組向量，表示x、y、z的量
+        - Direction : 本身就是Vector，建立在實體的視角之中，且是一個長度為1的向量（單位化）
+    - 解析完三者後，可以來看Location與Direction被Entity取出來後的使用方式 
+    - 要先釐清的是，`getLocation`與`getDirection` 都是複製物件。
+    - 因此當我們要設定時，需要再使用 `.set` 來設定。
+- 實際測試 : 踩壓力板實現突進 ⭐⭐⭐
+    - 我利用大型伺服器常見的踩壓力板可以往前噴的功能來測試Location、Direction、Vector的概念！
+    ```java=
+    // 設置仰角
+    Location location = player.getLocation();
+    location.setPitch(0);
+    
+    // 設置向量
+    var dir = location.getDirection();
+    dir.multiply(1.6);
+    dir.setY(1);
+    
+    // 設置速度
+    player.setVelocity(dir);
+    ```
+    - 我還想要搭配自訂義config，這樣可以讓使用者自行觸發條件，因此上述僅把物理方面寫好，明天繼續！
