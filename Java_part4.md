@@ -1517,6 +1517,7 @@
     ```
     - 接著利用getConfig讀取檔案，在藉由Material提供的String to Material比對，取得Material。
     - 以下是完整程式 : 
-    ![image](https://hackmd.io/_uploads/Sy923W3Cfl.png)
+    ![image](https://hackmd.io/_uploads/H1jmQz3RGl.png)
     - 步驟如右 : `確認是physical > 確認互動方塊是壓力板 > 確認launch-pad啟動 > 確認下方方塊是launch-pad方塊 > 確認玩家狀態 > 噴射`
+    - 影片展示 : 
     <video src="https://r2.uploads.tw/2026/11/ywa7BCBrs4.mp4" style="width: 100%; max-width: 640px;" controls playsinline></video>
