@@ -1503,3 +1503,20 @@
     player.setVelocity(dir);
     ```
     - 我還想要搭配自訂義config，這樣可以讓使用者自行觸發條件，因此上述僅把物理方面寫好，明天繼續！
+
+## Day323
+#### 學習重點 : Minecraft Plugin第七課 : 搭配Config實作LaunchPad
+- config自定義讀取 搭配 Launch-pad ⭐⭐⭐⭐⭐⭐
+    - 昨天我設定好了噴射台的物理部分，今天我接上了config的配置檔設定，自訂義踩到壓力版配上指定方塊時，會觸發噴射buff。
+    - 我先在config定義了以下結構 : 
+    ```yaml=
+    events:
+      launch-pad:
+        enabled: true
+        block: DIAMOND_BLOCK
+    ```
+    - 接著利用getConfig讀取檔案，在藉由Material提供的String to Material比對，取得Material。
+    - 以下是完整程式 : 
+    ![image](https://hackmd.io/_uploads/Sy923W3Cfl.png)
+    - 步驟如右 : `確認是physical > 確認互動方塊是壓力板 > 確認launch-pad啟動 > 確認下方方塊是launch-pad方塊 > 確認玩家狀態 > 噴射`
+    <video src="https://r2.uploads.tw/2026/11/ywa7BCBrs4.mp4" style="width: 100%; max-width: 640px;" controls playsinline></video>
