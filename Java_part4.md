@@ -1521,3 +1521,16 @@
     - 步驟如右 : `確認是physical > 確認互動方塊是壓力板 > 確認launch-pad啟動 > 確認下方方塊是launch-pad方塊 > 確認玩家狀態 > 噴射`
     - 影片展示 : 
     <video src="https://r2.uploads.tw/2026/11/ywa7BCBrs4.mp4" style="width: 100%; max-width: 640px;" controls playsinline></video>
+
+## Day324
+#### 學習重點 : Minecraft Plugin第七課 : Configuration的reload
+- 關於指令的reload config ⭐⭐⭐
+    - 由於每次在plugin當中修改配置檔後，都需要重新啟動才會生效（重新loadConfiguration）
+    - 那我就想說，為何不能設計一個指令去讀取所有配置檔作為suggestion，且具有權限的人可以呼叫reload去重新讀取該配置檔呢？
+- reload指令步驟 ⭐⭐⭐
+    - 首先是先在啟動時，讀取所有配置檔，並存進 `File[]`，作為成員。
+    - 接著在reloadCommand設計一個argument，利用suggestion讀取剛剛的 `File[]` 成員，作為suggestionBuilder回傳。
+    - 最後選取reload目標後，執行loadConfiguration的函式！
+- 實際結果 : ⭐
+    ![image](https://hackmd.io/_uploads/rJljF1ARMe.png)
+    ![image](https://hackmd.io/_uploads/HyUsYkCAzx.png)
