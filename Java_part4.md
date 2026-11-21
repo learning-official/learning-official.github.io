@@ -1534,3 +1534,22 @@
 - 實際結果 : ⭐
     ![image](https://hackmd.io/_uploads/rJljF1ARMe.png)
     ![image](https://hackmd.io/_uploads/HyUsYkCAzx.png)
+
+## Day325
+#### 學習重點 : Minecraft Plugin第八課 : Dialog.1
+- 何謂Dialog ⭐⭐⭐⭐
+    - Dialog是Minecraft在1.21之後出的原生對話框，這邊其實我就十分陌生了，因為以前沒玩過w
+    - 簡單來說，一個對話框會有title、body、input...，這些在Dialog都屬於 `base`; 而對話框的類型需要藉由 `type` 來做設定，根據我base是設計成甚麼形式以及導向來決定type！
+    - 舉個例子 : 假設base問「是否前往大廳？」，那type就會配 `confirmation`，因此底下會出現 `yes/no` 的按鈕。
+- 基本架構 : ⭐⭐
+    - 參考PaperMC的範例 : 
+    ```java=
+    Dialog dialog = Dialog.create(builder -> builder.empty()
+        .base(DialogBase.builder(text("Title")).build())
+        .type(DialogType.notice())
+    );
+    player.showDialog(dialog);
+    ```
+    - 此時notic作為type，底下就會出現一個 `確認` 按鈕。
+    ![image](https://hackmd.io/_uploads/ryBjsEkJml.png)
+    - 但我目前還尚未研究透徹，明天再繼續！
