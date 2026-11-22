@@ -1553,3 +1553,16 @@
     - 此時notic作為type，底下就會出現一個 `確認` 按鈕。
     ![image](https://hackmd.io/_uploads/ryBjsEkJml.png)
     - 但我目前還尚未研究透徹，明天再繼續！
+
+## Day326
+#### 學習重點 : Minecraft Plugin第八課 : Dialog.2
+- 深入研究 Dialog 的輸入表單（DialogInput）⭐⭐⭐⭐
+    - 昨天只有看基本的Dalog架構，今天直接來做一個小功能：「公告發布器」！
+    - 以前在箱子 GUI 裡面，如果想要讓玩家「輸入文字」是非常痛苦的事（可能要開假鐵砧之類的）；但原生 Dialog 直接在 base 裡面內建了 inputs()！
+    - 這次主要用到兩個元件，每個都要設定一個 key，之後取值全靠它：
+        - `DialogInput.text("message", ...)` : 原生文字輸入框，拿來打公告內容。
+        - `DialogInput.bool("show_title", ...)` : 決定「要不要同時在全服螢幕中央顯示 Title 大標題」。
+    - 而最後把這些元件放入DialogBase中即可！
+- 實作內容 ⭐⭐⭐
+    - 順便練習使用Actionbutton的使用方式！
+    ![image](https://hackmd.io/_uploads/BJ1QaYekml.png)
