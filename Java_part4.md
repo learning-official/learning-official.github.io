@@ -1566,3 +1566,21 @@
 - 實作內容 ⭐⭐⭐
     - 順便練習使用Actionbutton的使用方式！
     ![image](https://hackmd.io/_uploads/BJ1QaYekml.png)
+
+## Day327
+#### 學習重點 : Minecraft Plugin第八課 : Dialog.3
+- 拆解一顆按鈕背後的邏輯 ⭐⭐⭐⭐⭐
+    - 我們在設計Dialog按鈕時，會利用ActionButton來設計，並以鍊式寫法設計按鈕內容
+    - 設計完Button後，再放進Type指定的button placeholder，因此Button可以算是大組件中的一個小組件。
+    - 而Button會以底下幾個部分為主軸 : 
+        - `tootltip` : 簡單來說就是hover在按鈕上方時出現的Component
+        - `width` : 按鈕的寬度
+        - `action` : 這個最重要，去設定觸發的程式
+- Action如何設計？ ⭐⭐⭐⭐⭐
+    - 其實DialogAction提供了三種設計方式 : `customClick`、`commandTemplate`、`staticAction`，後兩者蠻無聊的我就不研究了ww。
+    - 而customClick主要提供兩個參數 : 
+        - `(response, audience)` : 透過整個DialogView取得其中填寫的inputText，跟argument類似，最後將response處理後配合自己設計的邏輯對audeince執行動作。
+        - `ClickCallBack` : 簡單來說是用於設定該Button的生命週期、能夠被點多少次...。
+    - 結合昨天的設計，可以以下方程式碼總結 : 
+    ![image](https://hackmd.io/_uploads/Skd0oaZJQg.png)
+    ![image](https://hackmd.io/_uploads/ry_TjTWJml.png)
