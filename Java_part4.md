@@ -1584,3 +1584,21 @@
     - 結合昨天的設計，可以以下方程式碼總結 : 
     ![image](https://hackmd.io/_uploads/Skd0oaZJQg.png)
     ![image](https://hackmd.io/_uploads/ry_TjTWJml.png)
+
+## Day328
+#### 學習重點 : Minecraft Plugin第九課 : 排程
+- 關於ScheduledTask ⭐⭐⭐
+    - 在Minecraft中野可以使用ScheduledTask來做事情。
+    - 有接觸過原生Java Schedule後其實對於這個感覺還好，所以直接來實作看看吧！
+    - 首先是架構 : 
+    ```java=
+    plugin.getServer().getScheduler().runTaskLater(
+            plugin,
+            () -> ctx.getSource().getSender().sendMessage(Component.text("HI")),
+            delayTicks
+    );
+    ```
+    - 外者我包的是command.argument，因此可以使用argument存取使用者輸入的delaySeconds，再轉換成ticks，接上實作Runnable！
+- 實際成果 ⭐⭐
+    - 等待3秒後輸出
+    <video src="https://r2.uploads.tw/2026/11/YdTjbBX9vg.mp4" style="width: 100%; max-width: 640px;" controls playsinline></video>
