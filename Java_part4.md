@@ -1602,3 +1602,16 @@
 - 實際成果 ⭐⭐
     - 等待3秒後輸出
     <video src="https://r2.uploads.tw/2026/11/YdTjbBX9vg.mp4" style="width: 100%; max-width: 640px;" controls playsinline></video>
+
+## Day329
+#### 學習重點 : Minecraft Plugin第九課 : 排程實作清道夫功能
+- 清道夫實作 ⭐⭐⭐⭐⭐
+    - 記得以前玩伺服器有用過清道夫插件（雖然聽說會耗效能w）但總感覺很適合排程實作。
+    - 之前可以在config中設定 `時間週期、定期、清除之物品、清除訊息` 等等，我想說藉由還原這個插件順便練習排程好了！
+    - 今天先把基本的 `/clear <countdown> <period>` 寫好，簡單來說就是發出指令後，過幾秒就清掃第一次，接著按照period週期性清理！
+- 成果 : ⭐⭐⭐
+    - 程式碼在這
+        - 思路很簡單，擷取ctx後，取得World的 `Collection<Item>`，然後直接remove，暫時不做filter
+        - 接著利用 `runTaskTimer` 擷取ctx的argument，並實作Runnable的清掃動作 : `item.remove`。
+    ![image](https://hackmd.io/_uploads/rkmn6Q4y7g.png)
+    - 清除部分等之後寫完再展示好了（絕對不是懶得錄影ww
