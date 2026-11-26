@@ -1615,3 +1615,18 @@
         - 接著利用 `runTaskTimer` 擷取ctx的argument，並實作Runnable的清掃動作 : `item.remove`。
     ![image](https://hackmd.io/_uploads/rkmn6Q4y7g.png)
     - 清除部分等之後寫完再展示好了（絕對不是懶得錄影ww
+
+## Day330
+#### 學習重點 : Minecraft Plugin第九課 : 清道夫功能完善Part1
+- 世界選擇 ⭐⭐⭐
+    - 在進入config設計之前，我先完善清掃功能的指令部分！
+    - 首先是關於世界選擇的部分，玩家可以指定清掃世界。
+    - 這邊就會用到 `ArgumentTypes` 中的World！選擇，超級方便ww。
+- 倒數計時 ⭐⭐⭐
+    - 昨天我設定的只是單純的delay跟period，但我其實想要做的是「每次period的後n秒可以倒數計時並顯示」。
+    - 因此我將countdown改為每次period要開始顯示倒數清掃的變數。
+    - 而倒計時我採用AtomicInteger，主要是避免lambd的effectively final問題，畢竟lambda是一個scope，採用物件timer才不會像primitive那樣報錯！
+- 實際程式 : ⭐⭐⭐
+    - 以下是半成品w
+    ![image](https://hackmd.io/_uploads/ryL8-mrkQl.png)
+    ![image](https://hackmd.io/_uploads/Sku8W7rJQg.png)
