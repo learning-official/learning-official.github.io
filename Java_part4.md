@@ -1629,4 +1629,4 @@
 - 實際程式 : ⭐⭐⭐
     - 以下是半成品w
     ![image](https://hackmd.io/_uploads/ryL8-mrkQl.png)
-    ![image](https://hackmd.io/_uploads/Sku8W7rJQg.png)
+    ![image](https://hackmd.io/_uploads/r1luiGXByme.png)
