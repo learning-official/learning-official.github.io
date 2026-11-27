@@ -1630,3 +1630,16 @@
     - 以下是半成品w
     ![image](https://hackmd.io/_uploads/ryL8-mrkQl.png)
     ![image](https://hackmd.io/_uploads/r1luiGXByme.png)
+
+## Day331
+#### 學習重點 : Minecraft Plugin第九課 : 清道夫功能完善Part2
+- 關於config設計 ⭐⭐⭐
+    - 首先是world的選擇，之前是設計在指令當中利用 `argumentType.world()` 來選擇，而今天新增了一個可以在config的 `worlds:` 當中去配置我要清除的世界。
+    - 而 `getSever.getWorld()` 其中可以放置world name去嘗試取得相對應的Workd物件，藉此由原本yml設定的name轉為World物件。
+- clear method抽離 ⭐⭐⭐⭐⭐
+    - 由於我分為 `從指令當中提取世界`、`從config讀取世界`，兩者的後面邏輯一樣，只是前面讀取途徑不同，因此我把後面邏輯獨立出來，根據 `List<World>` 去設定。
+- 半成品程式 : ⭐⭐⭐
+    - 底下就是將兩者程式邏輯相同處抽離。
+    - 而從yml讀取的list可以直接無痛轉成 `List<String>`，超級方便ww，接著利用Sream方式操作轉成World即可！
+    ![image](https://hackmd.io/_uploads/rJr-IXDkXx.png)
+     - 預計明天把cron加進去就大功告成啦！
